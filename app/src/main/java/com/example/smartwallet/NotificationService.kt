@@ -42,8 +42,8 @@ class NotificationService : NotificationListenerService() {
             val pkg = packageName.lowercase()
             val textLower = fullText.lowercase()
 
-            // Игнорируем Т-Инвестиции
-            if (textLower.contains("инвестиции") || textLower.contains("invest")) return
+            // Игнорируем Т-Инвестиции и инфо посты
+            if (textLower.contains("инвестиции") || textLower.contains("invest") || textLower.contains("t-investments") || textLower.contains("брокер")) return
 
             // Ловим ТОЛЬКО нужные банки и платежные системы (Т-Банк и Mir Pay)
             if (pkg.contains("mirpay") || pkg.contains("tinkoff") || pkg.contains("tcsbank") || pkg.contains("t-bank")) {

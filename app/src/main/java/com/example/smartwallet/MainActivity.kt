@@ -20,12 +20,37 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
+import org.json.JSONObject
 import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
     private var isWebViewLoaded = false
+
+    private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
+        if (result.contents != null) {
+            val content = result.contents
+            val regex = Regex("s=(\\d+\\.\\d{2})")
+            val matchResult = regex.find(content)
+            if (matchResult != null) {
+                val amount = matchResult.groupValues[1].toDoubleOrNull()
+                if (amount != null) {
+                    val json = JSONObject()
+                    json.put("amount", amount)
+                    json.put("store", "Чек ФНС")
+                    val encodedJson = URLEncoder.encode(json.toString(), "UTF-8").replace("+", "%20")
+                    runOnUiThread {
+                        webView.evaluateJavascript("javascript:handleScannedReceiptEncoded('$encodedJson');", null)
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Сумма в QR коде чека не найдена", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private val pushReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -120,17 +145,15 @@ class MainActivity : AppCompatActivity() {
     inner class AndroidScannerInterface(private val context: Context) {
         @JavascriptInterface
         fun startScan() {
-            Toast.makeText(context, "Открываю камеру для сканирования...", Toast.LENGTH_SHORT).show()
-
-            // Пока это заглушка, имитирующая успешное распознавание чека через 2 секунды.
-            // Позже мы прикрутим сюда реальную библиотеку для камеры!
-            Handler(Looper.getMainLooper()).postDelayed({
-                val mockJson = """{"amount": 1250.50, "store": "Пятёрочка"}"""
-                val encodedJson = URLEncoder.encode(mockJson, "UTF-8").replace("+", "%20")
-                runOnUiThread {
-                    webView.evaluateJavascript("javascript:handleScannedReceiptEncoded('$encodedJson');", null)
-                }
-            }, 2000)
+            runOnUiThread {
+                val options = ScanOptions()
+                options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                options.setPrompt("Отсканируйте QR-код чека")
+                options.setCameraId(0)
+                options.setBeepEnabled(true)
+                options.setBarcodeImageEnabled(true)
+                barcodeLauncher.launch(options)
+            }
         }
     }
 }

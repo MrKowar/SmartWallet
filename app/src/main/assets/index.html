@@ -1385,14 +1385,19 @@
             <div class="bills-container" id="bills-container-${g.id}"></div>
 
             <svg class="hourglass-svg" id="hourglass-svg-${g.id}" viewBox="0 0 100 120" width="100%" height="100%">
+              <defs>
+                <clipPath id="glass-clip-${g.id}">
+                  <path d="M23,13 L77,13 L74,22 L53,56 L53,64 L74,98 L77,107 L23,107 L26,98 L47,64 L47,56 L26,22 Z" />
+                </clipPath>
+              </defs>
               <path d="M20,10 L80,10 L80,20 L55,55 L55,65 L80,100 L80,110 L20,110 L20,100 L45,65 L45,55 L20,20 Z" fill="none" stroke="#204f35" stroke-width="3" stroke-linejoin="round"/>
               <path d="M23,13 L77,13 L74,22 L53,56 L53,64 L74,98 L77,107 L23,107 L26,98 L47,64 L47,56 L26,22 Z" fill="rgba(255,255,255,0.4)" stroke="#cde4d4" stroke-width="1"/>
 
-              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#7fd3a1" opacity="0.85" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50px 57px;"/>
+              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#7fd3a1" opacity="0.85" clip-path="url(#glass-clip-${g.id})" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50px 57px;"/>
 
               <line id="sand-stream-${g.id}" x1="50" y1="57" x2="50" y2="105" stroke="#4aa768" stroke-width="2" stroke-dasharray="3,3" style="display:none;"/>
 
-              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#4aa768" style="transform: scaleY(${pct/100}); transform-origin: 50px 105px;"/>
+              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#4aa768" clip-path="url(#glass-clip-${g.id})" style="transform: scaleY(${pct/100}); transform-origin: 50px 105px;"/>
             </svg>
           </div>
           <div class="goal-percentage">${pct}%</div>
@@ -1418,7 +1423,23 @@
     document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add('active');
 
     if(page === 'main') renderMainPage();
-    if(page === 'goals') updateGoalsPage();
+    if(page === 'goals') {
+      updateGoalsPage();
+      setTimeout(() => {
+        data.goals.forEach(g => {
+          const stream = document.getElementById('sand-stream-' + g.id);
+          if (stream) {
+            stream.style.display = 'block';
+            setTimeout(() => stream.style.display = 'none', 1200);
+          }
+          const scene = document.getElementById('hourglass-scene-' + g.id);
+          if (scene) {
+            scene.classList.add('hourglass-bounce');
+            setTimeout(() => scene.classList.remove('hourglass-bounce'), 1200);
+          }
+        });
+      }, 100);
+    }
     if(page === 'month') updateMonthPage();
     if(page === 'analytics') updateAnalyticsPage();
     if(page === 'ai') updateAIPage();

@@ -40,9 +40,13 @@ class NotificationService : NotificationListenerService() {
             val bigText = extras.getCharSequence("android.bigText")?.toString() ?: ""
             val fullText = "$title $text $bigText"
             val pkg = packageName.lowercase()
+            val textLower = fullText.lowercase()
 
-            // Ловим банки и платежные системы
-            if (pkg.contains("mirpay") || pkg.contains("ozon") || pkg.contains("tinkoff") || pkg.contains("bank") || pkg.contains("tcsbank")) {
+            // Игнорируем Т-Инвестиции
+            if (textLower.contains("инвестиции") || textLower.contains("invest")) return
+
+            // Ловим ТОЛЬКО нужные банки и платежные системы (Т-Банк и Mir Pay)
+            if (pkg.contains("mirpay") || pkg.contains("tinkoff") || pkg.contains("tcsbank") || pkg.contains("t-bank")) {
 
                 // Сохраняем пуш в базу
                 val prefs = applicationContext.getSharedPreferences("SmartWalletPrefs", Context.MODE_PRIVATE)

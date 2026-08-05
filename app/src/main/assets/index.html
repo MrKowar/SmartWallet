@@ -273,12 +273,12 @@
       100% { top: 160px; opacity: 0; transform: rotate(25deg) scale(0.4) translateX(0); }
     }
     @keyframes hourglassBounce {
-      0% { transform: translateX(-50%) scale(1); }
-      15% { transform: translateX(-50%) scale(1.04,0.96); }
-      30% { transform: translateX(-50%) scale(0.96,1.04); }
-      45% { transform: translateX(-50%) scale(1.02,0.98); }
-      60% { transform: translateX(-50%) scale(0.99,1.01); }
-      100% { transform: translateX(-50%) scale(1); }
+      0% { transform: scale(1); }
+      15% { transform: scale(1.04,0.96); }
+      30% { transform: scale(0.96,1.04); }
+      45% { transform: scale(1.02,0.98); }
+      60% { transform: scale(0.99,1.01); }
+      100% { transform: scale(1); }
     }
     .hourglass-bounce { animation: hourglassBounce 0.7s ease-in-out; }
     .sparkle {
@@ -861,6 +861,16 @@
   </div>
 </div>
 
+<div id="page-ai" class="page">
+  <div class="analytics-header">
+    <h2>ИИ Аналитика</h2>
+    <p>Умный анализ ваших трат</p>
+  </div>
+  <div class="card" id="ai-advisor-content" style="padding: 24px; text-align: center; font-size: 14px; color: #475569;">
+    <!-- AI content goes here -->
+  </div>
+</div>
+
 <div class="bottom-nav">
   <button class="nav-item active" data-page="main" onclick="switchPage('main')">
     <span class="nav-icon">🏠</span><span>Главная</span>
@@ -873,6 +883,9 @@
   </button>
   <button class="nav-item" data-page="analytics" onclick="switchPage('analytics')">
     <span class="nav-icon">📈</span><span>Аналитика</span>
+  </button>
+  <button class="nav-item" data-page="ai" onclick="switchPage('ai')">
+    <span class="nav-icon">🤖</span><span>ИИ</span>
   </button>
 </div>
 
@@ -950,6 +963,8 @@
     { id: 'clothes', name: 'Одежда', icon: '👕' },
     { id: 'health', name: 'Здоровье', icon: '💊' },
     { id: 'fun', name: 'Развлечения', icon: '🎉' },
+    { id: 'snack', name: 'Перекус на работе', icon: '🥪' },
+    { id: 'sweets', name: 'Вкусняхи', icon: '🍩' },
     { id: 'other_exp', name: 'Разное', icon: '📦' }
   ];
 
@@ -1373,11 +1388,11 @@
               <path d="M20,10 L80,10 L80,20 L55,55 L55,65 L80,100 L80,110 L20,110 L20,100 L45,65 L45,55 L20,20 Z" fill="none" stroke="#204f35" stroke-width="3" stroke-linejoin="round"/>
               <path d="M23,13 L77,13 L74,22 L53,56 L53,64 L74,98 L77,107 L23,107 L26,98 L47,64 L47,56 L26,22 Z" fill="rgba(255,255,255,0.4)" stroke="#cde4d4" stroke-width="1"/>
 
-              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#7fd3a1" opacity="0.85" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50% 57px;"/>
+              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#7fd3a1" opacity="0.85" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50px 57px;"/>
 
               <line id="sand-stream-${g.id}" x1="50" y1="57" x2="50" y2="105" stroke="#4aa768" stroke-width="2" stroke-dasharray="3,3" style="display:none;"/>
 
-              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#4aa768" style="transform: scaleY(${pct/100}); transform-origin: 50% 105px;"/>
+              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#4aa768" style="transform: scaleY(${pct/100}); transform-origin: 50px 105px;"/>
             </svg>
           </div>
           <div class="goal-percentage">${pct}%</div>
@@ -1406,6 +1421,35 @@
     if(page === 'goals') updateGoalsPage();
     if(page === 'month') updateMonthPage();
     if(page === 'analytics') updateAnalyticsPage();
+    if(page === 'ai') updateAIPage();
+  }
+
+  function updateAIPage() {
+    const container = document.getElementById('ai-advisor-content');
+    let totalSnacksAndSweets = 0;
+
+    data.transactions.forEach(t => {
+      if(t.type === 'expense' && (t.category === 'snack' || t.category === 'sweets')) {
+        totalSnacksAndSweets += t.amount;
+      }
+    });
+
+    if (totalSnacksAndSweets > 0) {
+      container.innerHTML = `
+        <div style="font-size: 40px; margin-bottom: 12px;">🚨</div>
+        <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Финансовая дыра!</h3>
+        <p style="margin-bottom: 16px;">Вы потратили <strong style="color: var(--danger); font-size: 16px;">${totalSnacksAndSweets.toLocaleString()} ₽</strong> на перекусы и вкусняшки.</p>
+        <div style="background: #eef8f1; border: 1px solid var(--line); border-radius: 14px; padding: 16px; text-align: left; color: var(--accent);">
+          <strong>💡 Совет:</strong> Попробуйте брать еду из дома. Если бы вы отложили эти деньги в копилку, вы бы приблизились к своей цели!
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
+        <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Всё под контролем</h3>
+        <p>На данный момент ИИ не нашел очевидных финансовых дыр в ваших расходах. Продолжайте в том же духе!</p>
+      `;
+    }
   }
 
   function openModal(name) {
@@ -1743,7 +1787,7 @@ function handlePushNotification(pushText) {
       let amountMatch = textWithoutBalance.match(/(\d+[\.,]?\d*)\s*(RUB|руб|р|₽)/i);
 
       // Если значка валюты нет, но это банк - берем первую цифру
-      if (!amountMatch && /списание|покупка|перевод|оплата|т-банк|tinkoff|ozon|озон/i.test(textWithoutBalance)) {
+      if (!amountMatch && /списание|покупка|перевод|оплата|т-банк|tinkoff|mirpay/i.test(textWithoutBalance)) {
         amountMatch = textWithoutBalance.match(/(\d+[\.,]?\d*)/);
       }
 
@@ -1761,7 +1805,7 @@ function handlePushNotification(pushText) {
 
         let opsName = 'Авто: из уведомления';
         if (lowerText.includes('перевод')) opsName = 'Перевод';
-        if (lowerText.includes('озон') || lowerText.includes('ozon')) opsName = 'Ozon';
+        if (lowerText.includes('mirpay') || lowerText.includes('мир пей') || lowerText.includes('mir pay')) opsName = 'Mir Pay';
         if (lowerText.includes('т-банк') || lowerText.includes('tinkoff') || lowerText.includes('t-bank') || lowerText.includes('tcsbank')) opsName = 'Т-Банк';
 
         document.getElementById('ops-name').value = opsName;

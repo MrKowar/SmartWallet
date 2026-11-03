@@ -1,0 +1,15 @@
+name = "smartwallet-ai"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+GEMINI_MODEL = "gemini-3.8-flash"
+DAILY_LIMIT_LICENSED = "100"
+DAILY_LIMIT_TRIAL = "15"
+# Открытый ключ лицензий — тот же, что LicenseVerifier.PUBLIC_KEY_BASE64 (он не секретный)
+LICENSE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEpOI5SupTzBC9lRoucOwYF5yzPqzHqUlLG88CvtL/4gqlweFmGe3bF1AJoPXqN1OU4hR18AxplDeGIrVdgxjTTg=="
+
+# Счётчики лимитов. Создайте namespace командой из README и впишите его id
+# [[kv_namespaces]]
+# binding = "RATE_KV"
+# id = "ВСТАВЬТЕ_ID"

@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Файлы релиза (tools/publish.bat)
+/dist/

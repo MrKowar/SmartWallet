@@ -13,6 +13,18 @@ val deepSeekApiKey: String = localProps.getProperty("deepseek.api.key", "")
 val geminiApiKey: String = localProps.getProperty("gemini.api.key", "")
 val openRouterApiKey: String = localProps.getProperty("openrouter.api.key", "")
 
+// Прокси ИИ на Cloudflare Workers (tools/ai-proxy). Если задан — ключи ИИ в релизный APK не попадают
+val aiProxyUrl: String = localProps.getProperty("ai.proxy.url", "")
+
+// Откуда приложение берёт сведения об обновлениях (tools/publish.bat кладёт update.json в GitHub Releases)
+val updateManifestUrl: String = localProps.getProperty(
+    "update.manifest.url",
+    "https://github.com/MrKowar/SmartWallet/releases/latest/download/update.json"
+)
+
+// Release-ключ подписи: файл и пароли только в local.properties
+val releaseStoreFile: String? = localProps.getProperty("release.store.file")
+
 android {
     namespace = "com.example.smartwallet"
     compileSdk = 37
@@ -21,13 +33,26 @@ android {
         applicationId = "com.example.smartwallet"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "DEEPSEEK_API_KEY", "\"$deepSeekApiKey\"")
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
         buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterApiKey\"")
+        buildConfigField("String", "AI_PROXY_URL", "\"$aiProxyUrl\"")
+        buildConfigField("String", "UPDATE_MANIFEST_URL", "\"$updateManifestUrl\"")
+    }
+
+    signingConfigs {
+        if (releaseStoreFile != null) {
+            create("release") {
+                storeFile = file(releaseStoreFile)
+                storePassword = localProps.getProperty("release.store.password")
+                keyAlias = localProps.getProperty("release.key.alias")
+                keyPassword = localProps.getProperty("release.key.password")
+            }
+        }
     }
 
     buildFeatures {
@@ -38,6 +63,12 @@ android {
         release {
             optimization {
                 enable = false
+            }
+            signingConfigs.findByName("release")?.let { signingConfig = it }
+            if (aiProxyUrl.isNotBlank()) {
+                buildConfigField("String", "DEEPSEEK_API_KEY", "\"\"")
+                buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+                buildConfigField("String", "OPENROUTER_API_KEY", "\"\"")
             }
         }
     }

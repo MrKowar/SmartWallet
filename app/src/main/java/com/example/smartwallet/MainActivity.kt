@@ -20,6 +20,8 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -40,12 +42,45 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
     private lateinit var licenseManager: LicenseManager
+    private lateinit var webBundles: WebBundleManager
+    private lateinit var updates: UpdateManager
+    private var pendingUpdate: JSONObject? = null
+    private var updateCheckStarted = false
     private var isWebViewLoaded = false
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
 
     private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         filePathCallback?.onReceiveValue(if (uri != null) arrayOf(uri) else null)
         filePathCallback = null
+    }
+
+    // Резервная копия данных: JSON из localStorage ↔ файл, выбранный пользователем
+    private var pendingBackupJson: String? = null
+
+    private val backupExporter = registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        val json = pendingBackupJson
+        pendingBackupJson = null
+        if (uri == null || json == null) return@registerForActivityResult
+        val ok = try {
+            contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray(Charsets.UTF_8)) } != null
+        } catch (e: Exception) {
+            false
+        }
+        Toast.makeText(this, if (ok) "Копия данных сохранена" else "Не удалось сохранить файл", Toast.LENGTH_LONG).show()
+    }
+
+    private val backupImporter = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri == null) return@registerForActivityResult
+        val text = try {
+            contentResolver.openInputStream(uri)?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }
+        } catch (e: Exception) {
+            null
+        }
+        if (text == null) {
+            Toast.makeText(this, "Не удалось прочитать файл", Toast.LENGTH_LONG).show()
+            return@registerForActivityResult
+        }
+        webView.evaluateJavascript("window.onBackupImported(${JSONObject.quote(text)});", null)
     }
 
     private val pushReceiver = object : BroadcastReceiver() {
@@ -68,6 +103,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         licenseManager = LicenseManager(this)
+        webBundles = WebBundleManager(this)
+        updates = UpdateManager(this, webBundles)
 
         webView = findViewById(R.id.webView)
         webView.setBackgroundColor(ContextCompat.getColor(this, R.color.sw_navy))
@@ -80,22 +117,39 @@ class MainActivity : AppCompatActivity() {
         }
         webView.settings.javaScriptEnabled = true
         webView.settings.domStorageEnabled = true
+        // Обновлённый интерфейс лежит в filesDir и открывается по file://, как встроенный
+        webView.settings.allowFileAccess = true
 
         // Мост между JavaScript и нативной частью Android
         webView.addJavascriptInterface(AndroidScannerInterface(this), "AndroidScanner")
         webView.addJavascriptInterface(LicenseInterface(this), "License")
+        webView.addJavascriptInterface(LoansInterface(), "AndroidLoans")
+        webView.addJavascriptInterface(BackupInterface(), "AndroidBackup")
+        webView.addJavascriptInterface(UpdaterInterface(), "AndroidUpdater")
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 // Пуши отдаём только в основной интерфейс, а не на экран активации
-                isWebViewLoaded = url == MAIN_URL
+                isWebViewLoaded = webBundles.isMainUrl(url)
                 if (!isWebViewLoaded) return
 
                 // Даем интерфейсу 1.5 секунды на полную прогрузку
                 Handler(Looper.getMainLooper()).postDelayed({
                     checkPendingPushes()
+                    startUpdateCheck()
                 }, 1500)
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                // Обновлённая страница не открылась — возвращаемся к встроенному интерфейсу
+                val url = request?.url?.toString() ?: return
+                if (request.isForMainFrame && url.startsWith("file:///data")) {
+                    val page = if (url.endsWith("activation.html")) "activation.html" else "index.html"
+                    webBundles.reset()
+                    view?.loadUrl("file:///android_asset/$page")
+                }
             }
         }
 
@@ -114,9 +168,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (licenseManager.shouldShowActivation()) {
-            webView.loadUrl(ACTIVATION_URL)
+            webView.loadUrl(webBundles.activationUrl())
         } else {
-            webView.loadUrl(MAIN_URL)
+            webView.loadUrl(webBundles.mainUrl())
         }
 
         val filter = IntentFilter("com.example.smartwallet.PUSH_RECEIVED")
@@ -210,6 +264,10 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun askAI(requestId: String, prompt: String) {
             val providers = buildList {
+                // Основной путь — свой прокси на Cloudflare: ключ Gemini не хранится в APK
+                if (BuildConfig.AI_PROXY_URL.isNotBlank()) {
+                    add(AiProvider("SmartWallet AI") { askProxy(prompt) })
+                }
                 if (BuildConfig.OPENROUTER_API_KEY.isNotBlank()) {
                     add(AiProvider("OpenRouter") { askOpenRouter(BuildConfig.OPENROUTER_API_KEY, prompt) })
                 }
@@ -260,6 +318,82 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // === РЕЗЕРВНАЯ КОПИЯ ДАННЫХ ===
+    inner class BackupInterface {
+        @JavascriptInterface
+        fun exportData(json: String, fileName: String) {
+            pendingBackupJson = json
+            runOnUiThread { backupExporter.launch(fileName) }
+        }
+
+        @JavascriptInterface
+        fun importData() {
+            runOnUiThread { backupImporter.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) }
+        }
+    }
+
+    // === УДАЛЁННОЕ ОБНОВЛЕНИЕ ===
+    private fun callJs(script: String) {
+        runOnUiThread { webView.evaluateJavascript(script, null) }
+    }
+
+    private fun offerUpdate(manifest: JSONObject) {
+        pendingUpdate = manifest
+        val info = JSONObject()
+            .put("versionName", manifest.optString("versionName"))
+            .put("changelog", manifest.optString("changelog"))
+        callJs("window.onAppUpdateAvailable && window.onAppUpdateAvailable($info);")
+    }
+
+    // Тихая проверка при запуске (не чаще раза в 12 часов): интерфейс обновляется сам, APK — по согласию
+    private fun startUpdateCheck() {
+        if (updateCheckStarted) return
+        updateCheckStarted = true
+        Thread {
+            try {
+                updates.check()?.let { offerUpdate(it) }
+            } catch (e: Exception) {
+                // Нет сети или релиза — проверим в следующий раз
+            }
+        }.start()
+    }
+
+    inner class UpdaterInterface {
+        @JavascriptInterface
+        fun checkNow() {
+            Thread {
+                try {
+                    val manifest = updates.check(force = true)
+                    if (manifest != null) offerUpdate(manifest)
+                    else callJs("window.onAppUpToDate && window.onAppUpToDate();")
+                } catch (e: Exception) {
+                    callJs("window.onAppUpdateError && window.onAppUpdateError(${JSONObject.quote(e.message ?: "Нет связи с сервером обновлений")});")
+                }
+            }.start()
+        }
+
+        @JavascriptInterface
+        fun downloadAndInstall() {
+            val manifest = pendingUpdate ?: return
+            Thread {
+                try {
+                    val apk = updates.downloadApk(manifest) { percent ->
+                        callJs("window.onAppUpdateProgress($percent, ${JSONObject.quote("Загрузка… $percent%")});")
+                    }
+                    runOnUiThread {
+                        if (updates.install(this@MainActivity, apk)) {
+                            callJs("window.onAppUpdateProgress(100, ${JSONObject.quote("Подтвердите установку в окне Android")});")
+                        } else {
+                            callJs("window.onAppUpdateProgress(-1, ${JSONObject.quote("Разрешите SmartWallet устанавливать приложения и нажмите «Обновить» ещё раз")});")
+                        }
+                    }
+                } catch (e: Exception) {
+                    callJs("window.onAppUpdateProgress(-1, ${JSONObject.quote(e.message ?: "Не удалось скачать обновление")});")
+                }
+            }.start()
+        }
+    }
+
     // === КЛАСС ДЛЯ ЭКРАНА АКТИВАЦИИ ===
     inner class LicenseInterface(private val context: Context) {
         @JavascriptInterface
@@ -284,7 +418,7 @@ class MainActivity : AppCompatActivity() {
 
             runOnUiThread {
                 Toast.makeText(context, "SmartWallet активирован ${licenseManager.expiryText(license)}", Toast.LENGTH_LONG).show()
-                webView.loadUrl(MAIN_URL)
+                webView.loadUrl(webBundles.mainUrl())
             }
             return JSONObject().put("ok", true).put("message", "Готово! Открываю приложение…").toString()
         }
@@ -293,7 +427,7 @@ class MainActivity : AppCompatActivity() {
         fun continueTrial() {
             if (licenseManager.status() !is LicenseManager.Status.Trial) return
             licenseManager.markTrialPromptShown()
-            runOnUiThread { webView.loadUrl(MAIN_URL) }
+            runOnUiThread { webView.loadUrl(webBundles.mainUrl()) }
         }
 
         @JavascriptInterface
@@ -328,6 +462,27 @@ class MainActivity : AppCompatActivity() {
     private class AiException(message: String) : Exception(message)
 
     private class AiProvider(val name: String, val call: () -> String)
+
+    private fun askProxy(prompt: String): String {
+        val connection = URL(BuildConfig.AI_PROXY_URL.trimEnd('/') + "/ai").openConnection() as HttpURLConnection
+        connection.requestMethod = "POST"
+        connection.connectTimeout = 15000
+        connection.readTimeout = 60000
+        connection.doOutput = true
+        connection.setRequestProperty("Content-Type", "application/json")
+
+        val body = JSONObject()
+            .put("deviceCode", licenseManager.deviceCode)
+            .put("license", licenseManager.savedKey() ?: "")
+            .put("system", aiSystemPrompt())
+            .put("prompt", prompt)
+        connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
+
+        val (code, raw) = readResponse(connection)
+        val json = try { JSONObject(raw) } catch (e: Exception) { JSONObject() }
+        if (code !in 200..299) throw AiException(json.optString("error").ifBlank { "SmartWallet AI вернул HTTP $code" })
+        return json.optString("answer").trim().ifEmpty { throw AiException("SmartWallet AI вернул пустой ответ") }
+    }
 
     private fun askOpenRouter(key: String, prompt: String): String {
         val connection = URL("https://openrouter.ai/api/v1/chat/completions")
@@ -541,8 +696,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val MAIN_URL = "file:///android_asset/index.html"
-        private const val ACTIVATION_URL = "file:///android_asset/activation.html"
         private const val OPENROUTER_MODEL = "google/gemma-4-31b-it:free"
         private const val GEMINI_MODEL = "gemini-3.8-flash"
         private const val DEEPSEEK_MODEL = "deepseek-chat"

@@ -976,6 +976,104 @@
     }
     .ai-tip strong{color:var(--orange-2);}
 
+    /* Копилка и Кредиты: две главные кнопки */
+    .hub-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-top:4px;}
+    .hub-btn{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+      padding:16px 10px;border:none;border-radius:18px;cursor:pointer;
+      font-size:13px;font-weight:800;color:#fff;transition:transform .15s ease;
+    }
+    .hub-btn span{font-size:22px;}
+    .hub-btn:active{transform:scale(.95);}
+    .hub-btn-goal{background:linear-gradient(135deg,var(--accent-2),var(--accent) 60%,#1747C9);box-shadow:0 10px 24px var(--accent-glow);}
+    .hub-btn-loan{background:linear-gradient(135deg,var(--orange-2),var(--orange) 60%,#E85D00);box-shadow:0 10px 24px var(--orange-glow);}
+
+    /* Карточка кредита */
+    .loan-card{
+      margin:0 16px 14px;padding:18px;border-radius:var(--radius);cursor:pointer;
+      background:linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
+      border:1px solid var(--line);box-shadow:var(--shadow);
+    }
+    .loan-card.overdue{border-color:rgba(255,92,122,.55);box-shadow:0 0 22px rgba(255,92,122,.18), var(--shadow);}
+    .loan-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+    .loan-card-name{font-size:16px;font-weight:800;color:var(--text);}
+    .loan-balance{font-size:26px;font-weight:800;color:#fff;margin-top:8px;}
+    .loan-balance small{font-size:12px;font-weight:600;color:var(--text-soft);margin-left:6px;}
+    .loan-progress{height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 8px;}
+    .loan-progress-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 10px var(--accent-glow);}
+    .loan-next{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-soft);gap:8px;}
+    .loan-next strong{color:var(--text);}
+    .empty-hint{margin:0 16px 14px;padding:18px;border-radius:18px;border:1px dashed var(--line-strong);color:var(--text-soft);font-size:13px;text-align:center;}
+
+    /* Статусы платежей */
+    .pay-chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;}
+    .pay-chip.paid{background:rgba(46,229,157,.14);color:var(--income);border:1px solid rgba(46,229,157,.30);}
+    .pay-chip.soon{background:rgba(47,123,255,.16);color:var(--accent-2);border:1px solid var(--line-strong);}
+    .pay-chip.overdue{background:rgba(255,92,122,.16);color:var(--danger);border:1px solid rgba(255,92,122,.40);}
+    .pay-chip.future{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--line);}
+
+    /* Калькулятор кредита */
+    .loan-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;}
+    .loan-calc{
+      margin:6px 0 4px;padding:14px;border-radius:16px;font-size:13px;line-height:1.5;color:var(--text-soft);
+      background:var(--surface-2);border:1px solid var(--line);
+    }
+    .loan-calc strong{color:var(--text);}
+    .loan-calc .big{font-size:24px;font-weight:800;color:var(--orange-2);}
+    .loan-calc .warn{color:var(--danger);}
+    .loan-calc .ok{color:var(--income);}
+    .scenario-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px;}
+    .scenario-table th{color:var(--text-dim);font-weight:700;text-align:right;padding:6px 4px;}
+    .scenario-table th:first-child,.scenario-table td:first-child{text-align:left;}
+    .scenario-table td{padding:8px 4px;text-align:right;color:var(--text);border-top:1px solid var(--line);}
+    .scenario-table tr.pick{cursor:pointer;}
+    .scenario-table tr.pick:active td{background:rgba(47,123,255,.10);}
+    .scenario-table tr.best td:first-child::after{content:' ★';color:var(--orange-2);}
+
+    /* Инструменты в карточке кредита */
+    .loan-tool{margin-top:12px;padding:14px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line);}
+    .loan-tool-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px;}
+    .loan-tool-row input{
+      width:100%;padding:12px;border-radius:14px;font-size:15px;
+      background:var(--bg-2);border:2px solid var(--line);color:var(--text);outline:none;
+    }
+    .loan-tool-row input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,123,255,.20);}
+    .loan-tool-result{margin-top:8px;font-size:12.5px;line-height:1.5;color:var(--text-soft);}
+    .loan-tool-result strong{color:var(--text);}
+    .loan-tool-result .modal-btn{padding:12px;font-size:14px;margin-top:8px;}
+
+    /* График платежей */
+    .pay-row{padding:12px 0;border-bottom:1px solid var(--line);}
+    .pay-row:last-child{border:none;}
+    .pay-row-top{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+    .pay-row-n{font-size:12px;color:var(--text-dim);font-weight:700;min-width:28px;}
+    .pay-row-date{
+      background:var(--bg-2);border:1px solid var(--line);border-radius:10px;color:var(--text);
+      padding:6px 8px;font-size:13px;color-scheme:dark;
+    }
+    .pay-row-amount{font-size:15px;font-weight:800;color:var(--text);margin-left:auto;}
+    .pay-row-split{font-size:11.5px;color:var(--text-soft);margin-top:6px;}
+    .pay-row-overdue{margin-top:6px;font-size:12px;color:var(--danger);line-height:1.45;}
+    .pay-row-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+    .pay-row-bottom .settings-hint{font-size:12px;}
+
+    /* Обязательные платежи на главной */
+    .obligations-card{
+      cursor:pointer;
+      background:
+        radial-gradient(120% 120% at 0% 0%, rgba(255,92,122,.10), transparent 55%),
+        linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
+      border:1px solid rgba(255,122,26,.22);
+    }
+    .obligations-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;}
+    .obligations-header .title{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--orange-2);}
+    .obligations-reserve{font-size:11px;font-weight:700;color:var(--text-soft);background:var(--surface-2);padding:3px 10px;border-radius:999px;border:1px solid var(--line);white-space:nowrap;}
+    .obligation-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);}
+    .obligation-row:first-child{border-top:none;}
+    .obligation-name{font-size:14px;font-weight:700;color:var(--text);}
+    .obligation-sub{font-size:11.5px;color:var(--text-soft);margin-top:2px;}
+    .obligation-amount{font-size:15px;font-weight:800;color:var(--text);text-align:right;}
+
     /* Строки настроек и переключатель */
     .settings-row{border-color:var(--line);background:var(--surface-2);}
     .settings-label{color:var(--text);}
@@ -1078,6 +1176,14 @@
     </div>
   </div>
 
+  <div class="card obligations-card" id="obligations-card" style="display:none;" onclick="switchPage('goals')">
+    <div class="obligations-header">
+      <span class="title">💳 ОБЯЗАТЕЛЬНЫЕ ПЛАТЕЖИ</span>
+      <span class="obligations-reserve" id="obligations-reserve">Резерв: 0 ₽</span>
+    </div>
+    <div id="obligations-list"></div>
+  </div>
+
   <div class="card auto-dist-summary">
     <div class="auto-dist-title">
       <span>📊 Авто распределение (<span id="auto-dist-period-label">Текущая неделя</span>)</span>
@@ -1121,11 +1227,19 @@
 
 <div id="page-goals" class="page">
   <div class="goals-header">
-    <h2>Цели и Копилки</h2>
-    <p>Накапливайте средства с помощью интерактивных песочных часов</p>
+    <h2>Копилка и Кредиты</h2>
+    <p>Копите на цели и держите кредиты под контролем</p>
   </div>
+  <div class="hub-actions">
+    <button class="hub-btn hub-btn-goal" onclick="openModal('add-goal')"><span>➕</span>Добавить новую цель</button>
+    <button class="hub-btn hub-btn-loan" onclick="openAddLoan()"><span>💳</span>Добавить кредит</button>
+  </div>
+
+  <div class="section-title">Кредиты</div>
+  <div id="loans-list-container"></div>
+
+  <div class="section-title">Цели</div>
   <div id="goals-list-container"></div>
-  <button class="add-goal-btn" onclick="openModal('add-goal')">➕ Добавить новую цель</button>
 </div>
 
 <div id="page-month" class="page">
@@ -1238,6 +1352,9 @@
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openProfileSettings()">👤 Мой профиль</button>
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openIncomeScheme()">📅 График доходов</button>
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openModal('dist-settings')">📊 Проценты автораспределения</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings'); checkForUpdates()">🔄 Проверить обновления</button>
+    <button class="modal-btn modal-btn-cancel" onclick="exportBackup()">💾 Сохранить копию данных</button>
+    <button class="modal-btn modal-btn-cancel" onclick="importBackup()">📂 Восстановить из копии</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings')">Закрыть</button>
   </div>
 </div>
@@ -1331,6 +1448,98 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-add-loan">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💳 Новый кредит</div>
+
+    <div class="scheme-field">
+      <label for="loan-name">Название</label>
+      <input type="text" id="loan-name" placeholder="Например: Кредитка Т-Банк">
+    </div>
+    <div class="loan-grid">
+      <div class="scheme-field">
+        <label for="loan-principal">Сумма, ₽</label>
+        <input type="number" id="loan-principal" inputmode="decimal" placeholder="300000" oninput="updateLoanCalc()">
+      </div>
+      <div class="scheme-field">
+        <label for="loan-rate">Ставка, % годовых</label>
+        <input type="number" id="loan-rate" inputmode="decimal" placeholder="19.9" oninput="updateLoanCalc()">
+      </div>
+      <div class="scheme-field">
+        <label for="loan-months">Срок, мес.</label>
+        <input type="number" id="loan-months" inputmode="numeric" placeholder="24" oninput="updateLoanCalc()">
+      </div>
+      <div class="scheme-field">
+        <label for="loan-type">Тип платежа</label>
+        <select id="loan-type" onchange="updateLoanCalc()">
+          <option value="annuity">Аннуитетный</option>
+          <option value="diff">Дифференцированный</option>
+        </select>
+      </div>
+      <div class="scheme-field">
+        <label for="loan-issue">Дата выдачи</label>
+        <input type="date" id="loan-issue" onchange="syncLoanPayDay(); updateLoanCalc()">
+      </div>
+      <div class="scheme-field">
+        <label for="loan-payday">День платежа</label>
+        <input type="number" id="loan-payday" inputmode="numeric" min="1" max="31" oninput="updateLoanCalc()">
+      </div>
+    </div>
+    <div class="scheme-field">
+      <label for="loan-penalty">Неустойка за просрочку, % годовых</label>
+      <input type="number" id="loan-penalty" inputmode="decimal" value="20">
+    </div>
+
+    <div class="loan-calc" id="loan-calc-box">Введите сумму, ставку и срок — расчёт появится здесь.</div>
+
+    <button class="modal-btn modal-btn-gold" onclick="saveLoan()">Сохранить кредит</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('add-loan')">Отмена</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-loan-detail">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="loan-detail-title">Кредит</div>
+    <div id="loan-detail-summary"></div>
+
+    <div class="loan-tool">
+      <div class="loan-tool-title">📉 Снизить ежемесячный платёж</div>
+      <div class="loan-tool-row">
+        <input type="number" id="loan-target-payment" inputmode="decimal" placeholder="Желаемый платёж, ₽" oninput="updateTargetPayment()">
+      </div>
+      <div class="loan-tool-result" id="loan-target-result"></div>
+    </div>
+
+    <div class="loan-tool">
+      <div class="loan-tool-title">💰 Досрочное погашение</div>
+      <div class="loan-tool-row">
+        <input type="number" id="loan-extra" inputmode="decimal" placeholder="Сумма взноса, ₽" oninput="updateExtraPayment()">
+      </div>
+      <div class="loan-tool-result" id="loan-extra-result"></div>
+    </div>
+
+    <div class="loan-tool-title" style="margin-top:16px;">🗓️ График и погашения</div>
+    <div id="loan-schedule"></div>
+
+    <button class="modal-btn modal-btn-cancel" onclick="askLoansAI()">🤖 Разбор кредитов от ИИ</button>
+    <div class="ai-answer" id="loans-ai-answer" style="display:none;"></div>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('loan-detail')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-app-update">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🚀 Доступно обновление</div>
+    <div class="ai-answer" id="app-update-text"></div>
+    <div class="msg" id="app-update-progress" style="margin-top:10px;color:var(--text-soft);"></div>
+    <button class="modal-btn modal-btn-gold" id="app-update-btn" onclick="startAppUpdate()">Обновить</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('app-update')">Позже</button>
+  </div>
+</div>
+
 <script>
   // ===== CONFIG & STATE =====
   const CATS_EXPENSE = [
@@ -1343,6 +1552,7 @@
     { id: 'fun', name: 'Развлечения', icon: '🎉' },
     { id: 'snack', name: 'Перекус на работе', icon: '🥪' },
     { id: 'sweets', name: 'Вкусняхи', icon: '🍩' },
+    { id: 'loan', name: 'Кредит', icon: '💳' },
     { id: 'other_exp', name: 'Разное', icon: '📦' }
   ];
 
@@ -1374,6 +1584,7 @@
       { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000, autoDist: true, pct: 10, deadline: null, deposits: [] }
     ],
     distPct: { invest: 30, pillow: 10, spending: 50 },
+    loans: [],
     dailyLimit: null,
     profile: { name: '', avatar: null },
     incomeScheme: { type: 'weekly', weekday: 3, payDays: [5, 20], vakhtaStart: null, vakhtaCycleDays: 30 }
@@ -1450,6 +1661,14 @@
     if(typeof s.vakhtaCycleDays !== 'number') s.vakhtaCycleDays = 30;
 
     if(d.dailyLimit === undefined) d.dailyLimit = null;
+
+    if(!Array.isArray(d.loans)) d.loans = [];
+    d.loans.forEach(l => {
+      if(!Array.isArray(l.schedule)) l.schedule = [];
+      if(!Array.isArray(l.prepayments)) l.prepayments = [];
+      if(l.penaltyRate === undefined) l.penaltyRate = '20';
+      l.schedule.forEach(p => { if(p.status !== 'paid') p.status = 'unpaid'; });
+    });
     return d;
   }
 
@@ -1622,9 +1841,10 @@
         }
       }
 
+      // Платежи по кредитам оплачиваются из резерва обязательных платежей, а не из бюджета на расходы
       if (isWithinPeriod(tDate, period)) {
         if (t.type === 'income') periodIncome += t.amount;
-        else periodExpense += t.amount;
+        else if (t.category !== 'loan') periodExpense += t.amount;
       }
     });
 
@@ -1639,8 +1859,11 @@
     });
     totalSavedAllTime = Math.round(totalSavedAllTime);
 
+    const obligations = getObligations(startOfDay(now));
+    const obligationsReserve = getObligationsReserve(obligations, period);
+
     const spendingRow = autoDistRowsData.find(r => r.key === 'spending');
-    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense;
+    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense - obligationsReserve;
 
     const daysLeftInWeek = Math.max(1, period.daysLeft);
     let baseDaily = parseFloat(data.dailyLimit) || 0;
@@ -1668,7 +1891,8 @@
       currentWeekAvailable,
       curWeekIncome: periodIncome, curWeekExpense: periodExpense,
       autoDistRowsData, curWeekTotalDistributed, totalSavedAllTime,
-      baseDaily, dailyAvailable, todaySpent, daysLeftInWeek
+      baseDaily, dailyAvailable, todaySpent, daysLeftInWeek,
+      obligations, obligationsReserve
     };
 
     renderMainPage();
@@ -1718,6 +1942,8 @@
     } else {
       fill.style.width = '0%';
     }
+
+    renderObligationsCard();
 
     document.getElementById('saved-total-display').textContent = `Всего отложено: ${globalCalc.totalSavedAllTime.toLocaleString()} ₽`;
 
@@ -1875,6 +2101,7 @@
   }
 
   function updateGoalsPage() {
+    renderLoans();
     const container = document.getElementById('goals-list-container');
     container.innerHTML = '';
 
@@ -2066,8 +2293,15 @@
     }
   }
 
+  function setLoansAiAnswer(text) {
+    const box = document.getElementById('loans-ai-answer');
+    box.style.display = 'block';
+    box.textContent = text;
+  }
+
   window.onDeepSeekAnswer = function (requestId, text) {
     if (requestId === 'ai-page') { setAiAnswer(text); return; }
+    if (requestId === 'loans') { setLoansAiAnswer('🤖 ' + text); return; }
     if (requestId.indexOf('goal:') === 0) {
       const box = document.getElementById('goal-ai-' + requestId.slice(5));
       if (box) box.textContent = '🤖 ' + text;
@@ -2076,11 +2310,558 @@
 
   window.onDeepSeekError = function (requestId, message) {
     if (requestId === 'ai-page') { setAiAnswer('Не удалось получить ответ: ' + message); return; }
+    if (requestId === 'loans') { setLoansAiAnswer('Не удалось получить ответ: ' + message); return; }
     if (requestId.indexOf('goal:') === 0) {
       const box = document.getElementById('goal-ai-' + requestId.slice(5));
       if (box) box.textContent = 'Не удалось получить ответ: ' + message;
     }
   };
+
+  // ===== КРЕДИТЫ: РАСЧЁТЫ ЧЕРЕЗ AndroidLoans (Kotlin, BigDecimal) =====
+  const DAYS_IN_MONTH_AVG = 30.44;
+  let activeLoanId = null;
+
+  function loanCall(method, ...args) {
+    if (typeof AndroidLoans === 'undefined' || !AndroidLoans) {
+      return { error: 'Расчёт кредитов доступен в приложении SmartWallet' };
+    }
+    try { return JSON.parse(AndroidLoans[method](...args)); }
+    catch (e) { return { error: e.message }; }
+  }
+
+  function isoDate(d) {
+    const x = new Date(d);
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`;
+  }
+
+  function parseIso(s) { return new Date(s + 'T00:00:00'); }
+
+  function rub(v) {
+    const n = Math.round(Number(v || 0) * 100) / 100;
+    const digits = Number.isInteger(n) ? 0 : 2;
+    return n.toLocaleString('ru-RU', { minimumFractionDigits: digits, maximumFractionDigits: 2 }) + ' ₽';
+  }
+
+  function plural(n, one, few, many) {
+    const m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+    return many;
+  }
+
+  function unpaidPayments(loan) { return loan.schedule.filter(p => p.status !== 'paid'); }
+
+  // Остаток долга = сумма основного долга в непогашенных платежах
+  function loanBalance(loan) {
+    const sum = unpaidPayments(loan).reduce((s, p) => s + Number(p.principal), 0);
+    return Math.round(sum * 100) / 100;
+  }
+
+  function loanPaidPrincipal(loan) {
+    return Math.max(0, Number(loan.principal) - loanBalance(loan));
+  }
+
+  // Состояние платежа: погашен, просрочен (с процентами и пенями), скоро или позже
+  function paymentState(loan, p, today) {
+    if (p.status === 'paid') return { kind: 'paid', due: Number(p.amount) };
+    const dueDate = parseIso(p.due);
+    const days = daysBetween(today, dueDate);
+    if (days < 0) {
+      const o = loanCall('overdue', p.amount, p.principal, loan.rate, loan.penaltyRate, p.due, isoDate(today));
+      if (!o.error) {
+        return { kind: 'overdue', days: o.days, interest: Number(o.interest), penalty: Number(o.penalty), due: Number(o.total) };
+      }
+      return { kind: 'overdue', days: -days, interest: 0, penalty: 0, due: Number(p.amount) };
+    }
+    return { kind: days <= 7 ? 'soon' : 'future', daysTo: days, due: Number(p.amount) };
+  }
+
+  function paymentChip(state) {
+    if (state.kind === 'paid') return '<span class="pay-chip paid">Погашено</span>';
+    if (state.kind === 'overdue') return `<span class="pay-chip overdue">Просрочено ${state.days} ${plural(state.days, 'день', 'дня', 'дней')}</span>`;
+    if (state.daysTo === 0) return '<span class="pay-chip soon">Сегодня</span>';
+    if (state.kind === 'soon') return `<span class="pay-chip soon">Через ${state.daysTo} ${plural(state.daysTo, 'день', 'дня', 'дней')}</span>`;
+    return '<span class="pay-chip future">Не погашено</span>';
+  }
+
+  // Обязательные платежи: ближайший непогашенный платёж каждого кредита (+ все просроченные)
+  function getObligations(today) {
+    const list = [];
+    (data.loans || []).forEach(loan => {
+      let upcomingAdded = false;
+      unpaidPayments(loan).forEach(p => {
+        const state = paymentState(loan, p, today);
+        if (state.kind === 'overdue') {
+          list.push({ loan, payment: p, state });
+        } else if (!upcomingAdded) {
+          list.push({ loan, payment: p, state });
+          upcomingAdded = true;
+        }
+      });
+    });
+    return list.sort((a, b) => parseIso(a.payment.due) - parseIso(b.payment.due));
+  }
+
+  // Резерв на текущий период: просроченное целиком + доля ближайшего платежа по длине периода
+  function getObligationsReserve(obligations, period) {
+    let reserve = 0;
+    obligations.forEach(o => {
+      if (o.state.kind === 'overdue') reserve += o.state.due;
+      else reserve += Math.min(o.state.due, o.state.due * period.daysTotal / DAYS_IN_MONTH_AVG);
+    });
+    return Math.round(reserve);
+  }
+
+  function renderObligationsCard() {
+    const card = document.getElementById('obligations-card');
+    const obligations = globalCalc.obligations || [];
+    if (obligations.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+    document.getElementById('obligations-reserve').textContent = `Резерв: ${rub(globalCalc.obligationsReserve)}`;
+    document.getElementById('obligations-list').innerHTML = obligations.slice(0, 4).map(o => {
+      let sub = `${formatShortDate(parseIso(o.payment.due))} · платёж №${o.payment.n}`;
+      if (o.state.kind === 'overdue') sub += ` · пени ${rub(o.state.penalty)}`;
+      return `
+        <div class="obligation-row">
+          <div>
+            <div class="obligation-name">${escapeHtml(o.loan.name)}</div>
+            <div class="obligation-sub">${sub}</div>
+          </div>
+          <div>
+            <div class="obligation-amount">${rub(o.state.due)}</div>
+            <div style="text-align:right;margin-top:4px;">${paymentChip(o.state)}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // ===== КРЕДИТЫ: СПИСОК =====
+  function renderLoans() {
+    const box = document.getElementById('loans-list-container');
+    if (!box) return;
+    const loans = data.loans || [];
+    if (loans.length === 0) {
+      box.innerHTML = '<div class="empty-hint">Кредитов нет. Нажмите «Добавить кредит» — посчитаем платёж, переплату и добавим платёж в обязательные.</div>';
+      return;
+    }
+    const today = startOfDay(new Date());
+    box.innerHTML = loans.map(loan => {
+      const balance = loanBalance(loan);
+      const pct = Number(loan.principal) > 0 ? Math.round(loanPaidPrincipal(loan) / Number(loan.principal) * 100) : 100;
+      const next = unpaidPayments(loan)[0];
+      const state = next ? paymentState(loan, next, today) : null;
+      const overdue = unpaidPayments(loan).some(p => paymentState(loan, p, today).kind === 'overdue');
+      const nextHtml = next
+        ? `<span>Следующий: <strong>${rub(state.due)}</strong> · ${formatShortDate(parseIso(next.due))}</span>${paymentChip(state)}`
+        : `<span><strong>Кредит закрыт 🎉</strong></span>`;
+      return `
+        <div class="loan-card ${overdue ? 'overdue' : ''}" onclick="openLoanDetail('${loan.id}')">
+          <div class="loan-card-head">
+            <div class="loan-card-name">💳 ${escapeHtml(loan.name)}</div>
+            <button class="btn-delete-all" style="font-size:11px;" onclick="event.stopPropagation(); deleteLoan('${loan.id}')">Удалить</button>
+          </div>
+          <div class="loan-balance">${rub(balance)}<small>остаток из ${rub(loan.principal)}</small></div>
+          <div class="loan-progress"><div class="loan-progress-fill" style="width:${pct}%"></div></div>
+          <div class="loan-next">${nextHtml}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function deleteLoan(id) {
+    const loan = data.loans.find(l => l.id === id);
+    if (!loan || !confirm(`Удалить кредит «${loan.name}»? Операции погашения останутся в истории.`)) return;
+    data.loans = data.loans.filter(l => l.id !== id);
+    saveSilently();
+    recalculateEverything();
+    updateGoalsPage();
+  }
+
+  // ===== КРЕДИТЫ: ДОБАВЛЕНИЕ И КАЛЬКУЛЯТОР =====
+  function openAddLoan() {
+    const today = new Date();
+    ['loan-name', 'loan-principal', 'loan-rate', 'loan-months'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('loan-type').value = 'annuity';
+    document.getElementById('loan-issue').value = isoDate(today);
+    document.getElementById('loan-payday').value = today.getDate();
+    document.getElementById('loan-penalty').value = '20';
+    updateLoanCalc();
+    openModal('add-loan');
+  }
+
+  function syncLoanPayDay() {
+    const v = document.getElementById('loan-issue').value;
+    if (v) document.getElementById('loan-payday').value = parseIso(v).getDate();
+  }
+
+  function readLoanForm() {
+    const principal = parseFloat(document.getElementById('loan-principal').value);
+    const rate = parseFloat(document.getElementById('loan-rate').value);
+    const months = parseInt(document.getElementById('loan-months').value, 10);
+    const issue = document.getElementById('loan-issue').value || isoDate(new Date());
+    let payDay = parseInt(document.getElementById('loan-payday').value, 10);
+    if (!(payDay >= 1 && payDay <= 31)) payDay = parseIso(issue).getDate();
+    return {
+      name: document.getElementById('loan-name').value.trim(),
+      principal, rate, months, issue, payDay,
+      type: document.getElementById('loan-type').value,
+      penaltyRate: parseFloat(document.getElementById('loan-penalty').value) || 0,
+      valid: principal > 0 && rate >= 0 && months >= 1 && months <= 600
+    };
+  }
+
+  // Средний доход в месяц за последние 90 дней — для оценки нагрузки
+  function avgMonthlyIncome() {
+    const from = Date.now() - 90 * 86400000;
+    const sum = data.transactions
+      .filter(t => t.type === 'income' && new Date(t.date).getTime() >= from)
+      .reduce((s, t) => s + Number(t.amount), 0);
+    return sum / 3;
+  }
+
+  function setLoanMonths(m) {
+    document.getElementById('loan-months').value = m;
+    updateLoanCalc();
+  }
+
+  function updateLoanCalc() {
+    const box = document.getElementById('loan-calc-box');
+    const f = readLoanForm();
+    if (!f.valid) { box.innerHTML = 'Введите сумму, ставку и срок — расчёт появится здесь.'; return; }
+
+    const res = loanCall('schedule', String(f.principal), String(f.rate), f.months, f.issue, f.payDay, f.type);
+    if (res.error) { box.innerHTML = `<span class="warn">${escapeHtml(res.error)}</span>`; return; }
+    const scenarios = loanCall('scenarios', String(f.principal), String(f.rate));
+
+    const income = avgMonthlyIncome();
+    const LOAD_LIMIT = 0.3;
+    let loadHtml = '';
+    if (income > 0) {
+      const load = Number(res.payment) / income;
+      loadHtml = `<br>Нагрузка на доход: <strong class="${load <= LOAD_LIMIT ? 'ok' : 'warn'}">${Math.round(load * 100)}%</strong>` +
+        (load <= LOAD_LIMIT ? ' — комфортно' : ' — больше 30% дохода, это тяжело для бюджета');
+    }
+
+    let html = `${f.type === 'diff' ? 'Первый платёж' : 'Платёж в месяц'}: <span class="big">${rub(res.payment)}</span><br>` +
+      `Переплата: <strong>${rub(res.overpayment)}</strong> · всего вернёте <strong>${rub(f.principal + Number(res.overpayment))}</strong>` +
+      loadHtml;
+
+    if (Array.isArray(scenarios)) {
+      // «Лучший» сценарий — самый короткий срок, который бюджет выдерживает (меньше переплата)
+      const affordable = income > 0 ? scenarios.filter(s => Number(s.payment) <= income * LOAD_LIMIT) : [];
+      const best = affordable.length ? affordable[0].months : null;
+      html += `<table class="scenario-table">
+        <tr><th>Срок</th><th>Платёж</th><th>Переплата</th></tr>
+        ${scenarios.map(s => `
+          <tr class="pick ${s.months === best ? 'best' : ''}" onclick="setLoanMonths(${s.months})">
+            <td>${s.months / 12} ${plural(s.months / 12, 'год', 'года', 'лет')}</td>
+            <td>${rub(s.payment)}</td>
+            <td>${rub(s.overpayment)}</td>
+          </tr>`).join('')}
+      </table>
+      <div style="margin-top:6px;font-size:11.5px;color:var(--text-dim);">Нажмите на строку, чтобы выбрать срок${best ? '. ★ — оптимально для вашего дохода' : ''}.</div>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function saveLoan() {
+    const f = readLoanForm();
+    if (!f.valid) { alert('Укажите сумму, ставку и срок кредита'); return; }
+    const res = loanCall('schedule', String(f.principal), String(f.rate), f.months, f.issue, f.payDay, f.type);
+    if (res.error) { alert(res.error); return; }
+
+    data.loans.push({
+      id: 'loan-' + Date.now(),
+      name: f.name || 'Кредит',
+      principal: String(f.principal),
+      rate: String(f.rate),
+      months: f.months,
+      issueDate: f.issue,
+      payDay: f.payDay,
+      type: f.type,
+      penaltyRate: String(f.penaltyRate),
+      schedule: res.schedule.map(p => ({ ...p, status: 'unpaid', paidAt: null, paidAmount: null, txId: null })),
+      prepayments: []
+    });
+    saveSilently();
+    closeModal('add-loan');
+    recalculateEverything();
+    updateGoalsPage();
+    showToast(`Кредит добавлен: платёж ${rub(res.payment)} в обязательных`);
+  }
+
+  // ===== КРЕДИТЫ: КАРТОЧКА, ГРАФИК, ТРЕКЕР =====
+  function openLoanDetail(id) {
+    activeLoanId = id;
+    document.getElementById('loan-target-payment').value = '';
+    document.getElementById('loan-extra').value = '';
+    document.getElementById('loan-target-result').innerHTML = '';
+    document.getElementById('loan-extra-result').innerHTML = '';
+    document.getElementById('loans-ai-answer').style.display = 'none';
+    renderLoanDetail();
+    openModal('loan-detail');
+  }
+
+  function activeLoan() { return (data.loans || []).find(l => l.id === activeLoanId); }
+
+  function renderLoanDetail() {
+    const loan = activeLoan();
+    if (!loan) return;
+    const today = startOfDay(new Date());
+    const unpaid = unpaidPayments(loan);
+    document.getElementById('loan-detail-title').textContent = `💳 ${loan.name}`;
+    document.getElementById('loan-detail-summary').innerHTML = `
+      <div class="loan-calc">
+        Остаток долга: <span class="big">${rub(loanBalance(loan))}</span><br>
+        Ставка <strong>${loan.rate}%</strong> · ${loan.type === 'diff' ? 'дифференцированный' : 'аннуитетный'} ·
+        осталось <strong>${unpaid.length} ${plural(unpaid.length, 'платёж', 'платежа', 'платежей')}</strong> ·
+        неустойка <strong>${loan.penaltyRate}%</strong> годовых
+      </div>`;
+
+    document.getElementById('loan-schedule').innerHTML = loan.schedule.map(p => {
+      const state = paymentState(loan, p, today);
+      const paid = p.status === 'paid';
+      let overdueHtml = '';
+      if (state.kind === 'overdue') {
+        overdueHtml = `<div class="pay-row-overdue">Набежало: проценты +${rub(state.interest)}, пени +${rub(state.penalty)} · к оплате <strong>${rub(state.due)}</strong></div>`;
+      }
+      return `
+        <div class="pay-row">
+          <div class="pay-row-top">
+            <span class="pay-row-n">№${p.n}</span>
+            <input type="date" class="pay-row-date" value="${p.due}" ${paid ? 'disabled' : ''} onchange="changePaymentDate(${p.n}, this.value)">
+            <span class="pay-row-amount">${rub(paid ? (p.paidAmount || p.amount) : state.due)}</span>
+          </div>
+          <div class="pay-row-split">Основной долг ${rub(p.principal)} · проценты ${rub(p.interest)}</div>
+          ${overdueHtml}
+          <div class="pay-row-bottom">
+            ${paymentChip(state)}
+            <button class="switch" role="switch" aria-checked="${paid}" aria-label="Погашено" onclick="togglePayment(${p.n})"><span class="switch-knob"></span></button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function changePaymentDate(n, value) {
+    const loan = activeLoan();
+    const p = loan && loan.schedule.find(x => x.n === n);
+    if (!p || !value) return;
+    p.due = value;
+    saveSilently();
+    recalculateEverything();
+    renderLoanDetail();
+    renderLoans();
+  }
+
+  function togglePayment(n) {
+    const loan = activeLoan();
+    const p = loan && loan.schedule.find(x => x.n === n);
+    if (!p) return;
+
+    if (p.status === 'paid') {
+      data.transactions = data.transactions.filter(t => t.id !== p.txId);
+      Object.assign(p, { status: 'unpaid', paidAt: null, paidAmount: null, txId: null });
+      showToast(`Платёж №${n} снова не погашен`);
+    } else {
+      const state = paymentState(loan, p, startOfDay(new Date()));
+      const amount = Math.round(state.due * 100) / 100;
+      const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
+      data.transactions.push({
+        id: txId, type: 'expense', amount, name: `Кредит «${loan.name}» №${n}`,
+        category: 'loan', date: new Date().toISOString(), loanId: loan.id
+      });
+      Object.assign(p, { status: 'paid', paidAt: new Date().toISOString(), paidAmount: amount, txId });
+      showToast(unpaidPayments(loan).length === 0 ? 'Кредит полностью погашен 🎉' : `Платёж №${n} погашен`);
+    }
+    saveSilently();
+    recalculateEverything();
+    renderLoanDetail();
+    renderLoans();
+  }
+
+  // Удалили операцию погашения в истории — платёж снова считается непогашенным
+  function unlinkLoanTransaction(txId) {
+    (data.loans || []).forEach(loan => loan.schedule.forEach(p => {
+      if (p.txId === txId) Object.assign(p, { status: 'unpaid', paidAt: null, paidAmount: null, txId: null });
+    }));
+  }
+
+  function updateTargetPayment() {
+    const loan = activeLoan();
+    const box = document.getElementById('loan-target-result');
+    const target = parseFloat(document.getElementById('loan-target-payment').value);
+    const unpaid = loan ? unpaidPayments(loan) : [];
+    if (!loan || !(target > 0) || unpaid.length === 0) { box.innerHTML = ''; return; }
+    const current = Number(unpaid[0].amount);
+    if (target >= current) { box.innerHTML = `Текущий платёж уже ${rub(current)} — укажите сумму меньше.`; return; }
+    const res = loanCall('prepayForTarget', String(loanBalance(loan)), loan.rate, unpaid.length, String(target));
+    if (res.error) { box.innerHTML = escapeHtml(res.error); return; }
+    box.innerHTML = `Чтобы платёж стал <strong>${rub(target)}</strong> вместо ${rub(current)}, внесите досрочно <strong>${rub(res.amount)}</strong>.
+      <button class="modal-btn modal-btn-primary" onclick="useTargetPrepay('${res.amount}')">Посчитать этот взнос</button>`;
+  }
+
+  function useTargetPrepay(amount) {
+    document.getElementById('loan-extra').value = Math.ceil(Number(amount));
+    updateExtraPayment();
+  }
+
+  function updateExtraPayment() {
+    const loan = activeLoan();
+    const box = document.getElementById('loan-extra-result');
+    const extra = parseFloat(document.getElementById('loan-extra').value);
+    const unpaid = loan ? unpaidPayments(loan) : [];
+    if (!loan || !(extra > 0) || unpaid.length === 0) { box.innerHTML = ''; return; }
+    const balance = loanBalance(loan);
+    if (extra >= balance) {
+      box.innerHTML = `Этой суммы хватит, чтобы закрыть кредит целиком (остаток ${rub(balance)}).
+        <button class="modal-btn modal-btn-gold" onclick="applyPrepayment('close')">Погасить полностью</button>`;
+      return;
+    }
+    const res = loanCall('afterPrepay', String(balance), loan.rate, unpaid.length, String(extra));
+    if (res.error) { box.innerHTML = escapeHtml(res.error); return; }
+    const better = Number(res.savedReduceTerm) >= Number(res.savedReducePayment) ? 'term' : 'payment';
+    box.innerHTML = `
+      <strong>Уменьшить платёж:</strong> ${rub(res.newPayment)} в месяц, экономия ${rub(res.savedReducePayment)}<br>
+      <strong>Сократить срок:</strong> ${res.newMonths} мес. вместо ${unpaid.length}, экономия ${rub(res.savedReduceTerm)}
+      ${better === 'term' ? '<br>💡 Сокращение срока выгоднее.' : ''}
+      <button class="modal-btn modal-btn-primary" onclick="applyPrepayment('payment')">Внести и уменьшить платёж</button>
+      <button class="modal-btn modal-btn-gold" onclick="applyPrepayment('term')">Внести и сократить срок</button>`;
+  }
+
+  function applyPrepayment(mode) {
+    const loan = activeLoan();
+    const extra = parseFloat(document.getElementById('loan-extra').value);
+    const unpaid = loan ? unpaidPayments(loan) : [];
+    if (!loan || !(extra > 0) || unpaid.length === 0) return;
+
+    const balance = loanBalance(loan);
+    const paid = loan.schedule.filter(p => p.status === 'paid');
+    const amount = Math.min(extra, balance);
+    const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
+
+    if (mode === 'close' || extra >= balance) {
+      loan.schedule = paid;
+    } else {
+      const months = mode === 'term'
+        ? Number(loanCall('afterPrepay', String(balance), loan.rate, unpaid.length, String(extra)).newMonths) || unpaid.length
+        : unpaid.length;
+      // База графика — месяц перед ближайшим платежом, чтобы первый новый платёж пришёлся на ту же дату
+      const nextDue = parseIso(unpaid[0].due);
+      const base = isoDate(new Date(nextDue.getFullYear(), nextDue.getMonth() - 1, 1));
+      const rest = Math.round((balance - extra) * 100) / 100;
+      const res = loanCall('schedule', String(rest), loan.rate, months, base, loan.payDay, loan.type);
+      if (res.error) { alert(res.error); return; }
+      const startN = paid.length;
+      loan.schedule = paid.concat(res.schedule.map((p, i) => ({
+        ...p, n: startN + i + 1, status: 'unpaid', paidAt: null, paidAmount: null, txId: null
+      })));
+    }
+
+    loan.prepayments.push({ date: new Date().toISOString(), amount, mode, txId });
+    data.transactions.push({
+      id: txId, type: 'expense', amount, name: `Досрочно: кредит «${loan.name}»`,
+      category: 'loan', date: new Date().toISOString(), loanId: loan.id
+    });
+    saveSilently();
+    recalculateEverything();
+    document.getElementById('loan-extra').value = '';
+    document.getElementById('loan-extra-result').innerHTML = '';
+    document.getElementById('loan-target-result').innerHTML = '';
+    renderLoanDetail();
+    renderLoans();
+    showToast(unpaidPayments(loan).length === 0 ? 'Кредит закрыт досрочно 🎉' : 'Досрочный платёж учтён, график пересчитан');
+  }
+
+  // ===== ИИ: РАЗБОР КРЕДИТОВ =====
+  function loansSummaryForAI() {
+    const today = startOfDay(new Date());
+    return (data.loans || []).filter(l => unpaidPayments(l).length > 0).map(l => {
+      const unpaid = unpaidPayments(l);
+      const overdue = unpaid.filter(p => paymentState(l, p, today).kind === 'overdue').length;
+      return `«${l.name}»: остаток ${Math.round(loanBalance(l))} ₽, ставка ${l.rate}%, платёж ${Math.round(Number(unpaid[0].amount))} ₽, ` +
+        `осталось ${unpaid.length} мес.${overdue ? `, просрочено платежей: ${overdue}` : ''}`;
+    }).join('; ');
+  }
+
+  function askLoansAI() {
+    const box = document.getElementById('loans-ai-answer');
+    box.style.display = 'block';
+    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
+      box.textContent = 'ИИ доступен только в приложении SmartWallet.';
+      return;
+    }
+    const loans = loansSummaryForAI();
+    if (!loans) { box.textContent = 'Нет непогашенных кредитов.'; return; }
+    box.textContent = '🤖 Думаю…';
+    const income = Math.round(avgMonthlyIncome());
+    const prompt = `Мои кредиты: ${loans}. Средний доход в месяц: ${income > 0 ? income + ' ₽' : 'нет данных'}. ` +
+      `Свободно в текущем бюджетном периоде: ${Math.round(globalCalc.periodAvailable || 0)} ₽. ` +
+      `Подскажи: какой кредит гасить досрочно в первую очередь и почему, сколько можно безопасно вносить сверх платежа, ` +
+      `и что выгоднее — уменьшать платёж или срок. Все суммы уже посчитаны, не пересчитывай их.`;
+    try { AndroidScanner.askAI('loans', prompt); }
+    catch (e) { box.textContent = 'Не удалось отправить запрос: ' + e.message; }
+  }
+
+  // ===== РЕЗЕРВНАЯ КОПИЯ =====
+  function exportBackup() {
+    if (typeof AndroidBackup === 'undefined') { alert('Резервная копия доступна в приложении SmartWallet'); return; }
+    const payload = JSON.stringify({ app: 'SmartWallet', format: 1, exportedAt: new Date().toISOString(), data });
+    AndroidBackup.exportData(payload, `smartwallet-backup-${isoDate(new Date())}.json`);
+  }
+
+  function importBackup() {
+    if (typeof AndroidBackup === 'undefined') { alert('Восстановление доступно в приложении SmartWallet'); return; }
+    AndroidBackup.importData();
+  }
+
+  window.onBackupImported = function (text) {
+    let parsed;
+    try { parsed = JSON.parse(text); } catch (e) { alert('Файл не похож на копию SmartWallet'); return; }
+    const imported = parsed && parsed.app === 'SmartWallet' ? parsed.data : parsed;
+    if (!imported || !Array.isArray(imported.transactions)) { alert('Файл не похож на копию SmartWallet'); return; }
+    if (!confirm(`Заменить текущие данные копией? Операций в копии: ${imported.transactions.length}.`)) return;
+    data = normalizeData(imported);
+    saveSilently();
+    closeModal('settings');
+    recalculateEverything();
+    switchPage('main');
+    showToast('Данные восстановлены из копии');
+  };
+
+  // ===== ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ =====
+  window.onAppUpdateAvailable = function (info) {
+    document.getElementById('app-update-text').textContent =
+      `Версия ${info.versionName}\n\n${info.changelog || 'Улучшения и исправления.'}`;
+    document.getElementById('app-update-progress').textContent = '';
+    document.getElementById('app-update-btn').disabled = false;
+    openModal('app-update');
+  };
+
+  window.onAppUpdateProgress = function (percent, message) {
+    document.getElementById('app-update-progress').textContent = message || `Загрузка… ${percent}%`;
+    // −1 — ошибка или нужно разрешение: даём нажать «Обновить» ещё раз
+    if (percent < 0) document.getElementById('app-update-btn').disabled = false;
+  };
+
+  window.onAppUpToDate = function () { showToast('У вас последняя версия SmartWallet'); };
+
+  window.onAppUpdateError = function (message) { showToast('Не удалось проверить обновления: ' + message); };
+
+  function checkForUpdates() {
+    if (typeof AndroidUpdater === 'undefined') { alert('Обновления доступны в приложении SmartWallet'); return; }
+    showToast('Проверяю обновления…');
+    AndroidUpdater.checkNow();
+  }
+
+  function startAppUpdate() {
+    if (typeof AndroidUpdater === 'undefined') return;
+    document.getElementById('app-update-btn').disabled = true;
+    window.onAppUpdateProgress(0, 'Загрузка…');
+    AndroidUpdater.downloadAndInstall();
+  }
 
   // ===== ACTIONS & INTERACTIONS =====
   function switchPage(page) {
@@ -2163,7 +2944,8 @@
       `на расходы доступно ${Math.round(globalCalc.periodAvailable)} ₽, дневной лимит ${Math.round(globalCalc.baseDaily)} ₽. ` +
       `Расходы за календарный месяц: ${Math.round(monthExpense)} ₽. Топ категорий: ${topCats || 'нет данных'}. ` +
       `Копилки: ${goalsText || 'нет'}. ` +
-      `Дай 3 коротких вывода и один конкретный совет, как улучшить бюджет.`;
+      `Кредиты: ${loansSummaryForAI() || 'нет'}; резерв на обязательные платежи в периоде ${Math.round(globalCalc.obligationsReserve || 0)} ₽. ` +
+      `Дай 3 коротких вывода и один конкретный совет, как улучшить бюджет. Все суммы уже посчитаны, не пересчитывай их.`;
 
     try {
       AndroidScanner.askAI('ai-page', prompt);
@@ -2563,6 +3345,7 @@
   function deleteSingleTransaction(id) {
     if(confirm("Удалить эту операцию?")) {
       data.transactions = data.transactions.filter(t => t.id !== id);
+      unlinkLoanTransaction(id);
       recalculateEverything();
       saveSilently();
       showToast("Операция удалена");

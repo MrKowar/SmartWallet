@@ -34,22 +34,21 @@ class NotificationService : NotificationListenerService() {
             // КРИТИЧЕСКИ ВАЖНО: Игнорируем уведомления от самого SmartWallet
             if (packageName == applicationContext.packageName) return
 
-            val extras = sbn.notification?.extras ?: return
-            val title = extras.getCharSequence("android.title")?.toString() ?: ""
-            val text = extras.getCharSequence("android.text")?.toString() ?: ""
-            val bigText = extras.getCharSequence("android.bigText")?.toString() ?: ""
-            val fullText = "$title $text $bigText"
+            // Читаем уведомления только если пользователь включил ползунок в настройках
+            if (!isMirPayReadingEnabled()) return
+
+            // Ловим ТОЛЬКО Mir Pay. Т-Банк и остальные приложения игнорируем.
             val pkg = packageName.lowercase()
-            val textLower = fullText.lowercase()
+            if (isMirPayPackage(pkg)) {
 
-            // Игнорируем Т-Инвестиции
-            if (textLower.contains("инвестиции") || textLower.contains("invest")) return
-
-            // Ловим ТОЛЬКО нужные банки и платежные системы (Т-Банк и Mir Pay)
-            if (pkg.contains("mirpay") || pkg.contains("tinkoff") || pkg.contains("tcsbank") || pkg.contains("t-bank")) {
+                val extras = sbn.notification?.extras ?: return
+                val title = extras.getCharSequence("android.title")?.toString() ?: ""
+                val text = extras.getCharSequence("android.text")?.toString() ?: ""
+                val bigText = extras.getCharSequence("android.bigText")?.toString() ?: ""
+                val fullText = "$title $text $bigText"
 
                 // Сохраняем пуш в базу
-                val prefs = applicationContext.getSharedPreferences("SmartWalletPrefs", Context.MODE_PRIVATE)
+                val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 val savedPushes = prefs.getString("pending_pushes", "[]")
                 val jsonArray = JSONArray(savedPushes)
                 jsonArray.put(fullText)
@@ -69,6 +68,23 @@ class NotificationService : NotificationListenerService() {
         } catch (e: Exception) {
             Log.e("SmartWallet", "Ошибка чтения пуша: ${e.message}")
         }
+    }
+
+    // Пакет Mir Pay (НСПК). Другие приложения не читаем.
+    private fun isMirPayPackage(pkg: String): Boolean {
+        return pkg == MIRPAY_PACKAGE || pkg.contains("mirpay") || pkg.contains("mir_pay")
+    }
+
+    // Ползунок «Читать уведомления Mir Pay» из настроек приложения
+    private fun isMirPayReadingEnabled(): Boolean {
+        return applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(KEY_MIRPAY_ENABLED, false)
+    }
+
+    companion object {
+        const val PREFS_NAME = "SmartWalletPrefs"
+        const val KEY_MIRPAY_ENABLED = "mirpay_enabled"
+        private const val MIRPAY_PACKAGE = "ru.nspk.mirpay"
     }
 
     // Создаем системный канал для Android 8+

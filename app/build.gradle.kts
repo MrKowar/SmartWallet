@@ -1,6 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+// Ключ DeepSeek читаем из local.properties (файл не попадает в git)
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val deepSeekApiKey: String = localProps.getProperty("deepseek.api.key", "")
+val geminiApiKey: String = localProps.getProperty("gemini.api.key", "")
+val openRouterApiKey: String = localProps.getProperty("openrouter.api.key", "")
 
 android {
     namespace = "com.example.smartwallet"
@@ -10,11 +21,18 @@ android {
         applicationId = "com.example.smartwallet"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "DEEPSEEK_API_KEY", "\"$deepSeekApiKey\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterApiKey\"")
     }
-    // ... дальше ничего не трогай
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     buildTypes {
         release {

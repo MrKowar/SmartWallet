@@ -2,11 +2,15 @@ package com.example.smartwallet
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -20,11 +24,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import org.json.JSONObject
 import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
+    private lateinit var licenseManager: LicenseManager
     private var isWebViewLoaded = false
 
     private val pushReceiver = object : BroadcastReceiver() {
@@ -46,17 +52,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        licenseManager = LicenseManager(this)
+
         webView = findViewById(R.id.webView)
+        webView.setBackgroundColor(ContextCompat.getColor(this, R.color.sw_navy))
         webView.settings.javaScriptEnabled = true
         webView.settings.domStorageEnabled = true
 
         // ВОТ ОН: Мост между JavaScript и нативной камерой Android
         webView.addJavascriptInterface(AndroidScannerInterface(this), "AndroidScanner")
+        webView.addJavascriptInterface(LicenseInterface(this), "License")
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                isWebViewLoaded = true
+                // Пуши отдаём только в основной интерфейс, а не на экран активации
+                isWebViewLoaded = url == MAIN_URL
+                if (!isWebViewLoaded) return
 
                 // Даем интерфейсу 1.5 секунды на полную прогрузку
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -65,7 +77,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        webView.loadUrl("file:///android_asset/index.html")
+        if (licenseManager.shouldShowActivation()) {
+            webView.loadUrl(ACTIVATION_URL)
+        } else {
+            webView.loadUrl(MAIN_URL)
+        }
 
         val filter = IntentFilter("com.example.smartwallet.PUSH_RECEIVED")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -132,5 +148,75 @@ class MainActivity : AppCompatActivity() {
                 }
             }, 2000)
         }
+    }
+
+    // === КЛАСС ДЛЯ ЭКРАНА АКТИВАЦИИ ===
+    inner class LicenseInterface(private val context: Context) {
+        @JavascriptInterface
+        fun getState(): String {
+            val json = JSONObject().put("deviceCode", licenseManager.deviceCode)
+            when (val status = licenseManager.status()) {
+                is LicenseManager.Status.Licensed -> json.put("status", "licensed")
+                is LicenseManager.Status.Trial -> json.put("status", "trial").put("daysLeft", status.daysLeft)
+                LicenseManager.Status.TrialExpired -> json.put("status", "trial_expired")
+                LicenseManager.Status.LicenseExpired -> json.put("status", "license_expired")
+            }
+            return json.toString()
+        }
+
+        @JavascriptInterface
+        fun activate(key: String): String {
+            val license = licenseManager.activate(key)
+                ?: return JSONObject()
+                    .put("ok", false)
+                    .put("message", "Ключ не подходит к этому устройству или срок его действия истёк")
+                    .toString()
+
+            runOnUiThread {
+                Toast.makeText(context, "SmartWallet активирован ${licenseManager.expiryText(license)}", Toast.LENGTH_LONG).show()
+                webView.loadUrl(MAIN_URL)
+            }
+            return JSONObject().put("ok", true).put("message", "Готово! Открываю приложение…").toString()
+        }
+
+        @JavascriptInterface
+        fun continueTrial() {
+            if (licenseManager.status() !is LicenseManager.Status.Trial) return
+            licenseManager.markTrialPromptShown()
+            runOnUiThread { webView.loadUrl(MAIN_URL) }
+        }
+
+        @JavascriptInterface
+        fun copyDeviceCode() {
+            copyText(licenseManager.deviceCode)
+            runOnUiThread { Toast.makeText(context, "Код скопирован", Toast.LENGTH_SHORT).show() }
+        }
+
+        private fun copyText(text: String) {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("SmartWallet", text))
+        }
+
+        @JavascriptInterface
+        fun readClipboard(): String {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            return clipboard.primaryClip?.takeIf { it.itemCount > 0 }
+                ?.getItemAt(0)?.coerceToText(context)?.toString() ?: ""
+        }
+
+        @JavascriptInterface
+        fun openBuy() {
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(LicenseManager.BUY_URL)))
+            } catch (e: ActivityNotFoundException) {
+                copyText(LicenseManager.BUY_URL)
+                runOnUiThread { Toast.makeText(context, "Ссылка на группу скопирована", Toast.LENGTH_LONG).show() }
+            }
+        }
+    }
+
+    companion object {
+        private const val MAIN_URL = "file:///android_asset/index.html"
+        private const val ACTIVATION_URL = "file:///android_asset/activation.html"
     }
 }

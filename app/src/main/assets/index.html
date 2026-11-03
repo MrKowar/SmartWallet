@@ -455,6 +455,88 @@
     .modal-btn-green { background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; }
     .modal-btn-cancel { background: #f1f5f9; color: #64748b; margin-top: 8px; }
 
+    /* SETTINGS — ПЕРЕКЛЮЧАТЕЛЬ */
+    .settings-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px; border: 2px solid #e5e7eb; border-radius: 16px;
+      margin-bottom: 14px; background: #fff;
+    }
+    .settings-text { flex: 1; min-width: 0; }
+    .settings-label { font-size: 15px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
+    .settings-hint { font-size: 12px; line-height: 1.45; color: #6b7280; }
+    .switch {
+      flex: 0 0 auto; width: 52px; height: 30px; padding: 0;
+      border: none; border-radius: 999px; background: #d1d5db;
+      position: relative; cursor: pointer; transition: background 0.2s;
+    }
+    .switch .switch-knob {
+      position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+      border-radius: 50%; background: #fff; display: block;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25); transition: transform 0.2s;
+    }
+    .switch[aria-checked="true"] { background: #22c55e; }
+    .switch[aria-checked="true"] .switch-knob { transform: translateX(22px); }
+
+    /* PROFILE */
+    .profile-card {
+      display: flex; align-items: center; gap: 14px;
+      margin: 12px 16px; padding: 14px 16px; background: #fff;
+      border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); cursor: pointer;
+    }
+    .avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg,#79c68f,#4aa768) center/cover no-repeat;
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; overflow: hidden; flex: 0 0 auto;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name {
+      font-size: 16px; font-weight: 800; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .profile-sub { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+    .profile-edit { font-size: 16px; opacity: 0.5; }
+    .profile-edit-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .avatar-lg { width: 72px; height: 72px; font-size: 24px; }
+
+    /* INCOME SCHEME */
+    .scheme-option {
+      display: flex; gap: 12px; padding: 14px; border: 2px solid #e5e7eb;
+      border-radius: 16px; margin-bottom: 10px; cursor: pointer; background: #fff;
+    }
+    .scheme-option.selected { border-color: #79c68f; background: #eef8f1; }
+    .scheme-option .so-icon { font-size: 22px; }
+    .scheme-option .so-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .scheme-option .so-desc { font-size: 12px; color: var(--text-soft); margin-top: 2px; line-height: 1.35; }
+    .scheme-field { margin-bottom: 12px; }
+    .scheme-field label { display: block; font-size: 13px; color: var(--text-soft); margin-bottom: 6px; }
+    .scheme-field input, .scheme-field select {
+      width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 14px;
+      font-size: 15px; background: #fff; color: var(--text);
+    }
+
+    /* GOAL EXTRAS */
+    .goal-meta { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+    .goal-tag { font-size: 11px; padding: 4px 10px; border-radius: 999px; background: #f1f5f9; color: #64748b; }
+    .goal-tag.on { background: #e7f7ec; color: #2e7d4f; }
+    .goal-forecast {
+      margin-top: 12px; padding: 12px; border-radius: 14px; background: #f7fbf8;
+      border: 1px solid var(--line); font-size: 12.5px; line-height: 1.45; color: var(--text-soft);
+    }
+    .goal-forecast strong { color: var(--text); }
+    .goal-ai { margin-top: 8px; font-size: 12.5px; line-height: 1.45; color: var(--text); white-space: pre-wrap; }
+    .goal-ai-btn {
+      width: 100%; margin-top: 10px; padding: 10px; border-radius: 14px;
+      border: 1px dashed var(--line-strong); background: #fff; color: var(--accent);
+      font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .ai-answer {
+      margin-top: 14px; padding: 14px; border-radius: 14px; background: #f7fbf8;
+      border: 1px solid var(--line); text-align: left; font-size: 13px;
+      line-height: 1.5; color: var(--text); white-space: pre-wrap;
+    }
+
     .category-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;
     }
@@ -893,6 +975,45 @@
       padding:16px;text-align:left;color:var(--text);
     }
     .ai-tip strong{color:var(--orange-2);}
+
+    /* Строки настроек и переключатель */
+    .settings-row{border-color:var(--line);background:var(--surface-2);}
+    .settings-label{color:var(--text);}
+    .settings-hint{color:var(--text-soft);}
+    .switch{background:var(--surface-3);}
+    .switch[aria-checked="true"]{background:var(--orange);box-shadow:0 0 12px var(--orange-glow);}
+
+    /* Профиль */
+    .profile-card{
+      background:linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
+      border:1px solid var(--line);box-shadow:var(--shadow);
+    }
+    .profile-card:active{transform:scale(.98);}
+    .avatar{
+      background:linear-gradient(135deg,var(--accent-2),var(--accent) 55%,#1747C9) center/cover no-repeat;
+      box-shadow:0 6px 18px var(--accent-glow);
+    }
+    .profile-edit{opacity:.7;}
+
+    /* Схема доходов */
+    .scheme-option{background:var(--surface-2);border-color:var(--line);}
+    .scheme-option.selected{
+      border-color:var(--orange);background:rgba(255,122,26,.12);
+      box-shadow:0 0 14px rgba(255,122,26,.20);
+    }
+    .scheme-field input, .scheme-field select{
+      background:var(--bg-2);border-color:var(--line);color:var(--text);
+    }
+    .scheme-field input:focus, .scheme-field select:focus{
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,123,255,.20);
+    }
+
+    /* Цели: теги, прогноз, ИИ */
+    .goal-tag{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--line);}
+    .goal-tag.on{background:rgba(46,229,157,.14);color:var(--income);border-color:rgba(46,229,157,.30);}
+    .goal-forecast,
+    .ai-answer{background:var(--surface-2);border-color:var(--line);}
+    .goal-ai-btn{background:rgba(47,123,255,.08);color:var(--accent-2);}
   </style>
 </head>
 <body>
@@ -908,18 +1029,27 @@
     <div class="header-logo">SW</div>
   </div>
 
+  <div class="profile-card" onclick="openProfileSettings()">
+    <div class="avatar" id="profile-avatar">SW</div>
+    <div class="profile-info">
+      <div class="profile-name" id="profile-name">Ваше имя</div>
+      <div class="profile-sub" id="profile-sub">Настройте профиль и график доходов</div>
+    </div>
+    <div class="profile-edit">✏️</div>
+  </div>
+
   <div class="card card-gradient">
-    <div class="budget-label">Доступно на текущую неделю</div>
+    <div class="budget-label" id="budget-period-label">Доступно на текущую неделю</div>
     <div class="budget-amount" id="week-available">0 <span>₽</span></div>
     <div class="budget-status" id="week-status-badge">В лимите</div>
     <div class="budget-stats">
       <div class="budget-stat">
         <div class="val" id="stat-week-income" style="color:#9DFFD3">0 ₽</div>
-        <div class="lbl">Доход нед.</div>
+        <div class="lbl" id="stat-week-income-lbl">Доход нед.</div>
       </div>
       <div class="budget-stat">
         <div class="val" id="stat-week-expense" style="color:#FFB3C1">0 ₽</div>
-        <div class="lbl">Расход нед.</div>
+        <div class="lbl" id="stat-week-expense-lbl">Расход нед.</div>
       </div>
     </div>
   </div>
@@ -950,7 +1080,7 @@
 
   <div class="card auto-dist-summary">
     <div class="auto-dist-title">
-      <span>📊 Авто распределение (Текущая неделя)</span>
+      <span>📊 Авто распределение (<span id="auto-dist-period-label">Текущая неделя</span>)</span>
       <span style="font-size:11px; font-weight:normal; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:10px; color:#475569;" id="saved-total-display">Всего отложено: 0 ₽</span>
     </div>
     <div id="auto-dist-rows"></div>
@@ -1062,7 +1192,7 @@
   </button>
 </div>
 
-<button class="fab" onclick="openModal('dist-settings')">⚙️</button>
+<button class="fab" onclick="openSettings()">⚙️</button>
 
 <div class="modal-overlay" id="modal-daily-settings">
   <div class="modal-content">
@@ -1090,6 +1220,63 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Настройки</div>
+
+    <div class="settings-row">
+      <div class="settings-text">
+        <div class="settings-label">Читать уведомления Mir Pay</div>
+        <div class="settings-hint">Когда ползунок включён, SmartWallet распознаёт оплаты Mir Pay и предлагает внести расход. Уведомления Т-Банка не читаются.</div>
+      </div>
+      <button class="switch" id="mirpay-switch" role="switch" aria-checked="false" aria-label="Читать уведомления Mir Pay" onclick="toggleMirPayNotifications()">
+        <span class="switch-knob"></span>
+      </button>
+    </div>
+
+    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openProfileSettings()">👤 Мой профиль</button>
+    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openIncomeScheme()">📅 График доходов</button>
+    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openModal('dist-settings')">📊 Проценты автораспределения</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-profile">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Мой профиль</div>
+
+    <div class="profile-edit-row">
+      <div class="avatar avatar-lg" id="profile-avatar-preview">SW</div>
+      <div style="flex:1;">
+        <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="onAvatarPicked(event)">
+        <button class="modal-btn modal-btn-primary" style="margin:0; padding:10px 14px; font-size:14px;" onclick="document.getElementById('avatar-file').click()">Загрузить фото</button>
+        <button class="modal-btn modal-btn-cancel" style="margin-top:8px; padding:10px 14px; font-size:14px;" onclick="removeAvatar()">Удалить фото</button>
+      </div>
+    </div>
+
+    <input type="text" class="modal-input" id="profile-name-input" placeholder="Имя или никнейм" maxlength="30" style="text-align:left; font-size:16px; font-weight:normal; padding:12px;">
+
+    <button class="modal-btn modal-btn-green" onclick="saveProfile()">Сохранить профиль</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('profile')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-income-scheme">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">График доходов</div>
+    <div class="modal-input-label" style="margin-bottom:12px;">Приложение посчитает бюджет от выплаты до выплаты и будет сбрасывать дневной лимит в день зарплаты.</div>
+
+    <div id="scheme-list"></div>
+    <div id="scheme-config" style="margin-top:6px;"></div>
+
+    <button class="modal-btn modal-btn-green" onclick="saveIncomeScheme()">Сохранить график</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('income-scheme')">Отмена</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-dist-settings">
   <div class="modal-content">
     <div class="modal-handle"></div>
@@ -1111,6 +1298,24 @@
     <div class="modal-title">Создать новую цель</div>
     <input type="text" class="modal-input" id="new-goal-name" placeholder="Название цели" style="font-size:16px; font-weight:normal; text-align:center;">
     <input type="number" class="modal-input" id="new-goal-target" placeholder="Целевая сумма ₽">
+
+    <label class="modal-input-label" style="text-align:left; margin-top:4px;">Желаемая дата (необязательно)</label>
+    <input type="date" class="modal-input" id="new-goal-deadline" style="text-align:left; font-size:15px; font-weight:normal; padding:12px;">
+
+    <div class="settings-row" style="margin-top:12px;">
+      <div class="settings-text">
+        <div class="settings-label">Включить в автораспределение</div>
+        <div class="settings-hint">Если включено — копилка будет получать свой процент с каждого дохода. Если выключено — только ручные пополнения.</div>
+      </div>
+      <button class="switch" id="new-goal-autodist-switch" role="switch" aria-checked="false" aria-label="Включить в автораспределение" onclick="toggleNewGoalAutoDist()">
+        <span class="switch-knob"></span>
+      </button>
+    </div>
+    <div id="new-goal-pct-box" style="display:none;">
+      <label class="modal-input-label" style="text-align:left;">Процент от каждого дохода</label>
+      <input type="number" class="modal-input" id="new-goal-pct" value="10" min="0" max="100" style="font-size:16px; padding:12px;">
+    </div>
+
     <button class="modal-btn modal-btn-green" onclick="submitNewGoal()">Создать копилку</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('add-goal')">Отмена</button>
   </div>
@@ -1148,21 +1353,33 @@
     { id: 'other_inc', name: 'Другое', icon: '💵' }
   ];
 
-  const DIST_CATEGORIES = [
-    { id: 'invest', name: 'Инвестиции', icon: '📈', defPct: 30, isSaving: true },
-    { id: 'pillow', name: 'Подушка безопасности', icon: '🛡️', defPct: 10, isSaving: true },
-    { id: 'car', name: 'Копилка на машину', icon: '🚘', defPct: 10, isSaving: true },
-    { id: 'spending', name: 'На расходы недели', icon: '🛍️', defPct: 50, isSaving: false }
+  const DIST_BUCKETS = [
+    { id: 'invest', name: 'Инвестиции', icon: '📈', defPct: 30 },
+    { id: 'pillow', name: 'Подушка безопасности', icon: '🛡️', defPct: 10 },
+    { id: 'spending', name: 'На расходы периода', icon: '🛍️', defPct: 50 }
   ];
+
+  const SCHEMES = [
+    { id: 'weekly', icon: '🗓️', title: 'Еженедельный доход', desc: 'Курьер, фриланс. Деньги раз в неделю — вы выбираете день недели.' },
+    { id: 'twice', icon: '💼', title: 'Аванс и зарплата', desc: 'График 5/2 или 2/2. Две выплаты в месяц.' },
+    { id: 'daily', icon: '☀️', title: 'Ежедневные выплаты', desc: 'Подработки. Деньги приходят каждый день.' },
+    { id: 'vakhta', icon: '🏗️', title: 'Вахтовый метод', desc: 'Крупная выплата за вахту, бюджет растягивается на весь период.' }
+  ];
+
+  const WEEKDAYS = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
 
   let data = {
     transactions: [],
     goals: [
-      { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000 }
+      { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000, autoDist: true, pct: 10, deadline: null, deposits: [] }
     ],
-    distPct: { invest: 30, pillow: 10, car: 10, spending: 50 },
-    dailyLimit: null
+    distPct: { invest: 30, pillow: 10, spending: 50 },
+    dailyLimit: null,
+    profile: { name: '', avatar: null },
+    incomeScheme: { type: 'weekly', weekday: 3, payDays: [5, 20], vakhtaStart: null, vakhtaCycleDays: 30 }
   };
+
+  let tempScheme = null;
 
   let currentOpsType = 'expense';
   let selectedCatId = '';
@@ -1190,8 +1407,48 @@
   function normalizeData(d) {
     if(!d) d = {};
     if(!Array.isArray(d.transactions)) d.transactions = [];
-    if(!Array.isArray(d.goals)) d.goals = [ { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000 } ];
-    if(!d.distPct) d.distPct = { invest: 30, pillow: 10, car: 10, spending: 50 };
+    if(!Array.isArray(d.goals) || d.goals.length === 0) {
+      d.goals = [ { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000 } ];
+    }
+    if(!d.distPct) d.distPct = {};
+    if(d.distPct.invest === undefined) d.distPct.invest = 30;
+    if(d.distPct.pillow === undefined) d.distPct.pillow = 10;
+    if(d.distPct.spending === undefined) d.distPct.spending = 50;
+
+    // Миграция старого формата: процент копилки «car» теперь живёт в самой цели
+    const legacyCarPct = (typeof d.distPct.car === 'number') ? d.distPct.car : 10;
+    delete d.distPct.car;
+
+    d.goals.forEach(g => {
+      if(typeof g.current !== 'number') g.current = 0;
+      if(typeof g.target !== 'number') g.target = 0;
+      if(typeof g.autoDist !== 'boolean') g.autoDist = (g.id === 'car-goal');
+      if(typeof g.pct !== 'number') g.pct = (g.id === 'car-goal' ? legacyCarPct : 10);
+      if(!Array.isArray(g.deposits)) g.deposits = [];
+      if(g.deadline === undefined) g.deadline = null;
+
+      // Восстанавливаем историю пополнений из старых операций «В копилку: ...»
+      if (g.deposits.length === 0) {
+        d.transactions.forEach(t => {
+          if (t.type === 'expense' && typeof t.name === 'string' && t.name.indexOf('В копилку: ' + g.name) === 0) {
+            g.deposits.push({ amount: Number(t.amount) || 0, date: t.date, source: 'manual' });
+          }
+        });
+      }
+    });
+
+    if(!d.profile) d.profile = {};
+    if(typeof d.profile.name !== 'string') d.profile.name = '';
+    if(d.profile.avatar === undefined) d.profile.avatar = null;
+
+    if(!d.incomeScheme) d.incomeScheme = {};
+    const s = d.incomeScheme;
+    if(!s.type) s.type = 'weekly';
+    if(typeof s.weekday !== 'number') s.weekday = 3;
+    if(!Array.isArray(s.payDays) || s.payDays.length !== 2) s.payDays = [5, 20];
+    if(s.vakhtaStart === undefined) s.vakhtaStart = null;
+    if(typeof s.vakhtaCycleDays !== 'number') s.vakhtaCycleDays = 30;
+
     if(d.dailyLimit === undefined) d.dailyLimit = null;
     return d;
   }
@@ -1250,6 +1507,83 @@
     document.getElementById('header-date').textContent = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
   }
 
+  // ===== ПЕРИОД ВЫПЛАТ (график доходов) =====
+  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / 86400000); }
+
+  function paydaysInMonth(year, month, days) {
+    const dim = new Date(year, month + 1, 0).getDate();
+    const uniq = [...new Set(days.map(d => Math.min(Math.max(1, parseInt(d) || 1), dim)))].sort((a, b) => a - b);
+    return uniq.map(d => new Date(year, month, d));
+  }
+
+  function lastPaydayOnOrBefore(today, days) {
+    let y = today.getFullYear(), m = today.getMonth();
+    for (let i = 0; i < 4; i++) {
+      const list = paydaysInMonth(y, m, days).filter(d => d <= today);
+      if (list.length) return list[list.length - 1];
+      m--; if (m < 0) { m = 11; y--; }
+    }
+    return startOfDay(today);
+  }
+
+  function nextPaydayAfter(today, days) {
+    let y = today.getFullYear(), m = today.getMonth();
+    for (let i = 0; i < 4; i++) {
+      const list = paydaysInMonth(y, m, days).filter(d => d > today);
+      if (list.length) return list[0];
+      m++; if (m > 11) { m = 0; y++; }
+    }
+    return addDays(today, 14);
+  }
+
+  function getBudgetPeriod(date) {
+    const now = date ? new Date(date) : new Date();
+    const today = startOfDay(now);
+    const s = data.incomeScheme || {};
+    const type = s.type || 'weekly';
+
+    let start = today, end = today, label = 'Доступно на сегодня', shortLabel = 'сегодня';
+
+    if (type === 'daily') {
+      start = new Date(today); end = new Date(today);
+      label = 'Доступно на сегодня'; shortLabel = 'сегодня';
+    } else if (type === 'weekly') {
+      const weekday = Number.isInteger(s.weekday) ? s.weekday : 3;
+      const diff = (today.getDay() - weekday + 7) % 7;
+      start = addDays(today, -diff);
+      end = addDays(start, 6);
+      label = 'Доступно до выплаты'; shortLabel = 'текущая неделя';
+    } else if (type === 'twice') {
+      const days = (Array.isArray(s.payDays) ? s.payDays : [5, 20]);
+      start = lastPaydayOnOrBefore(today, days);
+      end = addDays(nextPaydayAfter(today, days), -1);
+      label = 'Доступно до выплаты'; shortLabel = 'от выплаты до выплаты';
+    } else if (type === 'vakhta') {
+      const cycle = Math.max(1, parseInt(s.vakhtaCycleDays) || 30);
+      const base = s.vakhtaStart ? startOfDay(new Date(s.vakhtaStart)) : today;
+      let idx = Math.floor(daysBetween(base, today) / cycle);
+      if (isNaN(idx)) idx = 0;
+      start = addDays(base, idx * cycle);
+      end = addDays(start, cycle - 1);
+      if (end < today) end = new Date(today);
+      label = 'Доступно до конца периода'; shortLabel = 'текущая вахта';
+    }
+
+    const daysTotal = Math.max(1, daysBetween(start, end) + 1);
+    const daysLeft = Math.max(1, daysBetween(today, end) + 1);
+    return {
+      type, start, end, label, shortLabel, daysTotal, daysLeft,
+      nextPayout: addDays(end, 1)
+    };
+  }
+
+  function isWithinPeriod(date, period) {
+    const d = startOfDay(new Date(date));
+    return d >= startOfDay(period.start) && d <= startOfDay(period.end);
+  }
+
   // ===== BUSINESS LOGIC: CALCULATIONS =====
   let globalCalc = {};
 
@@ -1258,14 +1592,19 @@
     const currentDayNum = now.getDate();
     const weeks = getMonthWeeksLayout();
     const currentWeek = getCurrentWeekObj();
+    const period = getBudgetPeriod(now);
 
     let mIncome = 0;
     let mExpense = 0;
+    let periodIncome = 0;
+    let periodExpense = 0;
 
     const weekStats = weeks.map(w => ({ num: w.num, income: 0, expense: 0 }));
 
     data.transactions.forEach(t => {
       const tDate = new Date(t.date);
+      if (isNaN(tDate.getTime())) return;
+
       if(tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear()) {
         const tDay = tDate.getDate();
         let assignedWeekNum = weeks.length;
@@ -1282,37 +1621,28 @@
           if(stat) stat.expense += t.amount;
         }
       }
+
+      if (isWithinPeriod(tDate, period)) {
+        if (t.type === 'income') periodIncome += t.amount;
+        else periodExpense += t.amount;
+      }
     });
 
-    const curWeekStat = weekStats.find(s => s.num === currentWeek.num) || { income: 0, expense: 0 };
-    const autoDistRowsData = [];
-    let curWeekTotalDistributed = 0;
-
-    DIST_CATEGORIES.forEach(c => {
-      const pct = data.distPct[c.id] || 0;
-      const allocatedAmount = Math.round((curWeekStat.income * pct) / 100);
-      curWeekTotalDistributed += allocatedAmount;
-      autoDistRowsData.push({ ...c, pct, amount: allocatedAmount });
-    });
+    const autoDistRowsData = buildDistRows(periodIncome);
+    const curWeekTotalDistributed = autoDistRowsData.reduce((sum, r) => sum + r.amount, 0);
 
     let totalSavedAllTime = 0;
+    const savingPct = (data.distPct.invest || 0) + (data.distPct.pillow || 0) +
+      getAutoGoals().reduce((sum, g) => sum + (g.pct || 0), 0);
     data.transactions.forEach(t => {
-      if(t.type === 'income') {
-        DIST_CATEGORIES.forEach(c => {
-          if(c.isSaving) {
-            const pct = data.distPct[c.id] || 0;
-            totalSavedAllTime += (t.amount * pct) / 100;
-          }
-        });
-      }
+      if(t.type === 'income') totalSavedAllTime += (t.amount * savingPct) / 100;
     });
     totalSavedAllTime = Math.round(totalSavedAllTime);
 
-    const spendingPct = data.distPct['spending'] || 0;
-    const currentWeekSpendingBudget = Math.round((curWeekStat.income * spendingPct) / 100);
-    const currentWeekAvailable = currentWeekSpendingBudget - curWeekStat.expense;
+    const spendingRow = autoDistRowsData.find(r => r.key === 'spending');
+    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense;
 
-    const daysLeftInWeek = (currentWeek.endDay - currentDayNum) + 1;
+    const daysLeftInWeek = Math.max(1, period.daysLeft);
     let baseDaily = parseFloat(data.dailyLimit) || 0;
 
     let todaySpent = 0;
@@ -1327,25 +1657,35 @@
     if(data.dailyLimit) {
       dailyAvailable = Math.max(0, baseDaily - todaySpent);
     } else {
-      baseDaily = Math.max(0, Math.round(currentWeekAvailable / Math.max(1, daysLeftInWeek)));
+      baseDaily = Math.max(0, Math.round(currentWeekAvailable / daysLeftInWeek));
       dailyAvailable = Math.max(0, baseDaily - todaySpent);
     }
 
     globalCalc = {
       mIncome, mExpense, mBalance: mIncome - mExpense,
-      weekStats, currentWeek, currentWeekAvailable,
-      curWeekIncome: curWeekStat.income, curWeekExpense: curWeekStat.expense,
+      weekStats, currentWeek,
+      period, periodIncome, periodExpense, periodAvailable: currentWeekAvailable,
+      currentWeekAvailable,
+      curWeekIncome: periodIncome, curWeekExpense: periodExpense,
       autoDistRowsData, curWeekTotalDistributed, totalSavedAllTime,
       baseDaily, dailyAvailable, todaySpent, daysLeftInWeek
     };
 
     renderMainPage();
+    renderProfile();
   }
 
   // ===== UI RENDERERS =====
   function renderMainPage() {
     const wa = document.getElementById('week-available');
     wa.innerHTML = `${globalCalc.currentWeekAvailable.toLocaleString()} <span>₽</span>`;
+
+    const period = globalCalc.period || getBudgetPeriod();
+    document.getElementById('budget-period-label').textContent = `${period.label} · ${formatShortDate(period.start)}–${formatShortDate(period.end)}`;
+    document.getElementById('stat-week-income-lbl').textContent = 'Доход периода';
+    document.getElementById('stat-week-expense-lbl').textContent = 'Расход периода';
+    const distPeriodLabel = document.getElementById('auto-dist-period-label');
+    if (distPeriodLabel) distPeriodLabel.textContent = period.shortLabel;
 
     const badge = document.getElementById('week-status-badge');
     if(globalCalc.currentWeekAvailable >= 0) {
@@ -1362,7 +1702,10 @@
     document.getElementById('daily-available').textContent = `${globalCalc.dailyAvailable.toLocaleString()} ₽`;
     document.getElementById('daily-spent').textContent = `${globalCalc.todaySpent.toLocaleString()} ₽`;
     document.getElementById('daily-footer-left').textContent = `Базовый лимит: ${globalCalc.baseDaily.toLocaleString()} ₽`;
-    document.getElementById('daily-footer-right').textContent = `Осталось дней в нед: ${globalCalc.daysLeftInWeek}`;
+    document.getElementById('daily-footer-right').textContent =
+      (period.type === 'daily')
+        ? `Дней в периоде: ${globalCalc.daysLeftInWeek}`
+        : `До выплаты: ${globalCalc.daysLeftInWeek} дн.`;
 
     const fill = document.getElementById('daily-progress');
     if(globalCalc.baseDaily > 0) {
@@ -1576,11 +1919,168 @@
           <div>Цель: <span class="target">${g.target.toLocaleString()} ₽</span></div>
         </div>
 
+        <div class="goal-meta">
+          <span class="goal-tag ${g.autoDist ? 'on' : ''}" style="cursor:pointer;" onclick="toggleGoalAutoDist('${g.id}')">${g.autoDist ? 'Авто ' + (g.pct || 0) + '% с дохода' : 'Только вручную'}</span>
+          ${g.deadline ? `<span class="goal-tag">до ${formatShortDate(new Date(g.deadline))}</span>` : ''}
+        </div>
+
+        <div class="goal-forecast">${buildGoalForecastHtml(g)}</div>
+        <div class="goal-ai" id="goal-ai-${g.id}"></div>
+
+        <button class="goal-ai-btn" onclick="askGoalAI('${g.id}')">🤖 Спросить ИИ о прогнозе</button>
         <button class="goal-deposit-btn" onclick="openDepositGoal('${g.id}')">🪙 Пополнить копилку</button>
       `;
       container.appendChild(card);
     });
   }
+
+  function recordGoalDeposit(goal, amount, source) {
+    if (!Array.isArray(goal.deposits)) goal.deposits = [];
+    goal.deposits.push({ amount: Number(amount) || 0, date: new Date().toISOString(), source: source || 'manual' });
+    if (goal.deposits.length > 300) goal.deposits = goal.deposits.slice(-300);
+  }
+
+  function distributeIncome(amount) {
+    getAutoGoals().forEach(g => {
+      const amt = Math.round((amount * (Number(g.pct) || 0)) / 100);
+      if (amt > 0) {
+        g.current += amt;
+        recordGoalDeposit(g, amt, 'auto');
+      }
+    });
+  }
+
+  // ===== ПРОГНОЗ НАКОПЛЕНИЙ =====
+  function formatShortDate(d) {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+  }
+
+  function formatLongDate(d) {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function getGoalForecast(g) {
+    const target = Number(g.target) || 0;
+    const current = Number(g.current) || 0;
+    const remaining = Math.max(0, target - current);
+    const now = Date.now();
+    const deposits = (g.deposits || [])
+      .filter(d => d && Number(d.amount) > 0 && !isNaN(new Date(d.date).getTime()));
+
+    if (target <= 0) {
+      return { text: 'Укажите целевую сумму, чтобы увидеть прогноз.', ratePerDay: 0, ratePerMonth: 0, remaining, done: false, etaDate: null };
+    }
+    if (remaining <= 0) {
+      return { text: 'Цель достигнута 🎉', ratePerDay: 0, ratePerMonth: 0, remaining: 0, done: true, etaDate: new Date() };
+    }
+    if (deposits.length === 0) {
+      return { text: 'Пока нет пополнений — прогноз появится после первых взносов.', ratePerDay: 0, ratePerMonth: 0, remaining, done: false, etaDate: null };
+    }
+
+    const windowDays = 90;
+    const from = now - windowDays * 86400000;
+    const firstDeposit = Math.min(...deposits.map(d => new Date(d.date).getTime()));
+    const startTs = Math.max(from, firstDeposit);
+    const spanDays = Math.max(1, (now - startTs) / 86400000);
+    const sum = deposits
+      .filter(d => new Date(d.date).getTime() >= startTs)
+      .reduce((s, d) => s + Number(d.amount), 0);
+
+    const ratePerDay = sum / spanDays;
+    const ratePerMonth = ratePerDay * 30;
+
+    if (ratePerDay <= 0) {
+      return { text: 'За последние 3 месяца пополнений не было — прогноз построить нельзя.', ratePerDay: 0, ratePerMonth: 0, remaining, done: false, etaDate: null };
+    }
+
+    // Ограничим горизонт 100 годами, чтобы не показывать абсурдные даты
+    const etaDays = Math.min(remaining / ratePerDay, 36500);
+    return {
+      text: '',
+      ratePerDay,
+      ratePerMonth,
+      remaining,
+      done: false,
+      etaDate: new Date(now + etaDays * 86400000)
+    };
+  }
+
+  function buildGoalForecastHtml(g) {
+    const f = getGoalForecast(g);
+    if (f.done) return '🎉 <strong>Цель достигнута!</strong>';
+    if (!f.ratePerMonth || f.ratePerMonth <= 0) return f.text;
+
+    const rateStr = Math.round(f.ratePerMonth).toLocaleString('ru-RU');
+    let html = `Если продолжите откладывать в том же темпе (около <strong>${rateStr} ₽/мес</strong>), ` +
+      `вы накопите <strong>${Math.round(f.remaining).toLocaleString('ru-RU')} ₽</strong> к <strong>${formatLongDate(f.etaDate)}</strong>.`;
+
+    if (g.deadline) {
+      const deadline = startOfDay(new Date(g.deadline));
+      if (!isNaN(deadline.getTime())) {
+        const daysLeft = daysBetween(new Date(), deadline);
+        if (daysLeft < 0) {
+          html += `<br>Указанная дата уже прошла.`;
+        } else {
+          const projected = Math.min(Number(g.target) || 0, (Number(g.current) || 0) + f.ratePerDay * daysLeft);
+          const ok = projected >= (Number(g.target) || 0);
+          const projStr = Math.round(projected).toLocaleString('ru-RU');
+          html += ok
+            ? `<br>К ${formatLongDate(deadline)} вы успеете накопить <strong>${projStr} ₽</strong>.`
+            : `<br>К ${formatLongDate(deadline)} вы накопите <strong>${projStr} ₽</strong> — не хватит ${Math.round((Number(g.target) || 0) - projected).toLocaleString('ru-RU')} ₽.`;
+        }
+      }
+    }
+    return html;
+  }
+
+  // ===== ИИ (Gemini / DeepSeek) =====
+  function aiPromptForGoal(g) {
+    const f = getGoalForecast(g);
+    let p = `Копилка «${g.name}». Накоплено ${Math.round(Number(g.current) || 0)} ₽ из ${Math.round(Number(g.target) || 0)} ₽.`;
+    if (g.deadline) p += ` Желаемая дата: ${formatLongDate(new Date(g.deadline))}.`;
+    if (f.ratePerMonth > 0) {
+      p += ` Текущий темп: около ${Math.round(f.ratePerMonth)} ₽ в месяц, прогноз достижения цели — ${formatLongDate(f.etaDate)}.`;
+    } else {
+      p += ` Регулярных пополнений пока нет.`;
+    }
+    p += ` Подскажи, как ускорить накопление и уложиться в срок.`;
+    return p;
+  }
+
+  function askGoalAI(goalId) {
+    const g = data.goals.find(x => x.id === goalId);
+    const box = document.getElementById('goal-ai-' + goalId);
+    if (!g || !box) return;
+
+    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
+      box.textContent = 'ИИ доступен только в приложении SmartWallet.';
+      return;
+    }
+    box.textContent = '🤖 Думаю…';
+    try {
+      AndroidScanner.askAI('goal:' + goalId, aiPromptForGoal(g));
+    } catch (e) {
+      box.textContent = 'Не удалось отправить запрос: ' + e.message;
+    }
+  }
+
+  window.onDeepSeekAnswer = function (requestId, text) {
+    if (requestId === 'ai-page') { setAiAnswer(text); return; }
+    if (requestId.indexOf('goal:') === 0) {
+      const box = document.getElementById('goal-ai-' + requestId.slice(5));
+      if (box) box.textContent = '🤖 ' + text;
+    }
+  };
+
+  window.onDeepSeekError = function (requestId, message) {
+    if (requestId === 'ai-page') { setAiAnswer('Не удалось получить ответ: ' + message); return; }
+    if (requestId.indexOf('goal:') === 0) {
+      const box = document.getElementById('goal-ai-' + requestId.slice(5));
+      if (box) box.textContent = 'Не удалось получить ответ: ' + message;
+    }
+  };
 
   // ===== ACTIONS & INTERACTIONS =====
   function switchPage(page) {
@@ -1615,20 +2115,75 @@
         <div class="ai-tip">
           <strong>💡 Совет:</strong> Попробуйте брать еду из дома. Если бы вы отложили эти деньги в копилку, вы бы приблизились к своей цели!
         </div>
+        <button class="goal-ai-btn" onclick="askAnalyticsAI()">🤖 Спросить ИИ</button>
+        <div class="ai-answer" id="ai-answer" style="display:none;"></div>
       `;
     } else {
       container.innerHTML = `
         <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
         <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Всё под контролем</h3>
         <p>На данный момент ИИ не нашел очевидных финансовых дыр в ваших расходах. Продолжайте в том же духе!</p>
+        <button class="goal-ai-btn" onclick="askAnalyticsAI()">🤖 Спросить ИИ</button>
+        <div class="ai-answer" id="ai-answer" style="display:none;"></div>
       `;
     }
+  }
+
+  function askAnalyticsAI() {
+    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
+      setAiAnswer('ИИ доступен только в приложении SmartWallet.');
+      return;
+    }
+    setAiAnswer('🤖 Думаю…');
+
+    const now = new Date();
+    const period = globalCalc.period || getBudgetPeriod();
+    const byCat = {};
+    let monthExpense = 0;
+    data.transactions.forEach(t => {
+      const d = new Date(t.date);
+      if (t.type === 'expense' && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
+        byCat[t.category || 'other_exp'] = (byCat[t.category || 'other_exp'] || 0) + t.amount;
+        monthExpense += t.amount;
+      }
+    });
+    const catNames = {...CATS_EXPENSE.reduce((acc,c)=>(acc[c.id]=c.name,acc),{}), ...CATS_INCOME.reduce((acc,c)=>(acc[c.id]=c.name,acc),{})};
+    const topCats = Object.entries(byCat)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,4)
+      .map(([id, amt]) => `${catNames[id] || id} — ${Math.round(amt)} ₽`)
+      .join(', ');
+
+    const goalsText = data.goals.map(g =>
+      `${g.name}: ${Math.round(g.current)} из ${Math.round(g.target)} ₽${g.deadline ? `, срок ${formatLongDate(new Date(g.deadline))}` : ''}`
+    ).join('; ');
+
+    const prompt = `Мой бюджет. За текущий период с ${formatShortDate(period.start)} по ${formatShortDate(period.end)}: ` +
+      `доход ${Math.round(globalCalc.periodIncome)} ₽, расход ${Math.round(globalCalc.periodExpense)} ₽, ` +
+      `на расходы доступно ${Math.round(globalCalc.periodAvailable)} ₽, дневной лимит ${Math.round(globalCalc.baseDaily)} ₽. ` +
+      `Расходы за календарный месяц: ${Math.round(monthExpense)} ₽. Топ категорий: ${topCats || 'нет данных'}. ` +
+      `Копилки: ${goalsText || 'нет'}. ` +
+      `Дай 3 коротких вывода и один конкретный совет, как улучшить бюджет.`;
+
+    try {
+      AndroidScanner.askAI('ai-page', prompt);
+    } catch (e) {
+      setAiAnswer('Не удалось отправить запрос: ' + e.message);
+    }
+  }
+
+  function setAiAnswer(text) {
+    const box = document.getElementById('ai-answer');
+    if (!box) return;
+    box.style.display = 'block';
+    box.textContent = text;
   }
 
   function openModal(name) {
     document.getElementById('modal-' + name).classList.add('show');
     if(name === 'dist-settings') openDistSettings();
     if(name === 'daily-settings') document.getElementById('daily-limit-input').value = data.dailyLimit || '';
+    if(name === 'add-goal') resetGoalModal();
   }
 
   function closeModal(name) {
@@ -1643,6 +2198,284 @@
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ===== НАСТРОЙКИ: ЧТЕНИЕ УВЕДОМЛЕНИЙ MIR PAY =====
+  function nativeBridgeAvailable() {
+    return typeof AndroidScanner !== 'undefined' && AndroidScanner;
+  }
+
+  function openSettings() {
+    let enabled = false;
+    if (nativeBridgeAvailable() && typeof AndroidScanner.isMirPayNotificationsEnabled === 'function') {
+      try { enabled = !!AndroidScanner.isMirPayNotificationsEnabled(); } catch(e) { enabled = false; }
+    }
+    setMirPaySwitchUI(enabled);
+    openModal('settings');
+  }
+
+  function setMirPaySwitchUI(enabled) {
+    const sw = document.getElementById('mirpay-switch');
+    if (sw) sw.setAttribute('aria-checked', enabled ? 'true' : 'false');
+  }
+
+  function toggleMirPayNotifications() {
+    const sw = document.getElementById('mirpay-switch');
+    const next = sw.getAttribute('aria-checked') !== 'true';
+    setMirPaySwitchUI(next);
+
+    if (nativeBridgeAvailable() && typeof AndroidScanner.setMirPayNotificationsEnabled === 'function') {
+      try {
+        AndroidScanner.setMirPayNotificationsEnabled(next);
+        if (next && typeof AndroidScanner.isNotificationAccessGranted === 'function'
+            && !AndroidScanner.isNotificationAccessGranted()) {
+          showToast("Разрешите доступ к уведомлениям в настройках Android");
+        } else {
+          showToast(next ? "Чтение уведомлений Mir Pay включено" : "Чтение уведомлений выключено");
+        }
+      } catch(e) {
+        console.error(e);
+        showToast("Не удалось сохранить настройку");
+      }
+    } else {
+      showToast("Настройка работает только в приложении");
+    }
+  }
+
+  // ===== ПРОФИЛЬ =====
+  function initialsOf(name) {
+    const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return 'SW';
+    return parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
+  }
+
+  function paintAvatar(el, avatar, name) {
+    if (!el) return;
+    if (avatar) {
+      el.innerHTML = `<img src="${avatar}" alt="Аватар">`;
+    } else {
+      el.innerHTML = '';
+      el.textContent = initialsOf(name);
+    }
+  }
+
+  function renderProfile() {
+    const name = (data.profile && data.profile.name) ? data.profile.name : '';
+    const avatar = data.profile ? data.profile.avatar : null;
+
+    paintAvatar(document.getElementById('profile-avatar'), avatar, name);
+    paintAvatar(document.getElementById('profile-avatar-preview'), avatar, name);
+
+    const nameEl = document.getElementById('profile-name');
+    if (nameEl) nameEl.textContent = name || 'Ваше имя';
+
+    const subEl = document.getElementById('profile-sub');
+    if (subEl) {
+      const schemeTitles = { weekly: 'Еженедельный доход', twice: 'Аванс и зарплата', daily: 'Ежедневные выплаты', vakhta: 'Вахтовый метод' };
+      const s = data.incomeScheme || {};
+      let sub = schemeTitles[s.type] || 'График доходов';
+      if (globalCalc.period) {
+        sub += ` · до выплаты ${globalCalc.period.daysLeft} дн.`;
+      }
+      subEl.textContent = sub;
+    }
+  }
+
+  function openProfileSettings() {
+    document.getElementById('profile-name-input').value = (data.profile && data.profile.name) || '';
+    paintAvatar(
+      document.getElementById('profile-avatar-preview'),
+      data.profile ? data.profile.avatar : null,
+      data.profile ? data.profile.name : ''
+    );
+    openModal('profile');
+  }
+
+  function saveProfile() {
+    const name = document.getElementById('profile-name-input').value.trim().slice(0, 30);
+    data.profile.name = name;
+    saveSilently();
+    renderProfile();
+    closeModal('profile');
+    showToast("Профиль сохранён");
+  }
+
+  function onAvatarPicked(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const size = 256;
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+
+          // Квадратный кроп по центру
+          const side = Math.min(img.width, img.height);
+          const sx = (img.width - side) / 2;
+          const sy = (img.height - side) / 2;
+          ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+
+          data.profile.avatar = canvas.toDataURL('image/jpeg', 0.85);
+          saveSilently();
+          renderProfile();
+          showToast("Фото обновлено");
+        } catch (err) {
+          showToast("Не удалось обработать фото");
+        }
+      };
+      img.onerror = () => showToast("Не удалось прочитать изображение");
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  }
+
+  function removeAvatar() {
+    data.profile.avatar = null;
+    saveSilently();
+    renderProfile();
+    showToast("Фото удалено");
+  }
+
+  function toggleGoalAutoDist(goalId) {
+    const g = data.goals.find(x => x.id === goalId);
+    if (!g) return;
+
+    if (g.autoDist) {
+      if (!confirm(`Отключить автораспределение для «${g.name}»? Копилка останется только для ручных пополнений.`)) return;
+      g.autoDist = false;
+      data.distPct.spending = (data.distPct.spending || 0) + (Number(g.pct) || 0);
+    } else {
+      if (!confirm(`Включить автораспределение для «${g.name}»? Ей достанется ${Number(g.pct) || 10}% с каждого дохода.`)) return;
+      g.pct = Number(g.pct) || 10;
+      g.autoDist = true;
+      const overflow = getDistTotal() - 100;
+      if (overflow > 0) {
+        if ((data.distPct.spending || 0) >= overflow) {
+          data.distPct.spending -= overflow;
+        } else {
+          g.autoDist = false;
+          alert('Не хватает процентов: уменьшите другие доли в настройках распределения.');
+          return;
+        }
+      }
+    }
+
+    recalculateEverything();
+    updateGoalsPage();
+    saveSilently();
+    showToast(g.autoDist ? "Копилка добавлена в автораспределение" : "Копилка только для ручных пополнений");
+  }
+
+  // ===== ГРАФИК ДОХОДОВ =====
+  function openIncomeScheme() {
+    tempScheme = JSON.parse(JSON.stringify(data.incomeScheme || {}));
+    if (!tempScheme.type) tempScheme.type = 'weekly';
+    renderSchemeOptions();
+    openModal('income-scheme');
+  }
+
+  function renderSchemeOptions() {
+    const list = document.getElementById('scheme-list');
+    list.innerHTML = '';
+    SCHEMES.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'scheme-option' + (tempScheme.type === s.id ? ' selected' : '');
+      el.innerHTML = `
+        <div class="so-icon">${s.icon}</div>
+        <div>
+          <div class="so-title">${s.title}</div>
+          <div class="so-desc">${s.desc}</div>
+        </div>
+      `;
+      el.onclick = () => {
+        tempScheme.type = s.id;
+        renderSchemeOptions();
+      };
+      list.appendChild(el);
+    });
+    renderSchemeConfig();
+  }
+
+  function renderSchemeConfig() {
+    const box = document.getElementById('scheme-config');
+    const t = tempScheme.type;
+
+    if (t === 'weekly') {
+      const opts = WEEKDAYS.map((name, idx) =>
+        `<option value="${idx}" ${Number(tempScheme.weekday) === idx ? 'selected' : ''}>${name}</option>`
+      ).join('');
+      box.innerHTML = `
+        <div class="scheme-field">
+          <label>День выплаты (лимиты сбрасываются в этот день)</label>
+          <select id="scheme-weekday">${opts}</select>
+        </div>
+      `;
+    } else if (t === 'twice') {
+      const days = Array.isArray(tempScheme.payDays) ? tempScheme.payDays : [5, 20];
+      box.innerHTML = `
+        <div class="scheme-field">
+          <label>День аванса (число месяца)</label>
+          <input type="number" id="scheme-payday-1" min="1" max="31" value="${days[0] || 5}">
+        </div>
+        <div class="scheme-field">
+          <label>День зарплаты (число месяца)</label>
+          <input type="number" id="scheme-payday-2" min="1" max="31" value="${days[1] || 20}">
+        </div>
+      `;
+    } else if (t === 'daily') {
+      box.innerHTML = `
+        <div class="goal-forecast">Бюджет и дневной лимит пересчитываются каждый день. Добавляйте доход в тот же день, когда он пришёл.</div>
+      `;
+    } else if (t === 'vakhta') {
+      const start = tempScheme.vakhtaStart
+        ? new Date(tempScheme.vakhtaStart).toISOString().slice(0, 10)
+        : new Date().toISOString().slice(0, 10);
+      box.innerHTML = `
+        <div class="scheme-field">
+          <label>Дата начала вахты</label>
+          <input type="date" id="scheme-vakhta-start" value="${start}">
+        </div>
+        <div class="scheme-field">
+          <label>Длительность цикла, дней (вахта + отдых)</label>
+          <input type="number" id="scheme-vakhta-days" min="1" max="365" value="${Number(tempScheme.vakhtaCycleDays) || 30}">
+        </div>
+      `;
+    }
+  }
+
+  function saveIncomeScheme() {
+    const t = tempScheme.type;
+    const s = { type: t, weekday: 3, payDays: [5, 20], vakhtaStart: null, vakhtaCycleDays: 30 };
+
+    if (t === 'weekly') {
+      s.weekday = parseInt(document.getElementById('scheme-weekday').value);
+      if (isNaN(s.weekday)) s.weekday = 0;
+    } else if (t === 'twice') {
+      let a = parseInt(document.getElementById('scheme-payday-1').value) || 5;
+      let b = parseInt(document.getElementById('scheme-payday-2').value) || 20;
+      a = Math.min(31, Math.max(1, a));
+      b = Math.min(31, Math.max(1, b));
+      if (a === b) { alert('Аванс и зарплата должны быть в разные дни месяца'); return; }
+      s.payDays = [Math.min(a, b), Math.max(a, b)];
+    } else if (t === 'vakhta') {
+      const d = document.getElementById('scheme-vakhta-start').value;
+      if (!d) { alert('Укажите дату начала вахты'); return; }
+      s.vakhtaStart = new Date(d + 'T00:00:00').toISOString();
+      s.vakhtaCycleDays = Math.max(1, parseInt(document.getElementById('scheme-vakhta-days').value) || 30);
+    }
+
+    data.incomeScheme = s;
+    closeModal('income-scheme');
+    recalculateEverything();
+    saveSilently();
+    showToast("График доходов сохранён");
   }
 
   // Дневной лимит
@@ -1714,14 +2547,7 @@
     data.transactions.push(newTx);
 
     if(currentOpsType === 'income') {
-      const carPct = data.distPct['car'] || 0;
-      if(carPct > 0) {
-        const autoGoalAmt = Math.round((amt * carPct) / 100);
-        const carGoal = data.goals.find(g => g.id === 'car-goal');
-        if(carGoal && autoGoalAmt > 0) {
-          carGoal.current += autoGoalAmt;
-        }
-      }
+      distributeIncome(amt);
     }
 
     closeModal('add-ops');
@@ -1757,24 +2583,71 @@
   }
 
   // Настройка автораспределения
+  function getAutoGoals() {
+    return data.goals.filter(g => g.autoDist);
+  }
+
+  function getDistTotal() {
+    let sum = 0;
+    DIST_BUCKETS.forEach(b => { sum += data.distPct[b.id] || 0; });
+    getAutoGoals().forEach(g => { sum += Number(g.pct) || 0; });
+    return sum;
+  }
+
+  function buildDistRows(income) {
+    const rows = [];
+    DIST_BUCKETS.forEach(b => {
+      const pct = data.distPct[b.id] !== undefined ? data.distPct[b.id] : b.defPct;
+      rows.push({ key: b.id, name: b.name, icon: b.icon, pct, amount: Math.round((income * pct) / 100) });
+    });
+    getAutoGoals().forEach(g => {
+      const pct = Number(g.pct) || 0;
+      rows.push({ key: 'goal-' + g.id, name: g.name, icon: '⏳', pct, amount: Math.round((income * pct) / 100), goalId: g.id });
+    });
+    return rows;
+  }
+
   function openDistSettings() {
     const box = document.getElementById('pct-settings-list');
     box.innerHTML = '';
 
-    DIST_CATEGORIES.forEach(c => {
-      const currentPct = data.distPct[c.id] !== undefined ? data.distPct[c.id] : c.defPct;
+    DIST_BUCKETS.forEach(b => {
+      const currentPct = data.distPct[b.id] !== undefined ? data.distPct[b.id] : b.defPct;
       const row = document.createElement('div');
       row.className = 'pct-setting';
       row.innerHTML = `
-        <div class="pct-label">${c.icon} ${c.name}</div>
+        <div class="pct-label">${b.icon} ${b.name}</div>
         <div class="pct-controls">
-          <button onclick="changePct('${c.id}', -5)">-</button>
-          <div class="pct-val" id="pct-val-${c.id}">${currentPct}%</div>
-          <button onclick="changePct('${c.id}', 5)">+</button>
+          <button onclick="changePct('${b.id}', -5)">-</button>
+          <div class="pct-val" id="pct-val-${b.id}">${currentPct}%</div>
+          <button onclick="changePct('${b.id}', 5)">+</button>
         </div>
       `;
       box.appendChild(row);
     });
+
+    getAutoGoals().forEach(g => {
+      const row = document.createElement('div');
+      row.className = 'pct-setting';
+      row.innerHTML = `
+        <div class="pct-label">⏳ ${g.name}</div>
+        <div class="pct-controls">
+          <button onclick="changeGoalPct('${g.id}', -5)">-</button>
+          <div class="pct-val" id="pct-val-goal-${g.id}">${Number(g.pct) || 0}%</div>
+          <button onclick="changeGoalPct('${g.id}', 5)">+</button>
+        </div>
+      `;
+      box.appendChild(row);
+    });
+
+    if (getAutoGoals().length === 0) {
+      const hint = document.createElement('div');
+      hint.className = 'settings-hint';
+      hint.style.marginBottom = '10px';
+      hint.textContent = 'Ни одна копилка не включена в автораспределение. Включить можно при создании копилки или в её настройках.';
+      box.appendChild(hint);
+    }
+
     updatePctTotalLabel();
   }
 
@@ -1785,26 +2658,34 @@
     if(cur > 100) cur = 100;
     data.distPct[id] = cur;
 
-    document.getElementById(`pct-val-${id}`).textContent = cur + '%';
+    const el = document.getElementById(`pct-val-${id}`);
+    if (el) el.textContent = cur + '%';
+    updatePctTotalLabel();
+  }
+
+  function changeGoalPct(goalId, delta) {
+    const g = data.goals.find(x => x.id === goalId);
+    if (!g) return;
+    let cur = Number(g.pct) || 0;
+    cur += delta;
+    if (cur < 0) cur = 0;
+    if (cur > 100) cur = 100;
+    g.pct = cur;
+
+    const el = document.getElementById(`pct-val-goal-${goalId}`);
+    if (el) el.textContent = cur + '%';
     updatePctTotalLabel();
   }
 
   function updatePctTotalLabel() {
-    let sum = 0;
-    DIST_CATEGORIES.forEach(c => {
-      sum += data.distPct[c.id] !== undefined ? data.distPct[c.id] : c.defPct;
-    });
+    const sum = getDistTotal();
     const lbl = document.getElementById('pct-total-label');
     lbl.textContent = `Сумма: ${sum}%`;
-    if(sum === 100) lbl.style.color = 'var(--income)';
-    else lbl.style.color = 'var(--danger)';
+    lbl.style.color = (sum === 100) ? 'var(--income)' : 'var(--danger)';
   }
 
   function saveDistSettings() {
-    let sum = 0;
-    DIST_CATEGORIES.forEach(c => {
-      sum += data.distPct[c.id] !== undefined ? data.distPct[c.id] : c.defPct;
-    });
+    const sum = getDistTotal();
     if(sum !== 100) {
       alert(`Ошибка: Сумма процентов должна быть строго равна 100%. Сейчас она составляет ${sum}%. Пожалуйста, скорректируйте значения.`);
       return;
@@ -1816,6 +2697,24 @@
   }
 
   // Цели / Копилки
+  function toggleNewGoalAutoDist() {
+    const sw = document.getElementById('new-goal-autodist-switch');
+    const next = sw.getAttribute('aria-checked') !== 'true';
+    sw.setAttribute('aria-checked', next ? 'true' : 'false');
+    document.getElementById('new-goal-pct-box').style.display = next ? 'block' : 'none';
+  }
+
+  function resetGoalModal() {
+    const sw = document.getElementById('new-goal-autodist-switch');
+    if (sw) sw.setAttribute('aria-checked', 'false');
+    const box = document.getElementById('new-goal-pct-box');
+    if (box) box.style.display = 'none';
+    const pct = document.getElementById('new-goal-pct');
+    if (pct) pct.value = '10';
+    const dl = document.getElementById('new-goal-deadline');
+    if (dl) dl.value = '';
+  }
+
   function submitNewGoal() {
     const name = document.getElementById('new-goal-name').value.trim();
     const target = parseFloat(document.getElementById('new-goal-target').value);
@@ -1823,16 +2722,44 @@
     if(!name) { alert("Введите название цели"); return; }
     if(!target || target <= 0) { alert("Укажите целевую сумму"); return; }
 
+    const autoDist = document.getElementById('new-goal-autodist-switch').getAttribute('aria-checked') === 'true';
+    let pct = Math.round(parseFloat(document.getElementById('new-goal-pct').value) || 0);
+    pct = Math.max(0, Math.min(100, pct));
+
+    const deadlineVal = document.getElementById('new-goal-deadline').value;
+    const deadline = deadlineVal ? new Date(deadlineVal + 'T00:00:00').toISOString() : null;
+
+    if (autoDist) {
+      const total = getDistTotal() + pct;
+      if (total > 100) {
+        const overflow = total - 100;
+        const spending = data.distPct.spending || 0;
+        if (spending >= overflow) {
+          data.distPct.spending = spending - overflow;
+        } else {
+          alert("Сумма автораспределения превысит 100%. Уменьшите процент копилки или измените распределение в настройках.");
+          return;
+        }
+      } else if (total < 100) {
+        data.distPct.spending = (data.distPct.spending || 0) + (100 - total);
+      }
+    }
+
     const newG = {
       id: 'goal-' + Date.now(),
       name: name,
       current: 0,
-      target: target
+      target: target,
+      autoDist: autoDist,
+      pct: autoDist ? pct : 0,
+      deadline: deadline,
+      deposits: []
     };
 
     data.goals.push(newG);
     closeModal('add-goal');
     updateGoalsPage();
+    recalculateEverything();
     saveSilently();
     showToast("Новая копилка открыта!");
   }
@@ -1843,8 +2770,13 @@
     } else {
       if(!confirm("Удалить эту копилку?")) return;
     }
+    const removed = data.goals.find(g => g.id === id);
     data.goals = data.goals.filter(g => g.id !== id);
+    if (removed && removed.autoDist) {
+      data.distPct.spending = (data.distPct.spending || 0) + (Number(removed.pct) || 0);
+    }
     updateGoalsPage();
+    recalculateEverything();
     saveSilently();
   }
 
@@ -1903,6 +2835,7 @@
       if(scene) scene.classList.remove('hourglass-bounce');
 
       goal.current += amount;
+      recordGoalDeposit(goal, amount, 'manual');
 
       data.transactions.push({
         id: 'tx-auto-g-' + Date.now(),
@@ -1959,8 +2892,8 @@ function handlePushNotification(pushText) {
 
       let amountMatch = textWithoutBalance.match(/(\d+[\.,]?\d*)\s*(RUB|руб|р|₽)/i);
 
-      // Если значка валюты нет, но это банк - берем первую цифру
-      if (!amountMatch && /списание|покупка|перевод|оплата|т-банк|tinkoff|mirpay/i.test(textWithoutBalance)) {
+      // Если значка валюты нет, но это Mir Pay - берем первую цифру
+      if (!amountMatch && /списание|покупка|перевод|оплата|mirpay|мир пей|mir pay/i.test(textWithoutBalance)) {
         amountMatch = textWithoutBalance.match(/(\d+[\.,]?\d*)/);
       }
 
@@ -1976,10 +2909,8 @@ function handlePushNotification(pushText) {
 
         document.getElementById('ops-amount').value = parsedAmount;
 
-        let opsName = 'Авто: из уведомления';
+        let opsName = 'Mir Pay';
         if (lowerText.includes('перевод')) opsName = 'Перевод';
-        if (lowerText.includes('mirpay') || lowerText.includes('мир пей') || lowerText.includes('mir pay')) opsName = 'Mir Pay';
-        if (lowerText.includes('т-банк') || lowerText.includes('tinkoff') || lowerText.includes('t-bank') || lowerText.includes('tcsbank')) opsName = 'Т-Банк';
 
         document.getElementById('ops-name').value = opsName;
       } else {

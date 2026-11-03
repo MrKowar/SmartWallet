@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Палитра SmartWallet: тёмно-синий, Electric Blue, оранжевый -->
+    <color name="sw_navy">#FF070D24</color>
+    <color name="sw_navy_surface">#FF121E45</color>
+    <color name="sw_electric_blue">#FF2F7BFF</color>
+    <color name="sw_electric_blue_light">#FF4D9BFF</color>
+    <color name="sw_orange">#FFFF7A1A</color>
+    <color name="sw_text">#FFEAF0FF</color>
+    <color name="sw_text_soft">#FF8A9BC7</color>
 </resources>

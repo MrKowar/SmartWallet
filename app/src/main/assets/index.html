@@ -499,227 +499,400 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 
-  <!-- ВОТ ОН: ПРЕМИУМ МЯТНЫЙ РЕДИЗАЙН -->
-  <style id="mint-redesign-overrides">
+  <!-- РЕДИЗАЙН: ТЁМНО-СИНИЙ + ELECTRIC BLUE + ОРАНЖЕВЫЙ -->
+  <style id="navy-electric-theme">
     :root{
-      --bg:#eef5f0;
-      --bg-2:#e5f0e9;
-      --surface:#ffffff;
-      --surface-2:#f8fbf9;
-      --line:#d9eee0;
-      --line-strong:#c4e7d2;
-      --text:#204f35;
-      --text-soft:#6f9381;
-      --accent:#2f7a51;
-      --accent-2:#7fd3a1;
-      --danger:#d66161;
-      --warning:#c98a2f;
-      --shadow:0 10px 30px rgba(88,131,105,.10);
-      --shadow-soft:0 4px 14px rgba(88,131,105,.06);
-      --radius:26px;
+      --bg:#070D24;
+      --bg-2:#0B1533;
+      --surface:#121E45;
+      --surface-2:#18275A;
+      --surface-3:#1F3170;
+      --line:rgba(77,155,255,.14);
+      --line-strong:rgba(77,155,255,.32);
+      --text:#EAF0FF;
+      --text-soft:#8A9BC7;
+      --text-dim:#5D6E9C;
+      --accent:#2F7BFF;
+      --accent-2:#4D9BFF;
+      --accent-glow:rgba(47,123,255,.45);
+      --orange:#FF7A1A;
+      --orange-2:#FFA142;
+      --orange-glow:rgba(255,122,26,.40);
+      --income:#2EE59D;
+      --danger:#FF5C7A;
+      --warning:#FFB547;
+      --shadow:0 12px 32px rgba(0,0,0,.35);
+      --shadow-soft:0 4px 14px rgba(0,0,0,.25);
+      --radius:24px;
     }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(14px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    @keyframes glowPulse{
+      0%,100%{box-shadow:0 10px 28px var(--orange-glow);}
+      50%{box-shadow:0 10px 38px rgba(255,122,26,.65);}
+    }
+    @keyframes shimmer{
+      from{background-position:-200% 0;}
+      to{background-position:200% 0;}
+    }
+
     html{background:var(--bg);}
     body{
       font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(149,224,181,.17), transparent 32%),
-        radial-gradient(circle at top right, rgba(194,239,210,.22), transparent 28%),
-        linear-gradient(180deg, #f3f8f4 0%, #eaf2ed 100%);
+        radial-gradient(120% 60% at 0% 0%, rgba(47,123,255,.22), transparent 55%),
+        radial-gradient(90% 50% at 100% 0%, rgba(255,122,26,.10), transparent 60%),
+        linear-gradient(180deg, #0B1640 0%, var(--bg) 60%);
+      background-attachment:fixed;
       color:var(--text);
       min-height:100vh;
+      padding-bottom:110px;
+      -webkit-tap-highlight-color:transparent;
     }
-    body::before{
-      content:'';
-      position:fixed; inset:0; pointer-events:none; z-index:-1;
-      background-image:linear-gradient(rgba(113,166,131,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(113,166,131,.05) 1px, transparent 1px);
-      background-size:28px 28px;
-      opacity:.35;
-    }
-    .header{
-      background:transparent;
-      padding:18px 20px 10px;
-    }
+
+    /* Плавное появление контента при переключении вкладок */
+    .page.active > *{animation:fadeUp .45s cubic-bezier(.2,.8,.2,1) both;}
+    .page.active > *:nth-child(2){animation-delay:.04s;}
+    .page.active > *:nth-child(3){animation-delay:.08s;}
+    .page.active > *:nth-child(4){animation-delay:.12s;}
+    .page.active > *:nth-child(5){animation-delay:.16s;}
+    .page.active > *:nth-child(6){animation-delay:.20s;}
+    .page.active > *:nth-child(n+7){animation-delay:.24s;}
+
+    /* HEADER */
+    .header{background:transparent;padding:20px 20px 8px;}
     .header-left small{
-      color:var(--text-soft);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      color:var(--text-soft);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
     }
     .header-left h1{
-      font-size:24px;
-      font-weight:800;
-      letter-spacing:-.02em;
-      color:var(--text);
+      font-size:26px;font-weight:800;letter-spacing:-.02em;
+      background:linear-gradient(90deg,#FFFFFF 0%,#A9C8FF 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     }
     .header-logo{
       width:46px;height:46px;border-radius:16px;
-      background:linear-gradient(180deg,#dff2e6,#c4e8d1);
-      color:var(--accent);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.75), 0 10px 20px rgba(94,148,115,.15);
-      border:1px solid var(--line);
-      font-weight:800;
+      background:linear-gradient(135deg,var(--accent-2),var(--accent) 55%,#1747C9);
+      color:#fff;font-weight:800;letter-spacing:.02em;
+      box-shadow:0 8px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.35);
     }
+
+    /* CARDS */
     .card,
     .goal-card,
     .month-card,
-    .month-big-card,
-    .chart-placeholder,
-    .modal-content{
-      background:rgba(255,255,255,.96);
+    .chart-placeholder{
+      background:linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       border-radius:var(--radius);
+      color:var(--text);
     }
     .card{padding:20px 18px;}
+
+    /* Главная карточка баланса — Electric Blue */
     .card-gradient,
     .month-big-card{
-      background:linear-gradient(180deg,#ffffff 0%, #f7fbf8 100%);
-      border:2px solid var(--line);
+      position:relative;overflow:hidden;
+      background:
+        radial-gradient(120% 100% at 100% 0%, rgba(255,255,255,.18), transparent 50%),
+        linear-gradient(135deg,#3D8BFF 0%,#2F6BFF 45%,#1A3FBF 100%);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:var(--radius);
+      box-shadow:0 16px 40px var(--accent-glow);
+      color:#fff;
+    }
+    .card-gradient::after,
+    .month-big-card::after{
+      content:'';position:absolute;right:-50px;bottom:-60px;width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,122,26,.35), transparent 70%);
+      pointer-events:none;
     }
     .budget-label,
     .month-big-label{
-      color:var(--accent);
-      font-weight:700;
-      letter-spacing:.04em;
-      text-transform:uppercase;
+      color:rgba(255,255,255,.80);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;
     }
     .budget-amount,
-    .month-big-balance{color:var(--text);}
+    .month-big-balance,
+    .month-big-balance.positive,
+    .month-big-balance.negative{color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.18);}
+    .month-big-balance.negative{color:#FFD0D8;}
     .budget-status{
-      background:#eaf8ef;
-      color:var(--accent);
-      border:1px solid var(--line);
+      background:rgba(46,229,157,.18);color:#B8FFE2;border:1px solid rgba(46,229,157,.35);
+      backdrop-filter:blur(6px);
     }
-    .budget-status.over{background:#fff0f0;color:var(--danger);border-color:#f5d0d0;}
-    .budget-row,
-    .budget-stats,
-    .auto-dist-total,
-    .month-stat-row,
-    .auto-dist-row{border-color:var(--line);}
-    .budget-row-item .label,
+    .budget-status.over{background:rgba(255,92,122,.22);color:#FFD0D8;border-color:rgba(255,92,122,.45);}
+    .card-gradient .budget-stats,
+    .card-gradient .budget-row{border-color:rgba(255,255,255,.18);}
     .budget-stat .lbl,
-    .month-stat-row .label,
-    .month-stat-item .ms-lbl,
-    .goal-amounts,
-    .ops-empty,
-    .forecast-content,
-    .expense-info .cat,
-    .week-summary-item .ws-dates,
-    .week-summary-item .ws-stat .ws-lbl,
-    .month-header p,
-    .goals-header p,
-    .analytics-header p,
-    .section-title,
-    .daily-limit-main .sub,
-    .daily-limit-right .spent-label,
-    .daily-limit-footer,
-    .week-progress-section .sub,
-    .badge,
-    .forecast-tab,
-    .modal-input-label{
-      color:var(--text-soft);
+    .card-gradient .budget-row-item .label{color:rgba(255,255,255,.72);}
+    .card-gradient .budget-stat .val{
+      background:rgba(7,13,36,.28);padding:4px 12px;border-radius:12px;
     }
+    .month-stat-item{
+      background:rgba(7,13,36,.28);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;box-shadow:none;
+    }
+    .month-stat-item .ms-lbl{color:rgba(255,255,255,.72);}
+    .month-stat-item .ms-val.green{color:#9DFFD3;}
+    .month-stat-item .ms-val.red{color:#FFB3C1;}
+    .month-stat-item .ms-val.orange{color:var(--orange-2);}
+
+    /* Дневной лимит — оранжевый акцент */
     .daily-limit-card{
-      background:linear-gradient(180deg,#fffef7 0%,#f7fbf8 100%);
-      border:2px solid #e9efd6;
+      background:
+        radial-gradient(120% 120% at 100% 0%, rgba(255,122,26,.22), transparent 55%),
+        linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
+      border:1px solid rgba(255,122,26,.30);
     }
     .daily-limit-card::before{
-      width:130px;height:130px; top:-40px;right:-32px;
-      background:rgba(184,214,118,.18);
+      width:140px;height:140px;top:-50px;right:-40px;
+      background:radial-gradient(circle, rgba(255,161,66,.35), transparent 70%);
     }
-    .daily-limit-header .title,
-    .daily-limit-main .big-amount{color:#3f6b44;}
-    .daily-limit-right .spent-val{color:#bd5e5e;}
-    .daily-progress-track{background:#e8eee8;}
-    .daily-progress-fill{background:linear-gradient(90deg,#79c68f,#4aa768);}
-    .daily-progress-fill.warning{background:linear-gradient(90deg,#efc370,#d79a3f);}
-    .daily-progress-fill.danger{background:linear-gradient(90deg,#f09494,#d86767);}
-    .week-bar-track{background:#e5efe8;}
-    .week-bar-fill{background:linear-gradient(90deg,#8fd8aa,#4aa768);}
-    .badge-row{gap:10px;}
-    .badge{
-      border-radius:999px;
-      background:#f7fbf8;
-      border:1px solid var(--line);
-      font-weight:700;
+    .daily-limit-header .title{color:var(--orange-2);letter-spacing:.12em;font-size:12px;}
+    .daily-limit-header .icon{filter:drop-shadow(0 0 8px var(--orange-glow));}
+    .daily-limit-main .big-amount{color:#fff;}
+    .daily-limit-main .sub,
+    .daily-limit-right .spent-label,
+    .daily-limit-footer{color:var(--text-soft);}
+    .daily-limit-right .spent-val{color:var(--orange-2);}
+    .daily-progress-track{background:rgba(255,255,255,.08);}
+    .daily-progress-fill{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 12px var(--accent-glow);
     }
+    .daily-progress-fill.warning{
+      background:linear-gradient(90deg,var(--orange),var(--orange-2));
+      box-shadow:0 0 12px var(--orange-glow);
+    }
+    .daily-progress-fill.danger{
+      background:linear-gradient(90deg,#FF3D6A,var(--danger));
+      box-shadow:0 0 12px rgba(255,92,122,.5);
+    }
+
+    /* Автораспределение */
     .auto-dist-summary{
-      background:linear-gradient(180deg,#fbfffc 0%,#f4fbf6 100%);
-      border:2px solid var(--line);
+      background:linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
+      border:1px solid var(--line);
     }
     .auto-dist-title,
     .auto-dist-row .name,
     .auto-dist-total .name,
-    .auto-dist-total .amount,
     .auto-dist-row .amount{color:var(--text);}
+    .auto-dist-total .amount{color:var(--orange-2);}
+    .auto-dist-row,
+    .auto-dist-total,
+    .budget-row,
+    .budget-stats,
+    .month-stat-row,
+    .pct-setting{border-color:var(--line);}
     .auto-dist-row .pct,
     .distrib-item .pct-badge{
-      background:#edf9f1;
-      color:var(--accent);
-      border:1px solid var(--line);
+      background:rgba(47,123,255,.16);color:var(--accent-2);border:1px solid var(--line-strong);
     }
+    #saved-total-display{
+      background:rgba(255,122,26,.14) !important;color:var(--orange-2) !important;
+      border:1px solid rgba(255,122,26,.30);
+    }
+
     .distrib-grid{gap:14px;}
     .distrib-item,
-    .month-stat-item,
     .week-summary-item,
-    .expense-item,
-    .forecast-content,
-    .chart-placeholder{
-      background:var(--surface-2);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow-soft);
+    .forecast-content{
+      background:var(--surface-2);border:1px solid var(--line);box-shadow:var(--shadow-soft);color:var(--text);
     }
-    .distrib-item .val,
-    .month-stat-item .ms-val,
-    .goal-card-header .goal-name,
-    .week-summary-item .ws-title,
-    .expense-info .name,
-    .expense-amount,
-    .month-section-title,
-    .modal-title,
-    .analytics-header h2,
-    .goals-header h2,
-    .month-header h2,
-    .section-title{color:var(--text);}
+
+    /* Прогресс месяца */
+    .week-progress-section .title{color:var(--text);}
+    .week-progress-section .sub,
+    .week-percent-labels{color:var(--text-soft);}
+    .week-bar-track{background:rgba(255,255,255,.08);}
+    .week-bar-fill{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent));
+      background-size:200% 100%;
+      animation:shimmer 3s linear infinite;
+      box-shadow:0 0 12px var(--accent-glow);
+    }
+    .badge-row{gap:8px;}
+    .badge{
+      border-radius:999px;background:var(--surface-2);border:1px solid var(--line);
+      color:var(--text-soft);font-weight:700;
+    }
+
+    /* Заголовки секций */
     .section-title{
-      margin:22px 20px 12px;
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.28em;
-      text-transform:uppercase;
-      display:flex;align-items:center;gap:14px;
+      margin:24px 20px 12px;font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--text-soft);display:flex;align-items:center;gap:14px;
     }
     .section-title::after{
-      content:''; flex:1; height:2px; border-radius:999px;
-      background:linear-gradient(90deg,var(--line-strong), transparent);
+      content:'';flex:1;height:2px;border-radius:999px;
+      background:linear-gradient(90deg,var(--line-strong),transparent);
     }
-    .forecast-tab{
-      background:#f7fbf8; border:1px solid var(--line);
+    .section-header-row .section-title{margin:0;}
+    .btn-delete-all{color:var(--danger);}
+    .btn-delete-all:active{background:rgba(255,92,122,.12);}
+
+    /* Быстрые действия */
+    .qa-btn{
+      border-radius:18px;padding:16px 10px;font-size:12px;font-weight:700;color:#fff;
+      transition:transform .15s ease, box-shadow .2s ease;
     }
-    .forecast-tab.active{background:#dff3e6;color:var(--accent); border-color:#bfe3cc;}
-    .forecast-content{border-style:solid;}
+    .qa-btn:active{transform:scale(.94);}
+    .qa-expense{
+      background:linear-gradient(135deg,var(--orange-2),var(--orange) 60%,#E85D00);
+      box-shadow:0 10px 24px var(--orange-glow);
+    }
+    .qa-income{
+      background:linear-gradient(135deg,var(--accent-2),var(--accent) 60%,#1747C9);
+      box-shadow:0 10px 24px var(--accent-glow);
+    }
+    .qa-scanner{
+      background:var(--surface-2);color:var(--text);border:1px solid var(--line-strong);
+      box-shadow:var(--shadow-soft);
+    }
+
+    /* Вкладки и пустые состояния */
+    .forecast-tab{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--line);}
+    .forecast-tab.active{
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;border-color:transparent;
+      box-shadow:0 6px 16px var(--accent-glow);
+    }
+    .forecast-content{border-style:solid;color:var(--text-soft);}
+    .ops-empty{color:var(--text-soft);}
+
+    /* FAB — оранжевый, привлекает внимание */
     .fab{
-      background:linear-gradient(180deg,#79c68f,#4aa768); box-shadow:0 16px 28px rgba(73,135,94,.24); border:3px solid rgba(255,255,255,.95);
+      bottom:100px;
+      background:linear-gradient(135deg,var(--orange-2),var(--orange));
+      border:2px solid rgba(255,255,255,.18);
+      animation:glowPulse 2.8s ease-in-out infinite;
     }
+
+    /* Нижняя навигация */
     .bottom-nav{
-      left:10px; right:10px; bottom:10px; border:1px solid var(--line); background:rgba(255,255,255,.94); backdrop-filter:blur(16px); box-shadow:var(--shadow); border-radius:24px; padding:8px 8px 14px;
+      left:12px;right:12px;bottom:12px;
+      background:rgba(14,24,58,.88);
+      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+      border:1px solid var(--line-strong);border-radius:24px;
+      box-shadow:0 12px 32px rgba(0,0,0,.45);
+      padding:8px 6px 12px;
     }
-    .nav-item{ color:var(--text-soft); border-radius:16px; min-width:60px; }
-    .nav-item.active{ color:var(--accent); background:#eef8f1; }
+    .nav-item{color:var(--text-dim);border-radius:16px;min-width:58px;transition:color .2s, background .2s, transform .15s;}
+    .nav-item:active{transform:scale(.92);}
+    .nav-item.active{
+      color:#fff;
+      background:linear-gradient(180deg,rgba(47,123,255,.30),rgba(47,123,255,.12));
+      box-shadow:inset 0 0 0 1px var(--line-strong), 0 0 18px rgba(47,123,255,.25);
+    }
+    .nav-item.active .nav-icon{filter:drop-shadow(0 0 6px var(--accent-glow));}
     .nav-item .nav-icon{font-size:21px;}
+
+    /* Заголовки страниц */
     .goals-header, .analytics-header, .month-header{padding:22px 16px 12px;}
+    .goals-header h2, .analytics-header h2, .month-header h2{color:var(--text);}
+    .goals-header p, .analytics-header p, .month-header p{color:var(--text-soft);}
+
+    /* Цели */
     .goal-card, .month-card, .month-big-card{margin:0 16px 14px;}
-    .goal-deposit-btn, .add-goal-btn, .modal-btn-primary, .modal-btn-income, .modal-btn-green, .modal-btn-gold, .modal-btn-expense{ border-radius:18px; box-shadow:0 10px 20px rgba(90,143,108,.14); }
-    .goal-deposit-btn, .modal-btn-income, .modal-btn-green, .modal-btn-primary, .modal-btn-gold{ background:linear-gradient(180deg,#79c68f,#4aa768); }
-    .modal-btn-expense{background:linear-gradient(180deg,#ef9b9b,#d86767);}
-    .modal-btn-cancel{ background:#f5faf7; color:var(--text-soft); border:1px solid var(--line); border-radius:18px; }
-    .modal-content{ background:#fbfdfb; padding:22px 20px 26px; }
-    .modal-handle{background:#cde4d4;}
-    .modal-input{ border:2px solid var(--line); background:#fff; border-radius:18px; color:var(--text); }
-    .modal-input:focus{border-color:#9fd3b3; box-shadow:0 0 0 4px rgba(129,205,156,.14);}
-    .category-item{ border:2px solid var(--line); background:#fff; color:var(--text-soft); border-radius:16px; }
-    .category-item.selected{border-color:#9fd3b3;background:#eef8f1;color:var(--accent);}
-    .pct-setting{border-color:var(--line);}
+    .goal-card-header .goal-name{color:var(--text);}
+    .goal-percentage{
+      background:linear-gradient(135deg,var(--orange-2),var(--orange));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .goal-amounts{color:var(--text-soft);}
+    .goal-amounts .current{color:var(--text);}
+    .goal-amounts .target{color:var(--text-soft);}
+    .sparkle{background:var(--orange-2);box-shadow:0 0 8px var(--orange-glow);}
+    .hourglass-svg{filter:drop-shadow(0 0 14px rgba(47,123,255,.30));}
+    .add-goal-btn{
+      border:2px dashed var(--line-strong);color:var(--accent-2);border-radius:20px;
+      background:rgba(47,123,255,.06);
+    }
+
+    /* Список операций */
+    .expense-item{border-bottom:1px solid var(--line);border-radius:14px;}
+    .expense-item:active{background:rgba(47,123,255,.08);}
+    .expense-icon{background:var(--surface-2);border:1px solid var(--line);}
+    .expense-info .name{color:var(--text);}
+    .expense-info .cat{color:var(--text-soft);}
+    .expense-amount{color:var(--text);}
+    .expense-amount.negative{color:var(--danger);}
+    .expense-amount.positive{color:var(--income);}
+
+    /* Месяц / аналитика */
+    .month-stat-row .label{color:var(--text-soft);}
+    .month-stat-row .value{color:var(--text);}
+    .month-section-title{color:var(--text);}
+    .week-summary-item .ws-title{color:var(--text);}
+    .week-summary-item .ws-dates,
+    .week-summary-item .ws-stat .ws-lbl{color:var(--text-soft);}
+    .chart-placeholder{color:var(--text-soft);}
+
+    /* Кнопки модалок */
+    .modal-btn{border-radius:18px;transition:transform .15s ease;}
+    .modal-btn-primary,
+    .modal-btn-income{
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;
+      box-shadow:0 10px 24px var(--accent-glow);
+    }
+    .goal-deposit-btn,
+    .modal-btn-green,
+    .modal-btn-gold,
+    .modal-btn-expense{
+      background:linear-gradient(135deg,var(--orange-2),var(--orange));color:#fff;
+      box-shadow:0 10px 24px var(--orange-glow);
+    }
+    .goal-deposit-btn{border-radius:18px;}
+    .modal-btn-cancel{
+      background:var(--surface-2);color:var(--text-soft);border:1px solid var(--line);box-shadow:none;
+    }
+
+    /* Модальные окна */
+    .modal-overlay{background:rgba(3,7,20,.70);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+    .modal-content{
+      background:linear-gradient(180deg,#152251 0%,#0E1838 100%);
+      border:1px solid var(--line-strong);border-bottom:none;
+      box-shadow:0 -12px 40px rgba(0,0,0,.5);
+      padding:22px 20px 28px;color:var(--text);
+    }
+    .modal-handle{background:var(--line-strong);}
+    .modal-title{color:var(--text);}
+    .modal-input-label{color:var(--text-soft);}
+    .modal-input{
+      background:var(--bg-2);border:2px solid var(--line);border-radius:18px;color:var(--text);
+    }
+    .modal-input::placeholder{color:var(--text-dim);}
+    .modal-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,123,255,.20);}
+    .category-item{
+      background:var(--surface-2);border:2px solid var(--line);color:var(--text-soft);border-radius:16px;
+    }
+    .category-item.selected{
+      border-color:var(--orange);background:rgba(255,122,26,.14);color:var(--orange-2);
+      box-shadow:0 0 14px rgba(255,122,26,.25);
+    }
+    .pct-setting .pct-label{color:var(--text);}
+    .pct-setting .pct-controls button{
+      background:var(--surface-2);border:2px solid var(--line-strong);color:var(--text);
+    }
+    .pct-setting .pct-controls button:active{background:var(--surface-3);}
+    .pct-setting .pct-val{color:var(--accent-2);}
+    #pct-total-label{color:var(--text);}
+
+    /* Тост */
+    .toast{
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;
+      box-shadow:0 10px 30px var(--accent-glow);border:1px solid rgba(255,255,255,.18);
+    }
+
+    /* ИИ-советник */
+    #ai-advisor-content{color:var(--text-soft) !important;}
+    .ai-tip{
+      background:rgba(255,122,26,.10);border:1px solid rgba(255,122,26,.30);border-radius:14px;
+      padding:16px;text-align:left;color:var(--text);
+    }
+    .ai-tip strong{color:var(--orange-2);}
   </style>
 </head>
 <body>
@@ -741,11 +914,11 @@
     <div class="budget-status" id="week-status-badge">В лимите</div>
     <div class="budget-stats">
       <div class="budget-stat">
-        <div class="val" id="stat-week-income" style="color:#16a34a">0 ₽</div>
+        <div class="val" id="stat-week-income" style="color:#9DFFD3">0 ₽</div>
         <div class="lbl">Доход нед.</div>
       </div>
       <div class="budget-stat">
-        <div class="val" id="stat-week-expense" style="color:#dc2626">0 ₽</div>
+        <div class="val" id="stat-week-expense" style="color:#FFB3C1">0 ₽</div>
         <div class="lbl">Расход нед.</div>
       </div>
     </div>
@@ -1232,7 +1405,7 @@
     globalCalc.weekStats.forEach(s => {
       const b = document.createElement('div');
       b.className = 'badge';
-      if(s.num === globalCalc.currentWeek.num) b.style.borderColor = '#6366f1';
+      if(s.num === globalCalc.currentWeek.num) b.style.borderColor = 'var(--orange)';
       b.textContent = `Н${s.num}: +${s.income} / -${s.expense}`;
       badgeBox.appendChild(b);
     });
@@ -1292,7 +1465,7 @@
       const l = layout.find(x => x.num === s.num);
       const row = document.createElement('div');
       row.className = 'week-summary-item';
-      if(s.num === globalCalc.currentWeek.num) row.style.borderLeft = '4px solid #16a34a';
+      if(s.num === globalCalc.currentWeek.num) row.style.borderLeft = '4px solid var(--orange)';
 
       row.innerHTML = `
         <div class="ws-header">
@@ -1301,15 +1474,15 @@
         </div>
         <div class="ws-stats">
           <div class="ws-stat">
-            <div class="ws-val" style="color:#16a34a">+${s.income.toLocaleString()} ₽</div>
+            <div class="ws-val" style="color:var(--income)">+${s.income.toLocaleString()} ₽</div>
             <div class="ws-lbl">Доходы</div>
           </div>
           <div class="ws-stat">
-            <div class="ws-val" style="color:#dc2626">-${s.expense.toLocaleString()} ₽</div>
+            <div class="ws-val" style="color:var(--danger)">-${s.expense.toLocaleString()} ₽</div>
             <div class="ws-lbl">Расходы</div>
           </div>
           <div class="ws-stat">
-            <div class="ws-val" style="color:#1a1a2e">${(s.income - s.expense).toLocaleString()} ₽</div>
+            <div class="ws-val" style="color:var(--text)">${(s.income - s.expense).toLocaleString()} ₽</div>
             <div class="ws-lbl">Баланс</div>
           </div>
         </div>
@@ -1385,14 +1558,14 @@
             <div class="bills-container" id="bills-container-${g.id}"></div>
 
             <svg class="hourglass-svg" id="hourglass-svg-${g.id}" viewBox="0 0 100 120" width="100%" height="100%">
-              <path d="M20,10 L80,10 L80,20 L55,55 L55,65 L80,100 L80,110 L20,110 L20,100 L45,65 L45,55 L20,20 Z" fill="none" stroke="#204f35" stroke-width="3" stroke-linejoin="round"/>
-              <path d="M23,13 L77,13 L74,22 L53,56 L53,64 L74,98 L77,107 L23,107 L26,98 L47,64 L47,56 L26,22 Z" fill="rgba(255,255,255,0.4)" stroke="#cde4d4" stroke-width="1"/>
+              <path d="M20,10 L80,10 L80,20 L55,55 L55,65 L80,100 L80,110 L20,110 L20,100 L45,65 L45,55 L20,20 Z" fill="none" stroke="#4D9BFF" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M23,13 L77,13 L74,22 L53,56 L53,64 L74,98 L77,107 L23,107 L26,98 L47,64 L47,56 L26,22 Z" fill="rgba(47,123,255,0.08)" stroke="rgba(77,155,255,0.35)" stroke-width="1"/>
 
-              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#7fd3a1" opacity="0.85" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50px 57px;"/>
+              <path d="M25,15 L75,15 L72,24 L50,57 L28,24 Z" fill="#FFA142" opacity="0.85" style="transform: scaleY(${1 - (pct/100)}); transform-origin: 50px 57px;"/>
 
-              <line id="sand-stream-${g.id}" x1="50" y1="57" x2="50" y2="105" stroke="#4aa768" stroke-width="2" stroke-dasharray="3,3" style="display:none;"/>
+              <line id="sand-stream-${g.id}" x1="50" y1="57" x2="50" y2="105" stroke="#FF7A1A" stroke-width="2" stroke-dasharray="3,3" style="display:none;"/>
 
-              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#4aa768" style="transform: scaleY(${pct/100}); transform-origin: 50px 105px;"/>
+              <path d="M25,105 L75,105 L72,96 L50,63 L28,96 Z" fill="#FF7A1A" style="transform: scaleY(${pct/100}); transform-origin: 50px 105px;"/>
             </svg>
           </div>
           <div class="goal-percentage">${pct}%</div>
@@ -1439,7 +1612,7 @@
         <div style="font-size: 40px; margin-bottom: 12px;">🚨</div>
         <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Финансовая дыра!</h3>
         <p style="margin-bottom: 16px;">Вы потратили <strong style="color: var(--danger); font-size: 16px;">${totalSnacksAndSweets.toLocaleString()} ₽</strong> на перекусы и вкусняшки.</p>
-        <div style="background: #eef8f1; border: 1px solid var(--line); border-radius: 14px; padding: 16px; text-align: left; color: var(--accent);">
+        <div class="ai-tip">
           <strong>💡 Совет:</strong> Попробуйте брать еду из дома. Если бы вы отложили эти деньги в копилку, вы бы приблизились к своей цели!
         </div>
       `;
@@ -1623,8 +1796,8 @@
     });
     const lbl = document.getElementById('pct-total-label');
     lbl.textContent = `Сумма: ${sum}%`;
-    if(sum === 100) lbl.style.color = '#16a34a';
-    else lbl.style.color = '#dc2626';
+    if(sum === 100) lbl.style.color = 'var(--income)';
+    else lbl.style.color = 'var(--danger)';
   }
 
   function saveDistSettings() {

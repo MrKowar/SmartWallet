@@ -1,8 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SmartWallet" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Base application theme. Приложение всегда в тёмной теме -->
+    <style name="Base.Theme.SmartWallet" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/sw_electric_blue</item>
+        <item name="colorSecondary">@color/sw_orange</item>
+        <item name="android:colorBackground">@color/sw_navy</item>
+        <item name="android:windowBackground">@color/sw_navy</item>
+        <item name="android:statusBarColor">@color/sw_navy</item>
+        <item name="android:navigationBarColor">@color/sw_navy</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
     <style name="Theme.SmartWallet" parent="Base.Theme.SmartWallet" />

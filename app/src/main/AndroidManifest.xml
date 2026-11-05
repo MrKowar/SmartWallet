@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ENFORCE_UPDATE_OWNERSHIP" />
     <!-- Фоновая проверка обновлений продолжает работать после перезагрузки -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- JobScheduler требует его для задач с условием «есть сеть» -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"

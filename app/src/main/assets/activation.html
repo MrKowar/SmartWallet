@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>SmartWallet — активация</title>
   <style>
     :root{
@@ -139,6 +139,47 @@
     }
     .btn-ghost{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--line);}
     .hidden{display:none;}
+
+    /* ===== Полировка: нативное поведение и моушен ===== */
+    :root{
+      --ease-out-strong:cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overscroll-behavior:none;}
+    body{
+      min-height:100dvh;
+      padding:calc(32px + env(safe-area-inset-top, 0px)) 16px calc(32px + env(safe-area-inset-bottom, 0px));
+      -webkit-font-smoothing:antialiased;
+    }
+    button{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:inherit;}
+    textarea{font-size:15px;}
+
+    /* Экран видят редко — здесь уместен короткий каскад, но без «плавающих» 450 мс */
+    .wrap > *{animation:act-in 420ms var(--ease-out-strong) backwards;}
+    .wrap > *:nth-child(2){animation-delay:50ms;}
+    .wrap > *:nth-child(3){animation-delay:100ms;}
+    .wrap > *:nth-child(4){animation-delay:150ms;}
+    .wrap > *:nth-child(5){animation-delay:200ms;}
+    @keyframes act-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+    .card{
+      border-color:rgba(255,255,255,.07);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 32px -14px rgba(0,0,0,.6);
+    }
+    .logo{box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 18px 36px -16px var(--accent-glow);}
+    .code{font-variant-numeric:tabular-nums;}
+
+    /* Без бесконечной пульсации — статичное мягкое свечение */
+    .btn-orange{animation:none;box-shadow:0 14px 28px -14px var(--orange-glow);}
+    .btn-blue{box-shadow:0 14px 28px -14px var(--accent-glow);}
+    .btn,.icon-btn,.paste{transition:transform 160ms var(--ease-out-strong);}
+    .btn:active,.icon-btn:active,.paste:active{transform:scale(.97);}
+    .msg{transition:opacity 200ms ease;}
+
+    @media (prefers-reduced-motion: reduce){
+      .wrap > *{animation:act-fade 200ms ease backwards;}
+      @keyframes act-fade{from{opacity:0;}to{opacity:1;}}
+      .btn:active,.icon-btn:active,.paste:active{transform:none;}
+    }
   </style>
 </head>
 <body>

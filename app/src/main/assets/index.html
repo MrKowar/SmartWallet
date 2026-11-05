@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>SmartWallet</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -1233,6 +1233,348 @@
     .ai-answer{background:var(--surface-2);border-color:var(--line);}
     .goal-ai-btn{background:rgba(47,123,255,.08);color:var(--accent-2);}
   </style>
+  <!-- ПОЛИРОВКА: нативное поведение, типографика, моушен, устойчивость к длинным данным -->
+  <style id="premium-polish">
+    :root{
+      --ease-out-strong:cubic-bezier(0.23, 1, 0.32, 1);     /* входы, отклик на нажатие */
+      --ease-in-out-strong:cubic-bezier(0.77, 0, 0.175, 1); /* перемещение по экрану */
+      --ease-drawer:cubic-bezier(0.32, 0.72, 0, 1);         /* шторки, как в iOS */
+      --hairline:rgba(255,255,255,.07);
+      --card-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 12px 32px -14px rgba(0,0,0,.6);
+      --press-shadow:inset 0 1px 0 rgba(255,255,255,.04), 0 6px 16px -10px rgba(0,0,0,.6);
+    }
+
+    /* ===== Нативное поведение (mobile-native) ===== */
+    html{
+      -webkit-tap-highlight-color:transparent;   /* без серой вспышки при тапе */
+      -webkit-text-size-adjust:100%;
+      overscroll-behavior:none;                   /* страница не «оттягивается» целиком */
+    }
+    body{
+      min-height:100dvh;                          /* 100vh на телефоне выше видимой области */
+      padding-bottom:calc(104px + env(safe-area-inset-bottom, 0px));
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+    /* Управляющие элементы: мгновенный отклик и без выделения текста долгим нажатием */
+    button,[role="button"],.nav-item,.qa-btn,.hub-btn,.ob-btn,.ob-add,.category-item,.mp-cat,
+    .forecast-tab,.header-logo,.profile-card,.daily-limit-card,.loan-card,.ob-main,.expense-item,.goal-tag{
+      touch-action:manipulation;
+      -webkit-user-select:none;user-select:none;
+      -webkit-touch-callout:none;
+    }
+    .scheme-field input,.scheme-field select,.loan-tool-row input,.mp-field input{font-size:16px;}
+    .modal-content{overscroll-behavior:contain;}
+
+    /* ===== Типографика ===== */
+    body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,'Helvetica Neue',sans-serif;}
+    .budget-amount,.month-big-balance,.daily-limit-main .big-amount,.loan-balance,.goal-amounts .current,
+    .goal-amounts .target,.budget-stat .val,.daily-limit-right .spent-val,.auto-dist-row .amount,
+    .auto-dist-total .amount,.expense-amount,.ms-val,.month-stat-row .value,.ws-val,.distrib-item .val,
+    .pay-row-amount,.goal-percentage,.ob-amount,.daily-limit-footer,.obligations-reserve{
+      font-variant-numeric:tabular-nums;            /* цифры не «прыгают» при пересчёте */
+    }
+    .budget-amount,.month-big-balance,.daily-limit-main .big-amount{letter-spacing:-.035em;font-weight:800;}
+    .budget-label,.month-big-label,.daily-limit-header .title,.section-title,.obligations-header .title{letter-spacing:.09em;}
+    .section-title{font-size:11.5px;color:var(--text-dim);}
+    .goals-header h2,.analytics-header h2,.month-header h2{font-size:24px;letter-spacing:-.02em;}
+    .goals-header p,.analytics-header p,.month-header p{font-size:13.5px;line-height:1.45;max-width:320px;margin:6px auto 0;}
+
+    /* ===== Поверхности: мягкие тени и тонкие светлые кромки вместо тяжёлого свечения ===== */
+    .card,.goal-card,.month-card,.loan-card,.profile-card,.auto-dist-summary,.chart-placeholder{
+      box-shadow:var(--card-shadow);
+    }
+    .card,.goal-card,.month-card,.loan-card,.profile-card,.auto-dist-summary{border-color:var(--hairline);}
+    .card-gradient,.month-big-card{
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 22px 44px -20px rgba(47,123,255,.75);
+    }
+    .qa-expense{box-shadow:0 12px 26px -14px var(--orange-glow);}
+    .qa-income{box-shadow:0 12px 26px -14px var(--accent-glow);}
+    .modal-btn-primary,.modal-btn-income,.toast{box-shadow:0 12px 26px -14px var(--accent-glow);}
+    .goal-deposit-btn,.modal-btn-green,.modal-btn-gold,.modal-btn-expense{box-shadow:0 12px 26px -14px var(--orange-glow);}
+    .hub-btn-goal{box-shadow:0 14px 28px -16px var(--accent-glow);}
+    .hub-btn-loan{box-shadow:0 14px 28px -16px var(--orange-glow);}
+    .ob-btn{box-shadow:0 8px 18px -10px var(--accent-glow);}
+
+    /* Бесконечные пульсации и переливы дешевят интерфейс и тратят батарею */
+    .week-bar-fill{animation:none;}
+    .fab{display:none;}
+
+    /* Нижняя навигация — стекло */
+    .bottom-nav{
+      bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+      background:rgba(14,24,58,.72);
+      -webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 18px 40px -16px rgba(0,0,0,.7);
+    }
+
+    /* ===== Отклик на нажатие: 160 мс, сильный ease-out ===== */
+    .qa-btn,.hub-btn,.modal-btn,.goal-deposit-btn,.add-goal-btn,.goal-ai-btn,.ob-add,.header-logo,
+    .daily-limit-card,.profile-card,.loan-card,.icon-btn,.pct-setting .pct-controls button,.forecast-tab{
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .qa-btn:active,.hub-btn:active,.modal-btn:active,.goal-deposit-btn:active,.add-goal-btn:active,
+    .goal-ai-btn:active,.header-logo:active,.pct-setting .pct-controls button:active{transform:scale(.97);}
+    .daily-limit-card:active,.profile-card:active,.loan-card:active{transform:scale(.985);}
+    .category-item{transition:border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out-strong);}
+    .category-item:active{transform:scale(.96);}
+    .nav-item{transition:color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, transform 160ms var(--ease-out-strong);}
+    .nav-item:active{transform:scale(.92);}
+    .expense-item{transition:background-color 160ms ease;}
+
+    /* ===== Переключение вкладок: одно короткое затухание вместо каскада ===== */
+    /* Вкладки переключают десятки раз в день — каскад 450 мс ощущался медленным */
+    .page.active > *{animation:none;}
+    .page.active{animation:page-in 200ms var(--ease-out-strong) backwards;}
+    @keyframes page-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+    /* ===== Модальные окна — шторка снизу ===== */
+    .modal-overlay{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;}
+    .modal-overlay::before{
+      content:'';position:absolute;inset:0;
+      background:rgba(3,7,20,.62);
+      -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    }
+    .modal-overlay.show::before{animation:overlay-in 280ms ease backwards;}
+    .modal-overlay.closing::before{animation:overlay-out 220ms ease forwards;}
+    .modal-content{
+      position:relative;z-index:1;
+      max-height:88dvh;
+      padding-bottom:calc(28px + env(safe-area-inset-bottom, 0px));
+      background:linear-gradient(180deg,rgba(26,40,90,.94) 0%,rgba(12,22,52,.97) 100%);
+      -webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);
+      border:1px solid rgba(255,255,255,.08);border-bottom:none;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 -20px 50px -20px rgba(0,0,0,.7);
+      animation:none;
+    }
+    .modal-overlay.show .modal-content{animation:sheet-in 420ms var(--ease-drawer) backwards;}
+    .modal-overlay.closing .modal-content{animation:sheet-out 220ms var(--ease-out-strong) forwards;}
+    @keyframes overlay-in{from{opacity:0;}to{opacity:1;}}
+    @keyframes overlay-out{from{opacity:1;}to{opacity:0;}}
+    @keyframes sheet-in{from{transform:translateY(100%);}to{transform:none;}}
+    @keyframes sheet-out{from{transform:none;}to{transform:translateY(100%);}}
+    .modal-handle{width:36px;height:5px;background:rgba(255,255,255,.18);}
+    .modal-title{font-size:19px;letter-spacing:-.01em;}
+
+    /* Тост — сверху, из-за края, тем же путём уходит */
+    .toast{
+      top:calc(12px + env(safe-area-inset-top, 0px));
+      opacity:0;
+      transition:transform 320ms var(--ease-drawer), opacity 200ms ease;
+    }
+    .toast.show{opacity:1;}
+
+    /* ===== Песочные часы ===== */
+    /* Купюры падают с ускорением, как под силой тяжести, и анимируют только transform */
+    .falling-bill{top:0;animation:bill-fall 820ms cubic-bezier(0.32, 0, 0.67, 0) forwards;will-change:transform,opacity;}
+    @keyframes bill-fall{
+      0%{transform:translateY(-24px) rotate(-12deg);opacity:0;}
+      12%{opacity:1;}
+      65%{transform:translateY(96px) rotate(8deg) scale(.95);opacity:1;}
+      100%{transform:translateY(150px) rotate(18deg) scale(.6);opacity:0;}
+    }
+    .sparkle{animation:sparkle-pop 520ms var(--ease-out-strong) forwards;}
+    @keyframes sparkle-pop{
+      0%{opacity:0;transform:scale(.6);}
+      35%{opacity:1;transform:scale(1.5);}
+      100%{opacity:0;transform:scale(.8) translateY(-22px);}
+    }
+    .hourglass-bounce{animation:hourglass-squash 460ms var(--ease-out-strong);}
+    @keyframes hourglass-squash{
+      0%{transform:scale(1);}
+      30%{transform:scale(1.03,.97);}
+      60%{transform:scale(.99,1.01);}
+      100%{transform:scale(1);}
+    }
+    /* Песок перетекает к новому уровню, а не прыгает после пересчёта */
+    .hourglass-svg path{transition:transform 900ms var(--ease-in-out-strong);}
+
+    /* ===== Длинные данные (break-ui) ===== */
+    /* Крупные суммы масштабируются по ширине карточки: 999 999 999 ₽ помещается и на 320 px */
+    .card-gradient,.month-big-card,.daily-limit-card,.loan-card{container-type:inline-size;}
+    .budget-amount{font-size:clamp(24px, 12.5cqi, 40px);line-height:1.08;white-space:nowrap;}
+    .budget-amount span{font-size:.7em;}
+    .month-big-balance{font-size:clamp(22px, 12cqi, 38px);white-space:nowrap;}
+    .daily-limit-main .big-amount{font-size:clamp(22px, 10cqi, 32px);white-space:nowrap;}
+    .loan-balance{font-size:clamp(20px, 8cqi, 26px);}
+    .loan-balance small{display:block;margin:4px 0 0;}
+    .budget-status{float:none;display:inline-flex;margin-top:10px;}
+    .budget-stats{gap:10px;}
+    .budget-stat{min-width:0;}
+    .budget-stat .val{white-space:nowrap;font-size:clamp(13px, 4.4cqi, 16px);}
+    .daily-limit-amounts{flex-wrap:wrap;gap:8px 16px;}
+    .daily-limit-main,.daily-limit-right{min-width:0;}
+    .month-stat-item .ms-val{font-size:clamp(13px, 5cqi, 18px);overflow-wrap:anywhere;}
+
+    .auto-dist-row{gap:10px;}
+    .auto-dist-row .name{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .auto-dist-row .pct,.auto-dist-row .amount{flex-shrink:0;white-space:nowrap;}
+    .auto-dist-title{flex-wrap:wrap;gap:8px;}
+
+    .expense-icon{flex-shrink:0;}
+    .expense-info{min-width:0;}
+    .expense-info .name,.expense-info .cat{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .expense-amount{flex-shrink:0;white-space:nowrap;}
+
+    .month-stat-row{gap:10px;}
+    .month-stat-row .label{flex:1;min-width:0;overflow-wrap:anywhere;}
+    .month-stat-row .value{flex-shrink:0;white-space:nowrap;}
+
+    .loan-card-head{min-width:0;}
+    .loan-card-name{
+      min-width:0;overflow-wrap:anywhere;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .loan-card-head .btn-delete-all{flex-shrink:0;}
+    .loan-next{flex-wrap:wrap;row-gap:6px;}
+
+    .goal-card-header{gap:10px;}
+    .goal-card-header .goal-name{min-width:0;overflow-wrap:anywhere;}
+    .goal-card-header .btn-delete-all{flex-shrink:0;}
+    .goal-amounts{flex-wrap:wrap;gap:4px 12px;}
+    .profile-info{min-width:0;}
+    .category-item{min-width:0;}
+    .category-item span{overflow-wrap:anywhere;text-align:center;}
+    .week-summary-item .ws-stats{gap:8px;}
+    .week-summary-item .ws-val{overflow-wrap:anywhere;}
+
+    /* ===== Кнопка настроек: значок SW с маленькой шестерёнкой ===== */
+    .header-logo.settings-trigger{
+      position:relative;border:none;padding:0;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:15px;font-family:inherit;
+    }
+    .settings-badge{
+      position:absolute;right:-4px;bottom:-4px;width:20px;height:20px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      background:var(--bg-2);color:var(--accent-2);
+      box-shadow:0 0 0 2px var(--bg), 0 2px 6px rgba(0,0,0,.4);
+    }
+    .settings-badge svg{width:12px;height:12px;}
+
+    /* ===== Подсказки при первом входе ===== */
+    .coach{position:fixed;inset:0;z-index:400;}
+    .coach[hidden]{display:none;}
+    .coach-spot{
+      position:fixed;top:0;left:0;border-radius:24px;pointer-events:none;
+      box-shadow:0 0 0 2px rgba(255,255,255,.18), 0 0 0 9999px rgba(3,7,20,.74);
+      transition:transform 380ms var(--ease-in-out-strong), width 380ms var(--ease-in-out-strong),
+                 height 380ms var(--ease-in-out-strong), border-radius 380ms var(--ease-in-out-strong);
+    }
+    .coach-card{
+      position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;
+      padding:18px 18px 14px;border-radius:20px;
+      background:linear-gradient(180deg,rgba(30,46,100,.96),rgba(16,28,64,.98));
+      -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 24px 50px -20px rgba(0,0,0,.8);
+      transition:opacity 200ms ease, transform 260ms var(--ease-out-strong);
+    }
+    .coach-card.is-hidden{opacity:0;transform:translateY(6px) scale(.98);}
+    .coach-step{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange-2);}
+    .coach-title{font-size:17px;font-weight:800;color:var(--text);margin-top:6px;letter-spacing:-.01em;}
+    .coach-text{font-size:14px;line-height:1.5;color:var(--text-soft);margin-top:6px;}
+    .coach-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:12px;}
+    .coach-skip{
+      background:none;border:none;color:var(--text-soft);font-size:14px;font-weight:700;
+      padding:10px 4px;cursor:pointer;font-family:inherit;
+    }
+    .coach-next{
+      min-width:116px;height:44px;padding:0 20px;border:none;border-radius:14px;cursor:pointer;
+      font-size:15px;font-weight:800;color:#fff;font-family:inherit;
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));
+      box-shadow:0 10px 22px -12px var(--accent-glow);
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .coach-next:active,.coach-skip:active{transform:scale(.97);}
+    .coach-dots{display:flex;gap:6px;}
+    .coach-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);transition:background-color 200ms ease, transform 200ms var(--ease-out-strong);}
+    .coach-dot.is-active{background:var(--orange-2);transform:scale(1.25);}
+
+    /* ===== Несколько дней списания ===== */
+    .mp-days{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}
+    .mp-days:empty{display:none;}
+    .mp-day-chip{
+      display:inline-flex;align-items:center;gap:2px;height:34px;padding:0 4px 0 12px;border-radius:999px;
+      font-size:14px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;
+      background:rgba(255,122,26,.14);border:1px solid rgba(255,122,26,.32);
+      animation:chip-in 200ms var(--ease-out-strong) backwards;
+    }
+    .mp-day-chip button{
+      width:28px;height:28px;border:none;border-radius:50%;background:transparent;cursor:pointer;
+      color:var(--text-soft);font-size:18px;line-height:1;font-family:inherit;
+    }
+    .mp-day-chip button:active{background:rgba(255,255,255,.08);}
+    @keyframes chip-in{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:none;}}
+    .mp-day-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;}
+    .mp-day-btn{
+      height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--line-strong);cursor:pointer;
+      background:var(--surface-2);color:var(--text);font-size:14px;font-weight:800;font-family:inherit;white-space:nowrap;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .mp-day-btn:active{transform:scale(.97);}
+    .mp-day-btn:disabled,.mp-day-add input:disabled{opacity:.45;}
+    .mp-payday-btn{
+      display:none;margin-top:8px;padding:8px 12px;border-radius:999px;cursor:pointer;
+      border:1px dashed var(--line-strong);background:rgba(47,123,255,.08);color:var(--accent-2);
+      font-size:12.5px;font-weight:700;font-family:inherit;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .mp-payday-btn:active{transform:scale(.97);}
+
+    /* ===== Автораспределение: свои статьи ===== */
+    .pct-setting{gap:10px;}
+    .pct-setting .pct-label{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+    .pct-icon{flex-shrink:0;font-size:18px;}
+    .pct-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .pct-setting .pct-controls{flex-shrink:0;gap:8px;}
+    .pct-setting .pct-val{min-width:44px;font-variant-numeric:tabular-nums;}
+    .pct-remove{
+      width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
+      background:rgba(255,92,122,.12);color:var(--danger);font-size:18px;line-height:1;font-family:inherit;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .pct-remove:active{transform:scale(.92);}
+    .pct-remove-spacer{display:inline-block;width:32px;}
+    .dist-total-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;}
+    #pct-total-label{margin-left:auto;font-weight:800;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;}
+    .dist-balance-btn{
+      padding:8px 12px;border-radius:999px;border:1px dashed var(--line-strong);cursor:pointer;
+      background:rgba(47,123,255,.08);color:var(--accent-2);font-size:12.5px;font-weight:700;font-family:inherit;white-space:nowrap;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .dist-balance-btn:active{transform:scale(.97);}
+    .bucket-icons{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+    .bucket-icon{
+      width:38px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);
+      font-size:18px;cursor:pointer;transition:transform 160ms var(--ease-out-strong), border-color 160ms ease;
+    }
+    .bucket-icon:active{transform:scale(.94);}
+    .bucket-icon.is-selected{border-color:var(--orange);background:rgba(255,122,26,.14);}
+    .bucket-name-input,.mp-day-add input{
+      width:100%;height:48px;padding:0 14px;border-radius:14px;font-size:16px;font-weight:600;font-family:inherit;
+      background:var(--bg-2);border:2px solid var(--line);color:var(--text);outline:none;
+    }
+    .bucket-name-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,123,255,.20);}
+    .bucket-name-input.is-invalid{border-color:var(--danger);animation:mp-shake 240ms ease-out;}
+
+    /* ===== Меньше движения — по системной настройке ===== */
+    @media (prefers-reduced-motion: reduce){
+      .page.active{animation:fade-only 150ms ease backwards;}
+      .modal-overlay.show .modal-content{animation:fade-only 200ms ease backwards;}
+      .modal-overlay.closing .modal-content{animation:fade-out-only 150ms ease forwards;}
+      .falling-bill,.sparkle{display:none;}
+      .hourglass-bounce{animation:none;}
+      .hourglass-svg path{transition:transform 200ms ease;}
+      .coach-spot{transition:none;}
+      .coach-card{transition:opacity 150ms ease;}
+      .coach-card.is-hidden{transform:none;}
+      .toast{transition:opacity 200ms ease;}
+      @keyframes fade-only{from{opacity:0;}to{opacity:1;}}
+      @keyframes fade-out-only{from{opacity:1;}to{opacity:0;}}
+    }
+  </style>
 </head>
 <body>
 
@@ -1244,7 +1586,15 @@
       <small id="header-date">Среда, 8 июля</small>
       <h1>SmartWallet</h1>
     </div>
-    <div class="header-logo">SW</div>
+    <button class="header-logo settings-trigger" id="settings-trigger" onclick="openSettings()" aria-label="Настройки">
+      <span>SW</span>
+      <span class="settings-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </span>
+    </button>
   </div>
 
   <div class="profile-card" onclick="openProfileSettings()">
@@ -1429,7 +1779,19 @@
   </button>
 </div>
 
-<button class="fab" onclick="openSettings()">⚙️</button>
+<div class="coach" id="coach" hidden>
+  <div class="coach-spot" id="coach-spot"></div>
+  <div class="coach-card is-hidden" id="coach-card" role="dialog" aria-live="polite" aria-labelledby="coach-title">
+    <div class="coach-step" id="coach-step"></div>
+    <div class="coach-title" id="coach-title"></div>
+    <div class="coach-text" id="coach-text"></div>
+    <div class="coach-actions">
+      <button class="coach-skip" id="coach-skip" onclick="endCoach()">Пропустить</button>
+      <div class="coach-dots" id="coach-dots"></div>
+      <button class="coach-next" id="coach-next" onclick="nextCoach()">Далее</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modal-daily-settings">
   <div class="modal-content">
@@ -1475,6 +1837,7 @@
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openProfileSettings()">👤 Мой профиль</button>
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openIncomeScheme()">📅 График доходов</button>
     <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openModal('dist-settings')">📊 Проценты автораспределения</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings'); setTimeout(startCoach, 260)">💡 Показать подсказки</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings'); checkForUpdates()">🔄 Проверить обновления</button>
     <button class="modal-btn modal-btn-cancel" onclick="exportBackup()">💾 Сохранить копию данных</button>
     <button class="modal-btn modal-btn-cancel" onclick="importBackup()">📂 Восстановить из копии</button>
@@ -1520,15 +1883,26 @@
 <div class="modal-overlay" id="modal-dist-settings">
   <div class="modal-content">
     <div class="modal-handle"></div>
-    <div class="modal-title">Проценты автораспределения</div>
-    <div class="modal-input-label" style="margin-bottom:16px;">Настройте, какая доля ЛЮБОГО дохода отправляется в каждую категорию автоматически. Сумма должна быть равна 100%.</div>
+    <div class="modal-title">Автораспределение</div>
+    <div class="modal-input-label" style="margin-bottom:12px;">Какая доля дохода уходит в каждую статью. Сначала из дохода откладываются обязательные платежи, а проценты делят остаток. Ненужные статьи можно удалить.</div>
 
     <div id="pct-settings-list"></div>
 
-    <div style="margin-top:16px; text-align:right; font-weight:800; font-size:15px;" id="pct-total-label">Сумма: 100%</div>
+    <div class="dist-total-row">
+      <button type="button" class="dist-balance-btn" id="dist-balance-btn" onclick="balanceToSpending()">Остаток — на расходы</button>
+      <div id="pct-total-label">Сумма: 100%</div>
+    </div>
 
-    <button class="modal-btn modal-btn-primary" onclick="saveDistSettings()">Сохранить настройки</button>
-    <button class="modal-btn modal-btn-cancel" onclick="closeModal('dist-settings')">Закрыть</button>
+    <div class="mp-label" style="margin-top:14px;">Новая статья</div>
+    <div class="bucket-icons" id="bucket-icons"></div>
+    <div class="mp-day-add">
+      <input type="text" class="bucket-name-input" id="new-bucket-name" maxlength="40" placeholder="Например: Отпуск" enterkeyhint="done"
+             onkeydown="if(event.key==='Enter'){event.preventDefault();addDraftBucket();}">
+      <button type="button" class="mp-day-btn" onclick="addDraftBucket()">+ Добавить</button>
+    </div>
+
+    <button class="modal-btn modal-btn-primary" onclick="saveDistSettings()">Сохранить</button>
+    <button class="modal-btn modal-btn-cancel" onclick="cancelDistSettings()">Закрыть</button>
   </div>
 </div>
 
@@ -1662,20 +2036,25 @@
       <input type="text" id="mp-name" maxlength="60" autocomplete="off" placeholder="Например: Коммуналка">
     </div>
 
-    <div class="mp-row">
-      <div class="mp-field">
-        <label for="mp-amount">Сумма</label>
-        <div class="mp-input-wrap">
-          <input type="number" id="mp-amount" inputmode="decimal" min="1" max="10000000" placeholder="5 000" oninput="updateMandatoryPreview()">
-          <span class="mp-suffix">₽</span>
-        </div>
-      </div>
-      <div class="mp-field mp-field-day">
-        <label for="mp-day">День списания</label>
-        <input type="number" id="mp-day" inputmode="numeric" min="1" max="31" placeholder="10" oninput="updateMandatoryPreview()">
+    <div class="mp-field">
+      <label for="mp-amount">Сумма в месяц</label>
+      <div class="mp-input-wrap">
+        <input type="number" id="mp-amount" inputmode="decimal" min="1" max="10000000" placeholder="5 000" oninput="updateMandatoryPreview()">
+        <span class="mp-suffix">₽</span>
       </div>
     </div>
-    <div class="mp-hint">Если в месяце меньше дней — спишем в последний день месяца.</div>
+
+    <div class="mp-field">
+      <label for="mp-day">Дни списания</label>
+      <div class="mp-days" id="mp-days"></div>
+      <div class="mp-day-add">
+        <input type="number" id="mp-day" inputmode="numeric" min="1" max="31" placeholder="День, например 10" enterkeyhint="done"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();addMandatoryDay();}">
+        <button type="button" class="mp-day-btn" onclick="addMandatoryDay()">+ День</button>
+      </div>
+      <button type="button" class="mp-payday-btn" id="mp-payday-btn" onclick="useIncomeDays()"></button>
+    </div>
+    <div class="mp-hint">Платите частями с каждой зарплаты? Добавьте несколько дней — сумма разделится поровну. Если в месяце меньше дней, спишем в последний.</div>
 
     <div class="mp-label">Категория</div>
     <div class="mp-cats" id="mp-cats"></div>
@@ -1724,11 +2103,18 @@
     { id: 'other_inc', name: 'Другое', icon: '💵' }
   ];
 
+  // Статьи по умолчанию. Дальше пользователь сам удаляет, переименовывает и добавляет свои —
+  // список хранится в data.distBuckets, проценты — в data.distPct
   const DIST_BUCKETS = [
     { id: 'invest', name: 'Инвестиции', icon: '📈', defPct: 30 },
     { id: 'pillow', name: 'Подушка безопасности', icon: '🛡️', defPct: 10 },
     { id: 'spending', name: 'На расходы периода', icon: '🛍️', defPct: 50 }
   ];
+  // «На расходы периода» удалить нельзя: из неё считаются доступный бюджет и дневной лимит
+  const SPENDING_BUCKET = 'spending';
+  const BUCKET_ICONS = ['📈', '🛡️', '🏖️', '🎓', '🚗', '🏠', '🎁', '💍', '🧸', '🐾', '✈️', '💰'];
+
+  function distBuckets() { return data.distBuckets; }
 
   const SCHEMES = [
     { id: 'weekly', icon: '🗓️', title: 'Еженедельный доход', desc: 'Курьер, фриланс. Деньги раз в неделю — вы выбираете день недели.' },
@@ -1745,6 +2131,7 @@
       { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000, autoDist: true, pct: 10, deadline: null, deposits: [] }
     ],
     distPct: { invest: 30, pillow: 10, spending: 50 },
+    distBuckets: DIST_BUCKETS.map(b => ({ id: b.id, name: b.name, icon: b.icon })),
     loans: [],
     mandatoryPayments: [],
     dailyLimit: null,
@@ -1764,6 +2151,7 @@
     updateHeaderDate();
     recalculateEverything();
     switchPage('main');
+    if (!coachSeen()) setTimeout(startCoach, 900);
   });
 
   function loadData() {
@@ -1784,9 +2172,15 @@
       d.goals = [ { id: 'car-goal', name: 'Накопить на машину', current: 0, target: 300000 } ];
     }
     if(!d.distPct) d.distPct = {};
-    if(d.distPct.invest === undefined) d.distPct.invest = 30;
-    if(d.distPct.pillow === undefined) d.distPct.pillow = 10;
-    if(d.distPct.spending === undefined) d.distPct.spending = 50;
+    // Список статей: у старых данных его нет — берём стандартные три
+    if(!Array.isArray(d.distBuckets)) {
+      d.distBuckets = DIST_BUCKETS.map(b => ({ id: b.id, name: b.name, icon: b.icon }));
+      DIST_BUCKETS.forEach(b => { if(d.distPct[b.id] === undefined) d.distPct[b.id] = b.defPct; });
+    }
+    if(!d.distBuckets.some(b => b.id === SPENDING_BUCKET)) {
+      d.distBuckets.push({ id: SPENDING_BUCKET, name: 'На расходы периода', icon: '🛍️' });
+    }
+    d.distBuckets.forEach(b => { if(typeof d.distPct[b.id] !== 'number') d.distPct[b.id] = 0; });
 
     // Миграция старого формата: процент копилки «car» теперь живёт в самой цели
     const legacyCarPct = (typeof d.distPct.car === 'number') ? d.distPct.car : 10;
@@ -1836,7 +2230,10 @@
     d.mandatoryPayments = d.mandatoryPayments.filter(mp => mp && Number(mp.amount) > 0);
     d.mandatoryPayments.forEach(mp => {
       mp.amount = Number(mp.amount);
-      mp.day = Math.min(31, Math.max(1, parseInt(mp.day, 10) || 1));
+      // Было одно поле day — теперь список дней списания в месяце
+      const rawDays = Array.isArray(mp.days) ? mp.days : [mp.day];
+      mp.days = [...new Set(rawDays.map(d => Math.min(31, Math.max(1, parseInt(d, 10) || 1))))].sort((a, b) => a - b);
+      delete mp.day;
       if(typeof mp.name !== 'string' || !mp.name.trim()) mp.name = 'Платёж';
       if(!mp.category) mp.category = 'other';
       if(!mp.startDate) mp.startDate = isoDate(new Date());
@@ -2026,22 +2423,31 @@
       }
     });
 
-    const autoDistRowsData = buildDistRows(periodIncome);
+    // Сначала обязательные платежи: эти деньги уже заняты, их нельзя распределять по процентам.
+    // Инвестиции, подушка, копилки и расходы делят только остаток дохода.
+    const obligations = getObligations(startOfDay(now));
+    const obligationsReserve = getObligationsReserve(obligations, period);
+    const reserveCovered = Math.min(obligationsReserve, periodIncome);
+    const reserveShortfall = Math.max(0, obligationsReserve - periodIncome); // доход ещё не покрыл резерв
+    const distributableIncome = periodIncome - reserveCovered;
+
+    const autoDistRowsData = buildDistRows(distributableIncome);
+    if (obligationsReserve > 0) {
+      autoDistRowsData.unshift({ key: 'obligations', name: 'Обязательные платежи', icon: '🧾', pct: null, amount: reserveCovered });
+    }
     const curWeekTotalDistributed = autoDistRowsData.reduce((sum, r) => sum + r.amount, 0);
 
     let totalSavedAllTime = 0;
-    const savingPct = (data.distPct.invest || 0) + (data.distPct.pillow || 0) +
+    // «Отложено» — всё, что не идёт на расходы периода: свои статьи и копилки
+    const savingPct = distBuckets().filter(b => b.id !== SPENDING_BUCKET).reduce((sum, b) => sum + (data.distPct[b.id] || 0), 0) +
       getAutoGoals().reduce((sum, g) => sum + (g.pct || 0), 0);
     data.transactions.forEach(t => {
       if(t.type === 'income') totalSavedAllTime += (t.amount * savingPct) / 100;
     });
     totalSavedAllTime = Math.round(totalSavedAllTime);
 
-    const obligations = getObligations(startOfDay(now));
-    const obligationsReserve = getObligationsReserve(obligations, period);
-
     const spendingRow = autoDistRowsData.find(r => r.key === 'spending');
-    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense - obligationsReserve;
+    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense - reserveShortfall;
 
     const daysLeftInWeek = Math.max(1, period.daysLeft);
     let baseDaily = parseFloat(data.dailyLimit) || 0;
@@ -2132,7 +2538,7 @@
       d.className = 'auto-dist-row';
       d.innerHTML = `
         <div class="name">${r.icon} ${r.name}</div>
-        <div class="pct">${r.pct}%</div>
+        <div class="pct">${r.pct === null ? 'резерв' : r.pct + '%'}</div>
         <div class="amount">${r.amount.toLocaleString()} ₽</div>
       `;
       distBox.appendChild(d);
@@ -2345,9 +2751,18 @@
     if (goal.deposits.length > 300) goal.deposits = goal.deposits.slice(-300);
   }
 
+  // Сколько из нового дохода идёт в автораспределение: пока резерв на обязательные платежи
+  // не покрыт доходом периода, деньги сначала уходят туда
+  function distributablePart(amount) {
+    const income = Number(globalCalc.periodIncome) || 0;
+    const reserve = Number(globalCalc.obligationsReserve) || 0;
+    return Math.max(0, income + amount - reserve) - Math.max(0, income - reserve);
+  }
+
   function distributeIncome(amount) {
+    const net = distributablePart(amount);
     getAutoGoals().forEach(g => {
-      const amt = Math.round((amount * (Number(g.pct) || 0)) / 100);
+      const amt = Math.round((net * (Number(g.pct) || 0)) / 100);
       if (amt > 0) {
         g.current += amt;
         recordGoalDeposit(g, amt, 'auto');
@@ -2591,20 +3006,44 @@
     return new Date(y, m, Math.min(day, getDaysInMonth(y, m)));
   }
 
-  function nextOccurrenceOnOrAfter(date, day) {
-    const d = startOfDay(date);
-    const occ = monthlyOccurrence(d.getFullYear(), d.getMonth(), day);
-    return occ < d ? monthlyOccurrence(d.getFullYear(), d.getMonth() + 1, day) : occ;
+  /**
+   * Взносы платежа в месяце. Месячная сумма делится поровну между днями списания
+   * (остаток копеек — на последний день): аренда 30 000 ₽ 5-го и 20-го = два взноса по 15 000 ₽.
+   * Если два дня в коротком месяце совпали (30 и 31 в ноябре) — взносы объединяются.
+   */
+  function occurrencesInMonth(mp, year, month) {
+    const n = mp.days.length;
+    const per = Math.floor(mp.amount / n);
+    const lastAmount = Math.round((mp.amount - per * (n - 1)) * 100) / 100;
+    const byDate = new Map();
+    mp.days.forEach((day, i) => {
+      const date = monthlyOccurrence(year, month, day);
+      const amount = i === n - 1 ? lastAmount : per;
+      const key = isoDate(date);
+      if (byDate.has(key)) byDate.get(key).amount += amount;
+      else byDate.set(key, { date, amount });
+    });
+    return [...byDate.values()].sort((a, b) => a.date - b.date);
   }
 
-  // Ближайший неоплаченный срок: может быть в прошлом — тогда платёж просрочен
-  function mandatoryDue(mp) {
+  // Ближайший неоплаченный взнос (может быть в прошлом — тогда просрочен) и предыдущий срок
+  function mandatoryNext(mp) {
+    const start = startOfDay(parseIso(mp.startDate));
     const paid = new Set(mp.payments.map(p => p.due));
-    let occ = nextOccurrenceOnOrAfter(parseIso(mp.startDate), mp.day);
-    for (let i = 0; i < 600 && paid.has(isoDate(occ)); i++) {
-      occ = monthlyOccurrence(occ.getFullYear(), occ.getMonth() + 1, mp.day);
+    let prev = null;
+    for (let k = 0; k < 600; k++) {
+      for (const occ of occurrencesInMonth(mp, start.getFullYear(), start.getMonth() + k)) {
+        if (occ.date < start || paid.has(isoDate(occ.date))) { prev = occ.date; continue; }
+        return { due: occ.date, amount: occ.amount, prev };
+      }
     }
-    return occ;
+    return { due: start, amount: mp.amount, prev: null };
+  }
+
+  // «10 числа», «5 и 20 числа», «1, 8, 15 и 22 числа»
+  function mandatoryDaysLabel(days) {
+    if (days.length === 1) return `${days[0]} числа`;
+    return `${days.slice(0, -1).join(', ')} и ${days[days.length - 1]} числа`;
   }
 
   // Откуда начинается накопление: со следующей выплаты после прошлого срока,
@@ -2655,20 +3094,20 @@
   }
 
   function obligationFromMandatory(mp, today) {
-    const due = mandatoryDue(mp);
-    const prev = monthlyOccurrence(due.getFullYear(), due.getMonth() - 1, mp.day);
-    const plan = reservePlan(mp.amount, due, cycleStartDate(prev, parseIso(mp.startDate)), today);
+    const { due, amount, prev } = mandatoryNext(mp);
+    const plan = reservePlan(amount, due, cycleStartDate(prev, parseIso(mp.startDate)), today);
     const daysTo = daysBetween(today, due);
     const state = due < today
-      ? { kind: 'overdue', days: -daysTo, due: Number(mp.amount) }
-      : { kind: daysTo <= 7 ? 'soon' : 'future', daysTo, due: Number(mp.amount) };
+      ? { kind: 'overdue', days: -daysTo, due: amount }
+      : { kind: daysTo <= 7 ? 'soon' : 'future', daysTo, due: amount };
     const cat = mandatoryCategory(mp.category);
     const period = getBudgetPeriod(today);
     const lastPaid = mp.payments[mp.payments.length - 1];
     const paidThisPeriod = lastPaid && isWithinPeriod(new Date(lastPaid.paidAt), period) ? lastPaid : null;
     return {
       kind: 'custom', id: mp.id, name: mp.name, icon: cat.icon, categoryName: cat.name,
-      due, amount: Number(mp.amount), state, plan, paidThisPeriod, sub: cat.name
+      due, amount, state, plan, paidThisPeriod,
+      sub: mp.days.length > 1 ? `${cat.name} · ${rub(mp.amount)} в мес.` : cat.name
     };
   }
 
@@ -2798,18 +3237,19 @@
   function payMandatory(id) {
     const mp = data.mandatoryPayments.find(x => x.id === id);
     if (!mp) return;
-    const due = isoDate(mandatoryDue(mp));
+    const next = mandatoryNext(mp); // платится ближайший взнос, а не вся месячная сумма
+    const due = isoDate(next.due);
     const cat = mandatoryCategory(mp.category);
     const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
     data.transactions.push({
-      id: txId, type: 'expense', amount: Number(mp.amount), name: mp.name,
+      id: txId, type: 'expense', amount: next.amount, name: mp.name,
       category: cat.txCat, date: new Date().toISOString(), mandatoryId: mp.id, fromReserve: true,
       savedBefore: savedBeforeFor('custom', mp.id)
     });
-    mp.payments.push({ due, paidAt: new Date().toISOString(), amount: Number(mp.amount), txId });
+    mp.payments.push({ due, paidAt: new Date().toISOString(), amount: next.amount, txId });
     saveSilently();
     recalculateEverything();
-    showToast(`${mp.name}: оплачено ${rub(mp.amount)}`);
+    showToast(`${mp.name}: оплачено ${rub(next.amount)}`);
   }
 
   function undoMandatoryPayment(id) {
@@ -2833,8 +3273,53 @@
   // ===== ОКНО «ОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ» =====
   // Предел суммы: больше — уже не ежемесячный платёж, а строка с суммой вытесняет название
   const MANDATORY_MAX_AMOUNT = 10000000;
+  const MANDATORY_MAX_DAYS = 8;
   let editingMandatoryId = null;
   let selectedMandatoryCat = 'utilities';
+  let draftMandatoryDays = [];
+
+  // Дни списания — чипы с крестиком
+  function renderMandatoryDays() {
+    document.getElementById('mp-days').innerHTML = draftMandatoryDays.map(d => `
+      <span class="mp-day-chip">${d}<button type="button" aria-label="Убрать ${d} число" onclick="removeMandatoryDay(${d})">×</button></span>`).join('');
+    const input = document.getElementById('mp-day');
+    input.placeholder = draftMandatoryDays.length ? 'Ещё день' : 'День, например 10';
+    const full = draftMandatoryDays.length >= MANDATORY_MAX_DAYS;
+    input.disabled = full;
+    document.querySelector('.mp-day-btn').disabled = full;
+
+    // Подсказка по графику дохода: дни выплат как дни списания
+    const s = data.incomeScheme || {};
+    const btn = document.getElementById('mp-payday-btn');
+    let suggest = null;
+    if (s.type === 'twice' && Array.isArray(s.payDays)) suggest = { days: [...s.payDays], label: `Как зарплата: ${s.payDays.join(' и ')} числа` };
+    if (s.type === 'weekly') suggest = { days: [1, 8, 15, 22], label: 'Каждую неделю: 1, 8, 15 и 22 числа' };
+    const same = suggest && suggest.days.slice().sort((a, b) => a - b).join() === draftMandatoryDays.join();
+    btn.style.display = suggest && !same ? 'inline-flex' : 'none';
+    if (suggest) { btn.textContent = suggest.label; btn.dataset.days = suggest.days.join(','); }
+  }
+
+  function setMandatoryDays(days) {
+    draftMandatoryDays = [...new Set(days.filter(d => d >= 1 && d <= 31))].sort((a, b) => a - b).slice(0, MANDATORY_MAX_DAYS);
+    renderMandatoryDays();
+    updateMandatoryPreview();
+  }
+
+  function addMandatoryDay() {
+    const input = document.getElementById('mp-day');
+    const day = parseInt(input.value, 10);
+    if (!(day >= 1 && day <= 31)) { shakeField('mp-day'); return; }
+    input.value = '';
+    setMandatoryDays(draftMandatoryDays.concat(day));
+  }
+
+  function removeMandatoryDay(day) {
+    setMandatoryDays(draftMandatoryDays.filter(d => d !== day));
+  }
+
+  function useIncomeDays() {
+    setMandatoryDays(document.getElementById('mp-payday-btn').dataset.days.split(',').map(Number));
+  }
 
   function renderMandatoryCats() {
     document.getElementById('mp-cats').innerHTML = MANDATORY_CATEGORIES.map(c => `
@@ -2860,7 +3345,7 @@
     document.getElementById('mp-day').value = '';
     document.getElementById('mp-delete').style.display = 'none';
     renderMandatoryCats();
-    updateMandatoryPreview();
+    setMandatoryDays([]);
     openModal('add-payment');
   }
 
@@ -2872,20 +3357,23 @@
     document.getElementById('mp-title').textContent = 'Обязательный платёж';
     document.getElementById('mp-name').value = mp.name;
     document.getElementById('mp-amount').value = mp.amount;
-    document.getElementById('mp-day').value = mp.day;
+    document.getElementById('mp-day').value = '';
     document.getElementById('mp-delete').style.display = 'block';
     renderMandatoryCats();
-    updateMandatoryPreview();
+    setMandatoryDays(mp.days);
     openModal('add-payment');
   }
 
   function readMandatoryForm() {
     const amount = Math.round(parseFloat(String(document.getElementById('mp-amount').value).replace(',', '.')) * 100) / 100;
-    const day = parseInt(document.getElementById('mp-day').value, 10);
+    // День, набранный, но не добавленный кнопкой «+ День», тоже учитываем
+    const typed = parseInt(document.getElementById('mp-day').value, 10);
+    const days = [...new Set(draftMandatoryDays.concat(typed >= 1 && typed <= 31 ? [typed] : []))]
+      .sort((a, b) => a - b).slice(0, MANDATORY_MAX_DAYS);
     return {
       name: document.getElementById('mp-name').value.trim(),
-      amount, day,
-      valid: amount > 0 && amount <= MANDATORY_MAX_AMOUNT && day >= 1 && day <= 31
+      amount, days,
+      valid: amount > 0 && amount <= MANDATORY_MAX_AMOUNT && days.length > 0
     };
   }
 
@@ -2904,19 +3392,21 @@
     const today = startOfDay(new Date());
     const existing = editingMandatoryId && data.mandatoryPayments.find(x => x.id === editingMandatoryId);
     const draft = {
-      day: f.day, amount: f.amount, payments: existing ? existing.payments : [],
+      days: f.days, amount: f.amount, payments: existing ? existing.payments : [],
       startDate: existing ? existing.startDate : isoDate(today)
     };
-    const due = mandatoryDue(draft);
-    const prev = monthlyOccurrence(due.getFullYear(), due.getMonth() - 1, f.day);
-    const plan = reservePlan(f.amount, due, cycleStartDate(prev, parseIso(draft.startDate)), today);
-    const days = daysBetween(today, due);
+    const next = mandatoryNext(draft);
+    const plan = reservePlan(next.amount, next.due, cycleStartDate(next.prev, parseIso(draft.startDate)), today);
+    const days = daysBetween(today, next.due);
     const when = days === 0 ? 'сегодня' : `через ${days} ${plural(days, 'день', 'дня', 'дней')}`;
+    const split = f.days.length > 1
+      ? `${f.days.length} ${plural(f.days.length, 'взнос', 'взноса', 'взносов')} в месяц — ${mandatoryDaysLabel(f.days)}, примерно по ${rub(Math.floor(f.amount / f.days.length))}.<br>`
+      : '';
     let how;
-    if (plan.share >= plan.amount) how = `Заморозим всю сумму ${periodSourceLabel()}.`;
+    if (plan.share >= plan.amount) how = `Заморозим всю сумму взноса ${periodSourceLabel()}.`;
     else if (plan.share <= 0) how = 'Начнём откладывать со следующей выплаты.';
     else how = `${periodSourceLabel()[0].toUpperCase() + periodSourceLabel().slice(1)} отложим <strong>${rub(plan.share)}</strong>, всего выплат до срока: ${plan.periods}.`;
-    box.innerHTML = `Ближайшее списание — <strong>${formatLongDate(due)}</strong> (${when}).<br>${how}`;
+    box.innerHTML = `${split}Ближайшее списание — <strong>${rub(next.amount)}</strong>, ${formatLongDate(next.due)} (${when}).<br>${how}`;
   }
 
   function saveMandatory() {
@@ -2926,12 +3416,12 @@
 
     if (editingMandatoryId) {
       const mp = data.mandatoryPayments.find(x => x.id === editingMandatoryId);
-      Object.assign(mp, { name: f.name, amount: f.amount, day: f.day, category: selectedMandatoryCat });
+      Object.assign(mp, { name: f.name, amount: f.amount, days: f.days, category: selectedMandatoryCat });
       showToast('Платёж обновлён');
     } else {
       const id = 'mp-' + Date.now();
       data.mandatoryPayments.push({
-        id, name: f.name, amount: f.amount, day: f.day, category: selectedMandatoryCat,
+        id, name: f.name, amount: f.amount, days: f.days, category: selectedMandatoryCat,
         startDate: isoDate(new Date()), payments: []
       });
       justAddedObligationId = id;
@@ -3488,15 +3978,25 @@
     box.textContent = text;
   }
 
+  // Шторка уезжает вниз за 220 мс (быстрее, чем выезжает), потом окно скрывается
+  const MODAL_EXIT_MS = 220;
+
   function openModal(name) {
-    document.getElementById('modal-' + name).classList.add('show');
+    const el = document.getElementById('modal-' + name);
+    clearTimeout(el._closeTimer);
+    el.classList.remove('closing');
+    el.classList.add('show');
     if(name === 'dist-settings') openDistSettings();
     if(name === 'daily-settings') document.getElementById('daily-limit-input').value = data.dailyLimit || '';
     if(name === 'add-goal') resetGoalModal();
   }
 
   function closeModal(name) {
-    document.getElementById('modal-' + name).classList.remove('show');
+    const el = document.getElementById('modal-' + name);
+    if (el.classList.contains('show') && !el.classList.contains('closing')) {
+      el.classList.add('closing');
+      el._closeTimer = setTimeout(() => el.classList.remove('show', 'closing'), MODAL_EXIT_MS);
+    }
 
     if (name === 'add-ops' && window.pendingQueue && window.pendingQueue.length > 0) {
       setTimeout(processNextInQueue, 400);
@@ -3507,6 +4007,95 @@
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ===== ПОДСКАЗКИ ПРИ ПЕРВОМ ВХОДЕ =====
+  // Пять коротких шагов по главному экрану. Показываются один раз, повторно — из настроек.
+  const COACH_KEY = 'sw_coach_done_v1';
+  const COACH_STEPS = [
+    { target: '.card-gradient', title: 'Сколько можно тратить',
+      text: 'Деньги до следующей выплаты. Обязательные платежи уже вычтены — их можно не держать в голове.' },
+    { target: '.daily-limit-card', title: 'Лимит на сегодня',
+      text: 'Столько можно потратить сегодня, чтобы спокойно дотянуть до зарплаты. Нажмите, чтобы задать свой.' },
+    { target: '#obligations-card', title: 'Обязательные платежи',
+      text: 'ЖКХ, кредиты, подписки, кружки. Нажмите «+» — приложение само отложит деньги к сроку.' },
+    { target: '.quick-actions', title: 'Записывайте траты',
+      text: 'Расход или доход — в два касания. Чем точнее записи, тем точнее лимит.' },
+    { target: '#settings-trigger', title: 'Настройки — здесь',
+      text: 'Значок SW: профиль, график доходов, резервная копия. Там же можно снова включить эти подсказки.' }
+  ];
+  let coachIndex = -1;
+  let coachTimer = null;
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function coachSeen() {
+    try { return localStorage.getItem(COACH_KEY) === '1'; } catch (e) { return true; }
+  }
+
+  function startCoach() {
+    if (!document.getElementById('page-main').classList.contains('active')) switchPage('main');
+    coachIndex = -1;
+    document.getElementById('coach-dots').innerHTML = COACH_STEPS.map(() => '<span class="coach-dot"></span>').join('');
+    const spot = document.getElementById('coach-spot');
+    spot.style.transition = 'none'; // первый шаг — сразу на месте, дальше подсветка переезжает
+    document.getElementById('coach').hidden = false;
+    nextCoach();
+  }
+
+  function nextCoach() {
+    coachIndex++;
+    if (coachIndex >= COACH_STEPS.length) { endCoach(); return; }
+    showCoachStep(coachIndex);
+  }
+
+  function showCoachStep(i) {
+    const step = COACH_STEPS[i];
+    const target = document.querySelector(step.target);
+    if (!target) { nextCoach(); return; }
+    const card = document.getElementById('coach-card');
+    const spot = document.getElementById('coach-spot');
+    card.classList.add('is-hidden');
+    target.scrollIntoView({ block: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+
+    clearTimeout(coachTimer);
+    coachTimer = setTimeout(() => {
+      const r = target.getBoundingClientRect();
+      const pad = 6;
+      spot.style.width = `${r.width + pad * 2}px`;
+      spot.style.height = `${r.height + pad * 2}px`;
+      spot.style.transform = `translate(${r.left - pad}px, ${r.top - pad}px)`;
+      spot.style.borderRadius = `${(parseFloat(getComputedStyle(target).borderTopLeftRadius) || 16) + pad}px`;
+      requestAnimationFrame(() => { spot.style.transition = ''; });
+
+      document.getElementById('coach-step').textContent = `${i + 1} из ${COACH_STEPS.length}`;
+      document.getElementById('coach-title').textContent = step.title;
+      document.getElementById('coach-text').textContent = step.text;
+      document.getElementById('coach-next').textContent = i === COACH_STEPS.length - 1 ? 'Понятно' : 'Далее';
+      document.getElementById('coach-skip').style.visibility = i === COACH_STEPS.length - 1 ? 'hidden' : 'visible';
+      document.querySelectorAll('#coach-dots .coach-dot').forEach((d, k) => d.classList.toggle('is-active', k === i));
+
+      // Карточка — там, где больше места: под блоком или над ним
+      const gap = 14;
+      const spaceBelow = window.innerHeight - r.bottom;
+      if (spaceBelow >= card.offsetHeight + gap * 2 || spaceBelow >= r.top) {
+        card.style.top = `${Math.min(r.bottom + gap, window.innerHeight - card.offsetHeight - gap)}px`;
+        card.style.bottom = 'auto';
+      } else {
+        card.style.top = 'auto';
+        card.style.bottom = `${Math.min(window.innerHeight - r.top + gap, window.innerHeight - card.offsetHeight - gap)}px`;
+      }
+      requestAnimationFrame(() => card.classList.remove('is-hidden'));
+    }, prefersReducedMotion() ? 60 : 380);
+  }
+
+  function endCoach() {
+    try { localStorage.setItem(COACH_KEY, '1'); } catch (e) {}
+    clearTimeout(coachTimer);
+    document.getElementById('coach-card').classList.add('is-hidden');
+    setTimeout(() => { document.getElementById('coach').hidden = true; }, 200);
   }
 
   // ===== НАСТРОЙКИ: ЧТЕНИЕ УВЕДОМЛЕНИЙ MIR PAY =====
@@ -3900,15 +4489,15 @@
 
   function getDistTotal() {
     let sum = 0;
-    DIST_BUCKETS.forEach(b => { sum += data.distPct[b.id] || 0; });
+    distBuckets().forEach(b => { sum += data.distPct[b.id] || 0; });
     getAutoGoals().forEach(g => { sum += Number(g.pct) || 0; });
     return sum;
   }
 
   function buildDistRows(income) {
     const rows = [];
-    DIST_BUCKETS.forEach(b => {
-      const pct = data.distPct[b.id] !== undefined ? data.distPct[b.id] : b.defPct;
+    distBuckets().forEach(b => {
+      const pct = data.distPct[b.id] || 0;
       rows.push({ key: b.id, name: b.name, icon: b.icon, pct, amount: Math.round((income * pct) / 100) });
     });
     getAutoGoals().forEach(g => {
@@ -3918,93 +4507,123 @@
     return rows;
   }
 
+  // Черновик настроек: правки применяются только по «Сохранить», «Закрыть» их отменяет
+  let distDraft = null;
+  let newBucketIcon = BUCKET_ICONS[0];
+
   function openDistSettings() {
+    distDraft = {
+      buckets: data.distBuckets.map(b => ({ ...b })),
+      pct: { ...data.distPct },
+      goalPct: Object.fromEntries(getAutoGoals().map(g => [g.id, Number(g.pct) || 0]))
+    };
+    newBucketIcon = BUCKET_ICONS[0];
+    document.getElementById('new-bucket-name').value = '';
+    renderDistSettings();
+  }
+
+  function renderDistSettings() {
     const box = document.getElementById('pct-settings-list');
-    box.innerHTML = '';
-
-    DIST_BUCKETS.forEach(b => {
-      const currentPct = data.distPct[b.id] !== undefined ? data.distPct[b.id] : b.defPct;
-      const row = document.createElement('div');
-      row.className = 'pct-setting';
-      row.innerHTML = `
-        <div class="pct-label">${b.icon} ${b.name}</div>
-        <div class="pct-controls">
-          <button onclick="changePct('${b.id}', -5)">-</button>
-          <div class="pct-val" id="pct-val-${b.id}">${currentPct}%</div>
-          <button onclick="changePct('${b.id}', 5)">+</button>
+    const row = (key, icon, name, pct, removable) => `
+      <div class="pct-setting">
+        <div class="pct-label">
+          <span class="pct-icon">${icon}</span><span class="pct-name">${escapeHtml(name)}</span>
         </div>
-      `;
-      box.appendChild(row);
-    });
-
-    getAutoGoals().forEach(g => {
-      const row = document.createElement('div');
-      row.className = 'pct-setting';
-      row.innerHTML = `
-        <div class="pct-label">⏳ ${g.name}</div>
         <div class="pct-controls">
-          <button onclick="changeGoalPct('${g.id}', -5)">-</button>
-          <div class="pct-val" id="pct-val-goal-${g.id}">${Number(g.pct) || 0}%</div>
-          <button onclick="changeGoalPct('${g.id}', 5)">+</button>
+          <button onclick="changeDraftPct('${key}', -5)" aria-label="Уменьшить">−</button>
+          <div class="pct-val">${pct}%</div>
+          <button onclick="changeDraftPct('${key}', 5)" aria-label="Увеличить">+</button>
+          ${removable ? `<button class="pct-remove" onclick="removeDraftBucket('${key}')" aria-label="Удалить статью">×</button>` : '<span class="pct-remove-spacer"></span>'}
         </div>
-      `;
-      box.appendChild(row);
-    });
+      </div>`;
 
+    let html = distDraft.buckets.map(b =>
+      row(b.id, b.icon, b.name, distDraft.pct[b.id] || 0, b.id !== SPENDING_BUCKET)).join('');
+    html += getAutoGoals().map(g => row('goal:' + g.id, '⏳', g.name, distDraft.goalPct[g.id] || 0, false)).join('');
     if (getAutoGoals().length === 0) {
-      const hint = document.createElement('div');
-      hint.className = 'settings-hint';
-      hint.style.marginBottom = '10px';
-      hint.textContent = 'Ни одна копилка не включена в автораспределение. Включить можно при создании копилки или в её настройках.';
-      box.appendChild(hint);
+      html += '<div class="settings-hint" style="margin:6px 0 10px;">Копилки тоже могут пополняться автоматически — включите это при создании копилки.</div>';
     }
+    box.innerHTML = html;
 
+    document.getElementById('bucket-icons').innerHTML = BUCKET_ICONS.map(ic =>
+      `<button type="button" class="bucket-icon ${ic === newBucketIcon ? 'is-selected' : ''}" onclick="pickBucketIcon('${ic}')">${ic}</button>`).join('');
     updatePctTotalLabel();
   }
 
-  function changePct(id, delta) {
-    let cur = data.distPct[id] !== undefined ? data.distPct[id] : 50;
-    cur += delta;
-    if(cur < 0) cur = 0;
-    if(cur > 100) cur = 100;
-    data.distPct[id] = cur;
-
-    const el = document.getElementById(`pct-val-${id}`);
-    if (el) el.textContent = cur + '%';
-    updatePctTotalLabel();
+  function draftTotal() {
+    return distDraft.buckets.reduce((s, b) => s + (distDraft.pct[b.id] || 0), 0) +
+      Object.values(distDraft.goalPct).reduce((s, v) => s + v, 0);
   }
 
-  function changeGoalPct(goalId, delta) {
-    const g = data.goals.find(x => x.id === goalId);
-    if (!g) return;
-    let cur = Number(g.pct) || 0;
-    cur += delta;
-    if (cur < 0) cur = 0;
-    if (cur > 100) cur = 100;
-    g.pct = cur;
+  function changeDraftPct(key, delta) {
+    if (key.indexOf('goal:') === 0) {
+      const id = key.slice(5);
+      distDraft.goalPct[id] = Math.max(0, Math.min(100, (distDraft.goalPct[id] || 0) + delta));
+    } else {
+      distDraft.pct[key] = Math.max(0, Math.min(100, (distDraft.pct[key] || 0) + delta));
+    }
+    renderDistSettings();
+  }
 
-    const el = document.getElementById(`pct-val-goal-${goalId}`);
-    if (el) el.textContent = cur + '%';
-    updatePctTotalLabel();
+  function removeDraftBucket(id) {
+    if (id === SPENDING_BUCKET) return;
+    // Освободившиеся проценты уходят на расходы — сумма остаётся 100%
+    distDraft.pct[SPENDING_BUCKET] = (distDraft.pct[SPENDING_BUCKET] || 0) + (distDraft.pct[id] || 0);
+    distDraft.buckets = distDraft.buckets.filter(b => b.id !== id);
+    delete distDraft.pct[id];
+    renderDistSettings();
+  }
+
+  function pickBucketIcon(icon) {
+    newBucketIcon = icon;
+    renderDistSettings();
+  }
+
+  function addDraftBucket() {
+    const input = document.getElementById('new-bucket-name');
+    const name = input.value.trim();
+    if (!name) { shakeField('new-bucket-name'); return; }
+    const id = 'b-' + Date.now();
+    distDraft.buckets.splice(Math.max(0, distDraft.buckets.findIndex(b => b.id === SPENDING_BUCKET)), 0, { id, name, icon: newBucketIcon });
+    distDraft.pct[id] = 0;
+    input.value = '';
+    renderDistSettings();
+  }
+
+  // Всё, что не распределено, отправить на расходы периода
+  function balanceToSpending() {
+    const others = draftTotal() - (distDraft.pct[SPENDING_BUCKET] || 0);
+    distDraft.pct[SPENDING_BUCKET] = Math.max(0, 100 - others);
+    renderDistSettings();
   }
 
   function updatePctTotalLabel() {
-    const sum = getDistTotal();
+    const sum = distDraft ? draftTotal() : getDistTotal();
     const lbl = document.getElementById('pct-total-label');
-    lbl.textContent = `Сумма: ${sum}%`;
+    lbl.textContent = sum === 100 ? 'Сумма: 100% ✓' : `Сумма: ${sum}% — нужно ровно 100%`;
     lbl.style.color = (sum === 100) ? 'var(--income)' : 'var(--danger)';
+    document.getElementById('dist-balance-btn').style.display = sum === 100 ? 'none' : 'inline-flex';
   }
 
   function saveDistSettings() {
-    const sum = getDistTotal();
-    if(sum !== 100) {
-      alert(`Ошибка: Сумма процентов должна быть строго равна 100%. Сейчас она составляет ${sum}%. Пожалуйста, скорректируйте значения.`);
+    const sum = draftTotal();
+    if (sum !== 100) {
+      showToast(`Сумма процентов ${sum}% — нужно ровно 100%`);
       return;
     }
+    data.distBuckets = distDraft.buckets;
+    data.distPct = distDraft.pct;
+    getAutoGoals().forEach(g => { g.pct = distDraft.goalPct[g.id] || 0; });
+    distDraft = null;
     closeModal('dist-settings');
     recalculateEverything();
     saveSilently();
-    showToast("Проценты распределения сохранены");
+    showToast("Автораспределение сохранено");
+  }
+
+  function cancelDistSettings() {
+    distDraft = null;
+    closeModal('dist-settings');
   }
 
   // Цели / Копилки
@@ -4118,9 +4737,17 @@
     const scene = document.getElementById(`hourglass-scene-${goalId}`);
     if(scene) scene.classList.add('hourglass-bounce');
 
+    // Песок плавно перетекает к новому уровню, пока падают купюры (transition в CSS)
+    const newPct = goal.target > 0 ? Math.min(100, Math.round(((goal.current + amount) / goal.target) * 100)) : 100;
+    const sand = document.querySelectorAll(`#hourglass-svg-${goalId} path`);
+    if (sand.length >= 4) {
+      sand[2].style.transform = `scaleY(${1 - newPct / 100})`;
+      sand[3].style.transform = `scaleY(${newPct / 100})`;
+    }
+
     const billsContainer = document.getElementById(`bills-container-${goalId}`);
 
-    for(let i=0; i<6; i++) {
+    for(let i=0; i<5; i++) {
       setTimeout(() => {
         const bill = document.createElement('div');
         bill.className = 'falling-bill';
@@ -4134,11 +4761,11 @@
           sparkle.style.left = '50%';
           sparkle.style.top = '170px';
           billsContainer.appendChild(sparkle);
-          setTimeout(() => sparkle.remove(), 600);
+          setTimeout(() => sparkle.remove(), 520);
           bill.remove();
-        }, 1000);
+        }, 820);
 
-      }, i * 150);
+      }, i * 110);
     }
 
     setTimeout(() => {
@@ -4161,7 +4788,7 @@
       updateGoalsPage();
       saveSilently();
       showToast(`Успешно внесено ${amount} ₽! Часы запущены.`);
-    }, 1200);
+    }, 1500); // после последней купюры (110 мс × 4 + 820 мс полёта), чтобы перерисовка не обрывала её
   }
 
   // ===== СИСТЕМА ОЧЕРЕДИ УВЕДОМЛЕНИЙ И СКАНЕР ЧЕКОВ =====

@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
-import androidx.core.content.FileProvider
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -89,22 +87,17 @@ class UpdateManager(private val context: Context, private val webBundles: WebBun
     }
 
     /**
-     * Открывает системный установщик. Если ещё нет разрешения на установку из этого приложения,
-     * отправляет пользователя в настройки и возвращает false.
+     * Ставит обновление через PackageInstaller (SelfInstaller). Если ещё нет разрешения на установку
+     * из этого приложения, отправляет пользователя в настройки и возвращает false.
      */
-    fun install(activity: Activity, apk: File): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !activity.packageManager.canRequestPackageInstalls()) {
+    fun install(activity: Activity, apk: File, versionName: String): Boolean {
+        if (!SelfInstaller.canInstall(activity)) {
             activity.startActivity(
                 Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:${activity.packageName}"))
             )
             return false
         }
-        val uri = FileProvider.getUriForFile(activity, "${activity.packageName}.updates", apk)
-        activity.startActivity(
-            Intent(Intent.ACTION_VIEW)
-                .setDataAndType(uri, "application/vnd.android.package-archive")
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-        )
+        SelfInstaller.install(activity, apk, versionName, fromUi = true)
         return true
     }
 

@@ -105,6 +105,8 @@ class MainActivity : AppCompatActivity() {
         licenseManager = LicenseManager(this)
         webBundles = WebBundleManager(this)
         updates = UpdateManager(this, webBundles)
+        // Проверка обновлений в фоне раз в 6 часов, даже если приложение закрыто
+        UpdateJobService.schedule(this)
 
         webView = findViewById(R.id.webView)
         webView.setBackgroundColor(ContextCompat.getColor(this, R.color.sw_navy))
@@ -381,8 +383,8 @@ class MainActivity : AppCompatActivity() {
                         callJs("window.onAppUpdateProgress($percent, ${JSONObject.quote("Загрузка… $percent%")});")
                     }
                     runOnUiThread {
-                        if (updates.install(this@MainActivity, apk)) {
-                            callJs("window.onAppUpdateProgress(100, ${JSONObject.quote("Подтвердите установку в окне Android")});")
+                        if (updates.install(this@MainActivity, apk, manifest.optString("versionName"))) {
+                            callJs("window.onAppUpdateProgress(100, ${JSONObject.quote("Устанавливаю обновление… Если Android спросит — подтвердите")});")
                         } else {
                             callJs("window.onAppUpdateProgress(-1, ${JSONObject.quote("Разрешите SmartWallet устанавливать приложения и нажмите «Обновить» ещё раз")});")
                         }

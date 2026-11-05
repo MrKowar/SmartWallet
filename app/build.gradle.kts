@@ -65,11 +65,11 @@ android {
                 enable = false
             }
             signingConfigs.findByName("release")?.let { signingConfig = it }
-            if (aiProxyUrl.isNotBlank()) {
-                buildConfigField("String", "DEEPSEEK_API_KEY", "\"\"")
-                buildConfigField("String", "GEMINI_API_KEY", "\"\"")
-                buildConfigField("String", "OPENROUTER_API_KEY", "\"\"")
-            }
+            // Release-APK публикуется открыто — ключи ИИ в нём не должны быть никогда.
+            // ИИ в релизе работает только через прокси (ai.proxy.url), ключи — в debug для разработки
+            buildConfigField("String", "DEEPSEEK_API_KEY", "\"\"")
+            buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+            buildConfigField("String", "OPENROUTER_API_KEY", "\"\"")
         }
     }
     compileOptions {

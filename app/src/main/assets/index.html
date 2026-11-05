@@ -1523,6 +1523,30 @@
     }
     .mp-payday-btn:active{transform:scale(.97);}
 
+    /* ===== ИИ в разработке: вкладка размыта, кнопки ИИ скрыты ===== */
+    .goal-ai-btn,.goal-ai,.ai-feature{display:none !important;}
+    #page-ai.ai-soon{position:relative;min-height:calc(100dvh - 140px);}
+    .ai-soon-preview{
+      filter:blur(6px) saturate(80%);opacity:.55;pointer-events:none;
+      -webkit-user-select:none;user-select:none;
+    }
+    .ai-soon-card{
+      position:absolute;left:16px;right:16px;top:96px;max-width:420px;margin:0 auto;
+      padding:28px 22px 24px;border-radius:24px;text-align:center;
+      background:linear-gradient(180deg,rgba(30,46,100,.88),rgba(16,28,64,.92));
+      -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 24px 50px -20px rgba(0,0,0,.8);
+    }
+    .ai-soon-icon{font-size:40px;line-height:1;}
+    .ai-soon-badge{
+      display:inline-block;margin-top:14px;padding:4px 12px;border-radius:999px;
+      font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--orange-2);background:rgba(255,122,26,.14);border:1px solid rgba(255,122,26,.3);
+    }
+    .ai-soon-title{margin-top:12px;font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--text);}
+    .ai-soon-text{margin-top:8px;font-size:14px;line-height:1.5;color:var(--text-soft);}
+
     /* ===== Автораспределение: свои статьи ===== */
     .pct-setting{gap:10px;}
     .pct-setting .pct-label{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
@@ -1751,13 +1775,21 @@
   </div>
 </div>
 
-<div id="page-ai" class="page">
-  <div class="analytics-header">
-    <h2>ИИ Аналитика</h2>
-    <p>Умный анализ ваших трат</p>
+<div id="page-ai" class="page ai-soon">
+  <div class="ai-soon-preview" aria-hidden="true">
+    <div class="analytics-header">
+      <h2>ИИ Аналитика</h2>
+      <p>Умный анализ ваших трат</p>
+    </div>
+    <div class="card" id="ai-advisor-content" style="padding: 24px; text-align: center; font-size: 14px; color: #475569;">
+      <!-- AI content goes here -->
+    </div>
   </div>
-  <div class="card" id="ai-advisor-content" style="padding: 24px; text-align: center; font-size: 14px; color: #475569;">
-    <!-- AI content goes here -->
+  <div class="ai-soon-card">
+    <div class="ai-soon-icon">🤖</div>
+    <div class="ai-soon-badge">В разработке</div>
+    <div class="ai-soon-title">ИИ-аналитика скоро</div>
+    <div class="ai-soon-text">Умные советы по бюджету, кредитам и копилкам появятся в одном из ближайших обновлений — оно придёт само.</div>
   </div>
 </div>
 
@@ -2020,7 +2052,7 @@
     <div class="loan-tool-title" style="margin-top:16px;">🗓️ График и погашения</div>
     <div id="loan-schedule"></div>
 
-    <button class="modal-btn modal-btn-cancel" onclick="askLoansAI()">🤖 Разбор кредитов от ИИ</button>
+    <button class="modal-btn modal-btn-cancel ai-feature" onclick="askLoansAI()">🤖 Разбор кредитов от ИИ</button>
     <div class="ai-answer" id="loans-ai-answer" style="display:none;"></div>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('loan-detail')">Закрыть</button>
   </div>

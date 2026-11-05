@@ -1058,21 +1058,141 @@
     .pay-row-bottom .settings-hint{font-size:12px;}
 
     /* Обязательные платежи на главной */
+    :root{
+      --ease-out-strong:cubic-bezier(0.23, 1, 0.32, 1);
+    }
     .obligations-card{
-      cursor:pointer;
       background:
-        radial-gradient(120% 120% at 0% 0%, rgba(255,92,122,.10), transparent 55%),
+        radial-gradient(120% 120% at 0% 0%, rgba(255,122,26,.10), transparent 55%),
         linear-gradient(180deg,var(--surface) 0%, #0F1A3D 100%);
       border:1px solid rgba(255,122,26,.22);
+      padding:18px 16px 8px;
     }
-    .obligations-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;}
-    .obligations-header .title{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--orange-2);}
-    .obligations-reserve{font-size:11px;font-weight:700;color:var(--text-soft);background:var(--surface-2);padding:3px 10px;border-radius:999px;border:1px solid var(--line);white-space:nowrap;}
-    .obligation-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);}
-    .obligation-row:first-child{border-top:none;}
-    .obligation-name{font-size:14px;font-weight:700;color:var(--text);}
-    .obligation-sub{font-size:11.5px;color:var(--text-soft);margin-top:2px;}
-    .obligation-amount{font-size:15px;font-weight:800;color:var(--text);text-align:right;}
+    .obligations-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;}
+    .obligations-heading{display:flex;flex-direction:column;gap:6px;min-width:0;}
+    .obligations-header .title{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange-2);}
+    .obligations-reserve{
+      align-self:flex-start;font-size:12px;font-weight:700;color:var(--text);
+      background:rgba(255,122,26,.12);padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(255,122,26,.28);font-variant-numeric:tabular-nums;white-space:nowrap;
+    }
+    .ob-add{
+      flex-shrink:0;width:36px;height:36px;border-radius:12px;border:1px solid var(--line-strong);
+      background:var(--surface-2);color:var(--text);font-size:22px;line-height:1;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .ob-add:active{transform:scale(0.94);}
+
+    .ob-empty{padding:10px 0 12px;}
+    .ob-empty-title{font-size:14px;font-weight:700;color:var(--text);}
+    .ob-empty-text{font-size:12.5px;line-height:1.45;color:var(--text-soft);margin-top:4px;}
+
+    .ob-row{padding:14px 0 12px;border-top:1px solid var(--line);}
+    .ob-row:first-child{border-top:none;}
+    .ob-main{display:flex;align-items:flex-start;gap:12px;cursor:pointer;}
+    .ob-icon{
+      flex-shrink:0;width:40px;height:40px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-size:20px;
+      background:var(--surface-2);border:1px solid var(--line);
+    }
+    .ob-row.is-overdue .ob-icon{border-color:rgba(255,92,122,.45);background:rgba(255,92,122,.10);}
+    .ob-text{flex:1;min-width:0;padding-top:1px;}
+    .ob-name{
+      font-size:14.5px;font-weight:700;color:var(--text);line-height:1.3;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;
+    }
+    .ob-sub{font-size:12px;color:var(--text-soft);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ob-right{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+    .ob-amount{font-size:15px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+    /* Полоса накопления: синим — уже отложено, оранжевым — доля этой выплаты */
+    .ob-progress{position:relative;height:6px;margin:12px 0 10px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;}
+    .ob-saved,.ob-share,.ob-done{position:absolute;top:0;bottom:0;transform-origin:left center;border-radius:6px;}
+    .ob-saved{left:0;width:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+    .ob-share{background:linear-gradient(90deg,var(--orange),var(--orange-2));box-shadow:0 0 10px var(--orange-glow);}
+    .ob-done{left:0;width:100%;transform:scaleX(0);background:linear-gradient(90deg,#1FC98A,var(--income));}
+    .ob-row.is-overdue .ob-share{background:linear-gradient(90deg,#FF3D6A,var(--danger));box-shadow:0 0 10px rgba(255,92,122,.45);}
+    .ob-row.is-paid .ob-progress{opacity:.45;}
+
+    .ob-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .ob-plan{flex:1;min-width:0;font-size:12.5px;line-height:1.4;color:var(--text-soft);}
+    .ob-plan strong{color:var(--orange-2);font-variant-numeric:tabular-nums;}
+    .ob-btn{
+      flex-shrink:0;min-width:104px;height:36px;padding:0 14px;border:none;border-radius:12px;cursor:pointer;
+      font-size:13px;font-weight:800;color:#fff;white-space:nowrap;
+      background:linear-gradient(135deg,var(--accent-2),var(--accent));
+      box-shadow:0 6px 16px var(--accent-glow);
+      transition:transform 160ms var(--ease-out-strong), background-color 200ms ease;
+    }
+    .ob-btn:active{transform:scale(0.97);}
+    .ob-btn-ghost{background:var(--surface-2);color:var(--text-soft);box-shadow:none;border:1px solid var(--line);min-width:0;}
+    .ob-btn-label{display:inline-block;transition:filter 200ms ease, opacity 200ms ease;}
+
+    /* Оплата: кнопка зеленеет, полоса заполняется слева направо */
+    .ob-row.is-paying .ob-btn{background:linear-gradient(135deg,#2EE59D,#1FC98A);box-shadow:0 6px 16px rgba(46,229,157,.35);pointer-events:none;}
+    .ob-row.is-paying .ob-btn-label{animation:ob-label-swap 260ms var(--ease-out-strong);}
+    .ob-row.is-paying .ob-done{transform:scaleX(1);transition:transform 380ms var(--ease-out-strong);}
+    @keyframes ob-label-swap{
+      from{filter:blur(2px);opacity:.4;transform:scale(0.96);}
+      to{filter:blur(0);opacity:1;transform:scale(1);}
+    }
+
+    /* Новый платёж появляется в списке */
+    .ob-row.is-new{animation:ob-enter 280ms var(--ease-out-strong) both;}
+    @keyframes ob-enter{
+      from{opacity:0;transform:translateY(8px) scale(0.98);}
+      to{opacity:1;transform:none;}
+    }
+
+    /* Окно «Обязательный платёж» */
+    .mp-field{margin-bottom:12px;min-width:0;}
+    .mp-field label,.mp-label{display:block;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--text-soft);margin-bottom:6px;}
+    .mp-field input{
+      width:100%;height:48px;padding:0 14px;border-radius:14px;font-size:16px;font-weight:600;
+      background:var(--bg-2);border:2px solid var(--line);color:var(--text);outline:none;
+      transition:border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .mp-field input::placeholder{color:var(--text-dim);font-weight:500;}
+    .mp-field input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(47,123,255,.20);}
+    .mp-field input.is-invalid{border-color:var(--danger);animation:mp-shake 240ms ease-out;}
+    @keyframes mp-shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-4px);}
+      75%{transform:translateX(4px);}
+    }
+    .mp-row{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:10px;}
+    .mp-row .mp-field{margin-bottom:6px;}
+    .mp-input-wrap{position:relative;}
+    .mp-input-wrap input{padding-right:34px;font-variant-numeric:tabular-nums;}
+    .mp-suffix{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-soft);font-weight:700;pointer-events:none;}
+    .mp-hint{font-size:11.5px;color:var(--text-dim);margin:0 0 14px;line-height:1.4;}
+    .mp-cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
+    .mp-cat{
+      display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;padding:10px 4px;
+      border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--text-soft);
+      cursor:pointer;transition:transform 160ms var(--ease-out-strong), border-color 160ms ease, background-color 160ms ease;
+    }
+    .mp-cat:active{transform:scale(0.96);}
+    .mp-cat-icon{font-size:20px;line-height:1;}
+    .mp-cat-name{font-size:10.5px;font-weight:700;line-height:1.2;text-align:center;overflow-wrap:anywhere;}
+    .mp-cat.is-selected{border-color:var(--orange);background:rgba(255,122,26,.14);color:var(--orange-2);}
+    .mp-preview{
+      padding:14px;border-radius:16px;font-size:13px;line-height:1.5;color:var(--text-soft);
+      background:linear-gradient(180deg,rgba(47,123,255,.10),rgba(47,123,255,.04));
+      border:1px solid var(--line-strong);margin-bottom:6px;
+    }
+    .mp-preview strong{color:var(--text);font-variant-numeric:tabular-nums;}
+    .mp-delete{background:transparent;color:var(--danger);border:1px solid rgba(255,92,122,.35);box-shadow:none;}
+
+    @media (prefers-reduced-motion: reduce){
+      .ob-row.is-new{animation:ob-fade 200ms ease both;}
+      .ob-row.is-paying .ob-done{transition:opacity 200ms ease;transform:scaleX(1);}
+      .ob-row.is-paying .ob-btn-label{animation:none;}
+      .mp-field input.is-invalid{animation:none;}
+      .ob-btn:active,.ob-add:active,.mp-cat:active{transform:none;}
+      @keyframes ob-fade{from{opacity:0;}to{opacity:1;}}
+    }
 
     /* Строки настроек и переключатель */
     .settings-row{border-color:var(--line);background:var(--surface-2);}
@@ -1176,10 +1296,13 @@
     </div>
   </div>
 
-  <div class="card obligations-card" id="obligations-card" style="display:none;" onclick="switchPage('goals')">
+  <div class="card obligations-card" id="obligations-card">
     <div class="obligations-header">
-      <span class="title">💳 ОБЯЗАТЕЛЬНЫЕ ПЛАТЕЖИ</span>
-      <span class="obligations-reserve" id="obligations-reserve">Резерв: 0 ₽</span>
+      <div class="obligations-heading">
+        <span class="title">Обязательные платежи</span>
+        <span class="obligations-reserve" id="obligations-reserve">Резерв 0 ₽</span>
+      </div>
+      <button class="ob-add" onclick="openAddMandatory()" aria-label="Добавить обязательный платёж">+</button>
     </div>
     <div id="obligations-list"></div>
   </div>
@@ -1529,6 +1652,42 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-add-payment">
+  <div class="modal-content mp-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="mp-title">Новый обязательный платёж</div>
+
+    <div class="mp-field">
+      <label for="mp-name">Название</label>
+      <input type="text" id="mp-name" maxlength="60" autocomplete="off" placeholder="Например: Коммуналка">
+    </div>
+
+    <div class="mp-row">
+      <div class="mp-field">
+        <label for="mp-amount">Сумма</label>
+        <div class="mp-input-wrap">
+          <input type="number" id="mp-amount" inputmode="decimal" min="1" max="10000000" placeholder="5 000" oninput="updateMandatoryPreview()">
+          <span class="mp-suffix">₽</span>
+        </div>
+      </div>
+      <div class="mp-field mp-field-day">
+        <label for="mp-day">День списания</label>
+        <input type="number" id="mp-day" inputmode="numeric" min="1" max="31" placeholder="10" oninput="updateMandatoryPreview()">
+      </div>
+    </div>
+    <div class="mp-hint">Если в месяце меньше дней — спишем в последний день месяца.</div>
+
+    <div class="mp-label">Категория</div>
+    <div class="mp-cats" id="mp-cats"></div>
+
+    <div class="mp-preview" id="mp-preview"></div>
+
+    <button class="modal-btn modal-btn-gold" onclick="saveMandatory()">Сохранить</button>
+    <button class="modal-btn mp-delete" id="mp-delete" onclick="deleteMandatory()">Удалить платёж</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('add-payment')">Отмена</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-app-update">
   <div class="modal-content">
     <div class="modal-handle"></div>
@@ -1552,6 +1711,8 @@
     { id: 'fun', name: 'Развлечения', icon: '🎉' },
     { id: 'snack', name: 'Перекус на работе', icon: '🥪' },
     { id: 'sweets', name: 'Вкусняхи', icon: '🍩' },
+    { id: 'kids', name: 'Дети', icon: '🧸' },
+    { id: 'subs', name: 'Подписки и связь', icon: '📺' },
     { id: 'loan', name: 'Кредит', icon: '💳' },
     { id: 'other_exp', name: 'Разное', icon: '📦' }
   ];
@@ -1585,6 +1746,7 @@
     ],
     distPct: { invest: 30, pillow: 10, spending: 50 },
     loans: [],
+    mandatoryPayments: [],
     dailyLimit: null,
     profile: { name: '', avatar: null },
     incomeScheme: { type: 'weekly', weekday: 3, payDays: [5, 20], vakhtaStart: null, vakhtaCycleDays: 30 }
@@ -1668,6 +1830,17 @@
       if(!Array.isArray(l.prepayments)) l.prepayments = [];
       if(l.penaltyRate === undefined) l.penaltyRate = '20';
       l.schedule.forEach(p => { if(p.status !== 'paid') p.status = 'unpaid'; });
+    });
+
+    if(!Array.isArray(d.mandatoryPayments)) d.mandatoryPayments = [];
+    d.mandatoryPayments = d.mandatoryPayments.filter(mp => mp && Number(mp.amount) > 0);
+    d.mandatoryPayments.forEach(mp => {
+      mp.amount = Number(mp.amount);
+      mp.day = Math.min(31, Math.max(1, parseInt(mp.day, 10) || 1));
+      if(typeof mp.name !== 'string' || !mp.name.trim()) mp.name = 'Платёж';
+      if(!mp.category) mp.category = 'other';
+      if(!mp.startDate) mp.startDate = isoDate(new Date());
+      if(!Array.isArray(mp.payments)) mp.payments = [];
     });
     return d;
   }
@@ -1841,10 +2014,15 @@
         }
       }
 
-      // Платежи по кредитам оплачиваются из резерва обязательных платежей, а не из бюджета на расходы
+      // Обязательные платежи: то, что отложено с прошлых выплат, лежит отдельно и в расход
+      // периода не идёт. Остальное (доля этой выплаты и недокопленное) — расход текущего периода
       if (isWithinPeriod(tDate, period)) {
         if (t.type === 'income') periodIncome += t.amount;
-        else if (t.category !== 'loan') periodExpense += t.amount;
+        else if (t.category === 'loan' || t.fromReserve) {
+          const savedEarlier = typeof t.savedBefore === 'number' ? t.savedBefore : t.amount; // старые записи
+          periodExpense += Math.max(0, t.amount - savedEarlier);
+        }
+        else periodExpense += t.amount;
       }
     });
 
@@ -2384,55 +2562,402 @@
     return '<span class="pay-chip future">Не погашено</span>';
   }
 
-  // Обязательные платежи: ближайший непогашенный платёж каждого кредита (+ все просроченные)
+  // ===== ОБЯЗАТЕЛЬНЫЕ ПЛАТЕЖИ: РЕЗЕРВ ПО ВЫПЛАТАМ =====
+  //
+  // Каждый платёж копится между прошлым и ближайшим сроком. Сумма делится поровну между
+  // бюджетными периодами (выплатами из data.incomeScheme), которые попадают в это окно.
+  // Период, в который выпадает срок, добирает остаток; если платёж только что добавлен и срок
+  // уже в текущем периоде — замораживается вся сумма. Просроченное резервируется целиком.
+
+  const MANDATORY_CATEGORIES = [
+    { id: 'utilities', name: 'ЖКХ', icon: '🏠', txCat: 'home' },
+    { id: 'housing', name: 'Ипотека, аренда', icon: '🏦', txCat: 'home' },
+    { id: 'kids', name: 'Дети', icon: '🧸', txCat: 'kids' },
+    { id: 'subs', name: 'Подписки', icon: '📺', txCat: 'subs' },
+    { id: 'telecom', name: 'Связь', icon: '📱', txCat: 'subs' },
+    { id: 'health', name: 'Здоровье', icon: '💊', txCat: 'health' },
+    { id: 'transport', name: 'Транспорт', icon: '🚗', txCat: 'transport' },
+    { id: 'other', name: 'Другое', icon: '📌', txCat: 'other_exp' }
+  ];
+
+  function mandatoryCategory(id) {
+    return MANDATORY_CATEGORIES.find(c => c.id === id) || MANDATORY_CATEGORIES[MANDATORY_CATEGORIES.length - 1];
+  }
+
+  // Дата списания в месяце; если месяц короче (31 → февраль), берём последний день
+  function monthlyOccurrence(year, month, day) {
+    const first = new Date(year, month, 1); // нормализует месяц −1 / 12 в соседний год
+    const y = first.getFullYear(), m = first.getMonth();
+    return new Date(y, m, Math.min(day, getDaysInMonth(y, m)));
+  }
+
+  function nextOccurrenceOnOrAfter(date, day) {
+    const d = startOfDay(date);
+    const occ = monthlyOccurrence(d.getFullYear(), d.getMonth(), day);
+    return occ < d ? monthlyOccurrence(d.getFullYear(), d.getMonth() + 1, day) : occ;
+  }
+
+  // Ближайший неоплаченный срок: может быть в прошлом — тогда платёж просрочен
+  function mandatoryDue(mp) {
+    const paid = new Set(mp.payments.map(p => p.due));
+    let occ = nextOccurrenceOnOrAfter(parseIso(mp.startDate), mp.day);
+    for (let i = 0; i < 600 && paid.has(isoDate(occ)); i++) {
+      occ = monthlyOccurrence(occ.getFullYear(), occ.getMonth() + 1, mp.day);
+    }
+    return occ;
+  }
+
+  // Откуда начинается накопление: со следующей выплаты после прошлого срока,
+  // но не раньше, чем платёж (или кредит) появился в приложении
+  function cycleStartDate(prevDue, startDate) {
+    if (!prevDue || prevDue < startDate) return startDate;
+    return getBudgetPeriod(prevDue).nextPayout;
+  }
+
+  /**
+   * План накопления на один срок:
+   *   periods — сколько выплат успевает прийти до срока (k),
+   *   index   — какая из них текущая (i, 0 — накопление ещё не началось),
+   *   share   — сколько заморозить в текущем периоде,
+   *   saved   — сколько уже должно быть отложено с прошлых выплат.
+   */
+  function reservePlan(amount, due, cycleStart, today) {
+    amount = Math.round((Number(amount) || 0) * 100) / 100;
+    if (due < today) return { overdue: true, periods: 1, index: 1, share: amount, saved: 0, amount };
+
+    const periods = [];
+    let p = getBudgetPeriod(cycleStart);
+    for (let guard = 0; guard < 400 && startOfDay(p.start) <= due; guard++) {
+      periods.push(isoDate(p.start));
+      p = getBudgetPeriod(p.nextPayout);
+    }
+    const k = Math.max(1, periods.length);
+    const current = isoDate(getBudgetPeriod(today).start);
+    let i = periods.indexOf(current) + 1;
+    if (i === 0) i = (periods.length && current < periods[0]) ? 0 : k;
+
+    const per = Math.floor(amount / k);
+    const last = Math.round((amount - per * (k - 1)) * 100) / 100;
+    const share = i === 0 ? 0 : (i === k ? last : per);
+    const saved = i <= 1 ? 0 : per * (i - 1);
+    return { overdue: false, periods: k, index: i, share, saved, amount };
+  }
+
+  function obligationFromLoan(loan, p, state, today, prevDue) {
+    const due = parseIso(p.due);
+    const plan = state.kind === 'overdue'
+      ? { overdue: true, periods: 1, index: 1, share: state.due, saved: 0, amount: state.due }
+      : reservePlan(state.due, due, cycleStartDate(prevDue, parseIso(loan.issueDate)), today);
+    return {
+      kind: 'loan', id: loan.id, n: p.n, name: loan.name, icon: '💳', categoryName: 'Кредит',
+      due, amount: state.due, state, plan, sub: `платёж №${p.n}` + (state.kind === 'overdue' ? ` · пени ${rub(state.penalty)}` : '')
+    };
+  }
+
+  function obligationFromMandatory(mp, today) {
+    const due = mandatoryDue(mp);
+    const prev = monthlyOccurrence(due.getFullYear(), due.getMonth() - 1, mp.day);
+    const plan = reservePlan(mp.amount, due, cycleStartDate(prev, parseIso(mp.startDate)), today);
+    const daysTo = daysBetween(today, due);
+    const state = due < today
+      ? { kind: 'overdue', days: -daysTo, due: Number(mp.amount) }
+      : { kind: daysTo <= 7 ? 'soon' : 'future', daysTo, due: Number(mp.amount) };
+    const cat = mandatoryCategory(mp.category);
+    const period = getBudgetPeriod(today);
+    const lastPaid = mp.payments[mp.payments.length - 1];
+    const paidThisPeriod = lastPaid && isWithinPeriod(new Date(lastPaid.paidAt), period) ? lastPaid : null;
+    return {
+      kind: 'custom', id: mp.id, name: mp.name, icon: cat.icon, categoryName: cat.name,
+      due, amount: Number(mp.amount), state, plan, paidThisPeriod, sub: cat.name
+    };
+  }
+
+  // Все обязательные платежи: кредиты (ближайший + просроченные) и свои регулярные
   function getObligations(today) {
     const list = [];
     (data.loans || []).forEach(loan => {
       let upcomingAdded = false;
-      unpaidPayments(loan).forEach(p => {
+      loan.schedule.forEach((p, idx) => {
+        if (p.status === 'paid') return;
         const state = paymentState(loan, p, today);
+        const prevDue = idx > 0 ? parseIso(loan.schedule[idx - 1].due) : null;
         if (state.kind === 'overdue') {
-          list.push({ loan, payment: p, state });
+          list.push(obligationFromLoan(loan, p, state, today, prevDue));
         } else if (!upcomingAdded) {
-          list.push({ loan, payment: p, state });
+          list.push(obligationFromLoan(loan, p, state, today, prevDue));
           upcomingAdded = true;
         }
       });
     });
-    return list.sort((a, b) => parseIso(a.payment.due) - parseIso(b.payment.due));
+    (data.mandatoryPayments || []).forEach(mp => list.push(obligationFromMandatory(mp, today)));
+    return list.sort((a, b) => a.due - b.due);
   }
 
-  // Резерв на текущий период: просроченное целиком + доля ближайшего платежа по длине периода
+  // Резерв текущего периода — сумма долей, которые нужно заморозить с этой выплаты
   function getObligationsReserve(obligations, period) {
-    let reserve = 0;
-    obligations.forEach(o => {
-      if (o.state.kind === 'overdue') reserve += o.state.due;
-      else reserve += Math.min(o.state.due, o.state.due * period.daysTotal / DAYS_IN_MONTH_AVG);
-    });
-    return Math.round(reserve);
+    return Math.round(obligations.reduce((s, o) => s + o.plan.share, 0));
   }
+
+  // «с этой недели», «с этой выплаты» — под схему дохода пользователя
+  function periodSourceLabel() {
+    const type = (data.incomeScheme || {}).type;
+    if (type === 'daily') return 'сегодня';
+    if (type === 'weekly') return 'с этой недели';
+    if (type === 'vakhta') return 'с этой вахты';
+    return 'с этой выплаты';
+  }
+
+  function obligationPlanText(o) {
+    const p = o.plan;
+    if (o.paidThisPeriod) return `Оплачено ${formatShortDate(new Date(o.paidThisPeriod.paidAt))} · следующий срок ${formatShortDate(o.due)}`;
+    if (p.overdue) return `Просрочено — заморожена вся сумма`;
+    if (p.share <= 0) return `Копить начнём со следующей выплаты`;
+    if (p.share >= p.amount) return `Отложить всю сумму ${periodSourceLabel()}`;
+    return `Отложить <strong>${rub(p.share)}</strong> из ${rub(p.amount)} ${periodSourceLabel()}`;
+  }
+
+  let justAddedObligationId = null;
 
   function renderObligationsCard() {
-    const card = document.getElementById('obligations-card');
     const obligations = globalCalc.obligations || [];
-    if (obligations.length === 0) { card.style.display = 'none'; return; }
-    card.style.display = 'block';
-    document.getElementById('obligations-reserve').textContent = `Резерв: ${rub(globalCalc.obligationsReserve)}`;
-    document.getElementById('obligations-list').innerHTML = obligations.slice(0, 4).map(o => {
-      let sub = `${formatShortDate(parseIso(o.payment.due))} · платёж №${o.payment.n}`;
-      if (o.state.kind === 'overdue') sub += ` · пени ${rub(o.state.penalty)}`;
+    document.getElementById('obligations-reserve').textContent = `Резерв ${rub(globalCalc.obligationsReserve)}`;
+    const list = document.getElementById('obligations-list');
+
+    if (obligations.length === 0) {
+      list.innerHTML = `
+        <div class="ob-empty">
+          <div class="ob-empty-title">Ничего не забудете оплатить</div>
+          <div class="ob-empty-text">Добавьте ЖКХ, подписки, кружки детей — приложение само отложит деньги к сроку с каждой выплаты.</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = obligations.map(o => {
+      const p = o.plan;
+      const savedFrac = p.amount > 0 ? Math.min(1, p.saved / p.amount) : 0;
+      const shareFrac = p.amount > 0 ? Math.min(1 - savedFrac, p.share / p.amount) : 0;
+      const paid = !!o.paidThisPeriod;
+      const chip = paid
+        ? '<span class="pay-chip paid">Оплачено</span>'
+        : (o.state.kind === 'future'
+            ? `<span class="pay-chip future">Через ${o.state.daysTo} ${plural(o.state.daysTo, 'день', 'дня', 'дней')}</span>`
+            : paymentChip(o.state));
+      const action = paid
+        ? (o.kind === 'custom' ? `<button class="ob-btn ob-btn-ghost" onclick="undoMandatoryPayment('${o.id}')">Отменить</button>` : '')
+        : `<button class="ob-btn" onclick="payObligation(this, '${o.kind}', '${o.id}', ${o.n || 0})"><span class="ob-btn-label">Оплатить</span></button>`;
+      const openEdit = o.kind === 'custom' ? `openEditMandatory('${o.id}')` : `openLoanDetail('${o.id}')`;
       return `
-        <div class="obligation-row">
-          <div>
-            <div class="obligation-name">${escapeHtml(o.loan.name)}</div>
-            <div class="obligation-sub">${sub}</div>
+        <div class="ob-row ${p.overdue ? 'is-overdue' : ''} ${paid ? 'is-paid' : ''} ${o.id === justAddedObligationId ? 'is-new' : ''}" data-ob="${o.kind}:${o.id}">
+          <div class="ob-main" onclick="${openEdit}">
+            <div class="ob-icon">${o.icon}</div>
+            <div class="ob-text">
+              <div class="ob-name" title="${escapeHtml(o.name)}">${escapeHtml(o.name)}</div>
+              <div class="ob-sub">${formatShortDate(o.due)} · ${escapeHtml(o.sub)}</div>
+            </div>
+            <div class="ob-right">
+              <div class="ob-amount">${rub(o.amount)}</div>
+              ${chip}
+            </div>
           </div>
-          <div>
-            <div class="obligation-amount">${rub(o.state.due)}</div>
-            <div style="text-align:right;margin-top:4px;">${paymentChip(o.state)}</div>
+          <div class="ob-progress" aria-hidden="true">
+            <div class="ob-saved" style="transform:scaleX(${savedFrac})"></div>
+            <div class="ob-share" style="left:${savedFrac * 100}%;transform:scaleX(${shareFrac / Math.max(0.0001, 1 - savedFrac)});width:${(1 - savedFrac) * 100}%"></div>
+            <div class="ob-done"></div>
+          </div>
+          <div class="ob-foot">
+            <div class="ob-plan">${obligationPlanText(o)}</div>
+            ${action}
           </div>
         </div>`;
     }).join('');
+    justAddedObligationId = null;
+  }
+
+  // «Оплатить»: короткая анимация подтверждения, затем запись расхода
+  function payObligation(btn, kind, id, n) {
+    const row = btn.closest('.ob-row');
+    if (row.classList.contains('is-paying')) return;
+    row.classList.add('is-paying');
+    btn.querySelector('.ob-btn-label').textContent = '✓ Оплачено';
+    setTimeout(() => {
+      if (kind === 'loan') {
+        activeLoanId = id;
+        togglePayment(n);
+      } else {
+        payMandatory(id);
+      }
+    }, 420);
+  }
+
+  // Сколько на этот платёж отложено с прошлых выплат (эти деньги уже не в бюджете периода)
+  function savedBeforeFor(kind, id, n) {
+    const o = (globalCalc.obligations || []).find(x => x.kind === kind && x.id === id && (kind !== 'loan' || x.n === n));
+    return o ? Math.min(o.amount, o.plan.saved) : 0;
+  }
+
+  function payMandatory(id) {
+    const mp = data.mandatoryPayments.find(x => x.id === id);
+    if (!mp) return;
+    const due = isoDate(mandatoryDue(mp));
+    const cat = mandatoryCategory(mp.category);
+    const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
+    data.transactions.push({
+      id: txId, type: 'expense', amount: Number(mp.amount), name: mp.name,
+      category: cat.txCat, date: new Date().toISOString(), mandatoryId: mp.id, fromReserve: true,
+      savedBefore: savedBeforeFor('custom', mp.id)
+    });
+    mp.payments.push({ due, paidAt: new Date().toISOString(), amount: Number(mp.amount), txId });
+    saveSilently();
+    recalculateEverything();
+    showToast(`${mp.name}: оплачено ${rub(mp.amount)}`);
+  }
+
+  function undoMandatoryPayment(id) {
+    const mp = data.mandatoryPayments.find(x => x.id === id);
+    const last = mp && mp.payments[mp.payments.length - 1];
+    if (!last) return;
+    mp.payments.pop();
+    data.transactions = data.transactions.filter(t => t.id !== last.txId);
+    saveSilently();
+    recalculateEverything();
+    showToast('Оплата отменена');
+  }
+
+  // Удалили операцию в истории — платёж снова считается неоплаченным
+  function unlinkMandatoryTransaction(txId) {
+    (data.mandatoryPayments || []).forEach(mp => {
+      mp.payments = mp.payments.filter(p => p.txId !== txId);
+    });
+  }
+
+  // ===== ОКНО «ОБЯЗАТЕЛЬНЫЙ ПЛАТЁЖ» =====
+  // Предел суммы: больше — уже не ежемесячный платёж, а строка с суммой вытесняет название
+  const MANDATORY_MAX_AMOUNT = 10000000;
+  let editingMandatoryId = null;
+  let selectedMandatoryCat = 'utilities';
+
+  function renderMandatoryCats() {
+    document.getElementById('mp-cats').innerHTML = MANDATORY_CATEGORIES.map(c => `
+      <button type="button" class="mp-cat ${c.id === selectedMandatoryCat ? 'is-selected' : ''}" onclick="selectMandatoryCat('${c.id}')">
+        <span class="mp-cat-icon">${c.icon}</span><span class="mp-cat-name">${c.name}</span>
+      </button>`).join('');
+  }
+
+  function selectMandatoryCat(id) {
+    selectedMandatoryCat = id;
+    document.querySelectorAll('#mp-cats .mp-cat').forEach((el, i) => {
+      el.classList.toggle('is-selected', MANDATORY_CATEGORIES[i].id === id);
+    });
+    updateMandatoryPreview();
+  }
+
+  function openAddMandatory() {
+    editingMandatoryId = null;
+    selectedMandatoryCat = 'utilities';
+    document.getElementById('mp-title').textContent = 'Новый обязательный платёж';
+    document.getElementById('mp-name').value = '';
+    document.getElementById('mp-amount').value = '';
+    document.getElementById('mp-day').value = '';
+    document.getElementById('mp-delete').style.display = 'none';
+    renderMandatoryCats();
+    updateMandatoryPreview();
+    openModal('add-payment');
+  }
+
+  function openEditMandatory(id) {
+    const mp = data.mandatoryPayments.find(x => x.id === id);
+    if (!mp) return;
+    editingMandatoryId = id;
+    selectedMandatoryCat = mp.category;
+    document.getElementById('mp-title').textContent = 'Обязательный платёж';
+    document.getElementById('mp-name').value = mp.name;
+    document.getElementById('mp-amount').value = mp.amount;
+    document.getElementById('mp-day').value = mp.day;
+    document.getElementById('mp-delete').style.display = 'block';
+    renderMandatoryCats();
+    updateMandatoryPreview();
+    openModal('add-payment');
+  }
+
+  function readMandatoryForm() {
+    const amount = Math.round(parseFloat(String(document.getElementById('mp-amount').value).replace(',', '.')) * 100) / 100;
+    const day = parseInt(document.getElementById('mp-day').value, 10);
+    return {
+      name: document.getElementById('mp-name').value.trim(),
+      amount, day,
+      valid: amount > 0 && amount <= MANDATORY_MAX_AMOUNT && day >= 1 && day <= 31
+    };
+  }
+
+  // Живой расчёт прямо в окне: когда списание и сколько заморозим с текущей выплаты
+  function updateMandatoryPreview() {
+    const box = document.getElementById('mp-preview');
+    const f = readMandatoryForm();
+    if (f.amount > MANDATORY_MAX_AMOUNT) {
+      box.innerHTML = `Сумма больше ${rub(MANDATORY_MAX_AMOUNT)} — для разовой крупной цели лучше подойдёт копилка.`;
+      return;
+    }
+    if (!f.valid) {
+      box.innerHTML = 'Укажите сумму и день списания — покажем, сколько откладывать с каждой выплаты.';
+      return;
+    }
+    const today = startOfDay(new Date());
+    const existing = editingMandatoryId && data.mandatoryPayments.find(x => x.id === editingMandatoryId);
+    const draft = {
+      day: f.day, amount: f.amount, payments: existing ? existing.payments : [],
+      startDate: existing ? existing.startDate : isoDate(today)
+    };
+    const due = mandatoryDue(draft);
+    const prev = monthlyOccurrence(due.getFullYear(), due.getMonth() - 1, f.day);
+    const plan = reservePlan(f.amount, due, cycleStartDate(prev, parseIso(draft.startDate)), today);
+    const days = daysBetween(today, due);
+    const when = days === 0 ? 'сегодня' : `через ${days} ${plural(days, 'день', 'дня', 'дней')}`;
+    let how;
+    if (plan.share >= plan.amount) how = `Заморозим всю сумму ${periodSourceLabel()}.`;
+    else if (plan.share <= 0) how = 'Начнём откладывать со следующей выплаты.';
+    else how = `${periodSourceLabel()[0].toUpperCase() + periodSourceLabel().slice(1)} отложим <strong>${rub(plan.share)}</strong>, всего выплат до срока: ${plan.periods}.`;
+    box.innerHTML = `Ближайшее списание — <strong>${formatLongDate(due)}</strong> (${when}).<br>${how}`;
+  }
+
+  function saveMandatory() {
+    const f = readMandatoryForm();
+    if (!f.name) { shakeField('mp-name'); return; }
+    if (!f.valid) { shakeField(!(f.amount > 0 && f.amount <= MANDATORY_MAX_AMOUNT) ? 'mp-amount' : 'mp-day'); return; }
+
+    if (editingMandatoryId) {
+      const mp = data.mandatoryPayments.find(x => x.id === editingMandatoryId);
+      Object.assign(mp, { name: f.name, amount: f.amount, day: f.day, category: selectedMandatoryCat });
+      showToast('Платёж обновлён');
+    } else {
+      const id = 'mp-' + Date.now();
+      data.mandatoryPayments.push({
+        id, name: f.name, amount: f.amount, day: f.day, category: selectedMandatoryCat,
+        startDate: isoDate(new Date()), payments: []
+      });
+      justAddedObligationId = id;
+      showToast('Платёж добавлен в обязательные');
+    }
+    saveSilently();
+    closeModal('add-payment');
+    recalculateEverything();
+  }
+
+  function deleteMandatory() {
+    const mp = data.mandatoryPayments.find(x => x.id === editingMandatoryId);
+    if (!mp || !confirm(`Удалить «${mp.name}» из обязательных платежей? Прошлые оплаты останутся в истории.`)) return;
+    data.mandatoryPayments = data.mandatoryPayments.filter(x => x.id !== editingMandatoryId);
+    saveSilently();
+    closeModal('add-payment');
+    recalculateEverything();
+  }
+
+  // Ошибка ввода: поле коротко вздрагивает и подсвечивается, без alert
+  function shakeField(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('is-invalid');
+    void el.offsetWidth;
+    el.classList.add('is-invalid');
+    el.focus();
   }
 
   function escapeHtml(s) {
@@ -2671,7 +3196,8 @@
       const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
       data.transactions.push({
         id: txId, type: 'expense', amount, name: `Кредит «${loan.name}» №${n}`,
-        category: 'loan', date: new Date().toISOString(), loanId: loan.id
+        category: 'loan', date: new Date().toISOString(), loanId: loan.id,
+        savedBefore: savedBeforeFor('loan', loan.id, n)
       });
       Object.assign(p, { status: 'paid', paidAt: new Date().toISOString(), paidAmount: amount, txId });
       showToast(unpaidPayments(loan).length === 0 ? 'Кредит полностью погашен 🎉' : `Платёж №${n} погашен`);
@@ -2763,7 +3289,8 @@
     loan.prepayments.push({ date: new Date().toISOString(), amount, mode, txId });
     data.transactions.push({
       id: txId, type: 'expense', amount, name: `Досрочно: кредит «${loan.name}»`,
-      category: 'loan', date: new Date().toISOString(), loanId: loan.id
+      category: 'loan', date: new Date().toISOString(), loanId: loan.id,
+      savedBefore: 0 // досрочный взнос сверх графика — из бюджета текущего периода
     });
     saveSilently();
     recalculateEverything();
@@ -3346,6 +3873,7 @@
     if(confirm("Удалить эту операцию?")) {
       data.transactions = data.transactions.filter(t => t.id !== id);
       unlinkLoanTransaction(id);
+      unlinkMandatoryTransaction(id);
       recalculateEverything();
       saveSilently();
       showToast("Операция удалена");

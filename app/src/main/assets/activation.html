@@ -132,6 +132,7 @@
       transition:transform .15s ease;
     }
     .btn:active{transform:scale(.97);}
+    .btn:disabled{opacity:.6;pointer-events:none;}
     .btn-blue{background:linear-gradient(135deg,var(--accent-2),var(--accent));box-shadow:0 10px 24px var(--accent-glow);}
     .btn-orange{
       background:linear-gradient(135deg,var(--orange-2),var(--orange));
@@ -211,10 +212,10 @@
 
   <div class="card">
     <div class="label">Ключ активации</div>
-    <textarea id="key-input" placeholder="SW-…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <textarea id="key-input" placeholder="SW-… или SWT-XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
     <button class="paste" onclick="pasteKey()">📥 Вставить из буфера</button>
     <div class="msg" id="msg"></div>
-    <button class="btn btn-blue" onclick="activate()">Активировать</button>
+    <button class="btn btn-blue" id="activate-btn" onclick="activate()">Активировать</button>
   </div>
 
   <button class="btn btn-ghost hidden" id="trial-btn" onclick="continueTrial()"></button>
@@ -271,11 +272,38 @@
     else showMsg('Буфер обмена пуст', false);
   }
 
-  function activate() {
+  // Сервер тестовых кодов SWT-… (tools/license-server). Обычные ключи SW-… проверяются без интернета
+  const LICENSE_SERVER = 'https://smartwallet-license.SUBDOMAIN.workers.dev';
+
+  async function activate() {
     const key = document.getElementById('key-input').value.trim();
     if (!key) { showMsg('Вставьте ключ активации', false); return; }
+    if (/^SWT/i.test(key.replace(/\s+/g, ''))) { await redeemCode(key); return; }
     const result = JSON.parse(bridge.activate(key));
     showMsg(result.message, result.ok);
+  }
+
+  /** Код SWT-… обменивается на сервере на ключ SW-…, привязанный к этому телефону. */
+  async function redeemCode(code) {
+    const btn = document.getElementById('activate-btn');
+    btn.disabled = true;
+    showMsg('Проверяю код…', true);
+    try {
+      const device = JSON.parse(bridge.getState()).deviceCode;
+      const res = await fetch(LICENSE_SERVER + '/redeem', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ code, device })
+      });
+      const data = await res.json();
+      if (!data.ok || !data.key) { showMsg(data.message || 'Код не подошёл', false); return; }
+      const result = JSON.parse(bridge.activate(data.key));
+      showMsg(result.message, result.ok);
+    } catch (e) {
+      showMsg('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз', false);
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   render();

@@ -47,9 +47,61 @@ public class KeyGen {
                 }
                 issue(args[1], args.length >= 3 ? args[2] : "lifetime");
                 break;
+            case "codes":
+                codes(args.length >= 2 ? args[1] : "A:100:30");
+                break;
             default:
                 usage();
         }
+    }
+
+    // ---------- Тестовые коды SWT-… (их же узнаёт tools/license-server/worker.js) ----------
+
+    private static final String ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    /** Печатает коды партий и адрес админ-панели. Формат партий как у BATCHES: "A:100:30,B:50:14". */
+    private static void codes(String spec) throws Exception {
+        String pem = new String(Files.readAllBytes(privateKeyFile()), StandardCharsets.US_ASCII).replaceAll("\\s+", "");
+        byte[] seed = java.security.MessageDigest.getInstance("SHA-256").digest(("SWT1|" + pem).getBytes(StandardCharsets.UTF_8));
+        javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+        mac.init(new javax.crypto.spec.SecretKeySpec(seed, "HmacSHA256"));
+
+        StringBuilder out = new StringBuilder();
+        out.append("Админ-панель: https://<адрес-сервера>/a/")
+           .append(toBase32(mac.doFinal("admin".getBytes(StandardCharsets.UTF_8)), 26)).append("\n\n");
+        for (String part : spec.split(",")) {
+            String[] p = part.trim().split(":");
+            char letter = Character.toUpperCase(p[0].charAt(0));
+            int count = Integer.parseInt(p[1]);
+            out.append("Партия ").append(letter).append(": ").append(count).append(" кодов на ").append(p[2]).append(" дней\n");
+            for (int n = 0; n < count; n++) {
+                String body = "" + letter + ALPHABET.charAt(n >> 5) + ALPHABET.charAt(n & 31);
+                String s = body + toBase32(mac.doFinal(("code|" + body).getBytes(StandardCharsets.UTF_8)), 9);
+                out.append(String.format("%3d  SWT-%s-%s-%s%n", n + 1, s.substring(0, 4), s.substring(4, 8), s.substring(8)));
+            }
+            out.append("\n");
+        }
+        System.out.print(out);
+    }
+
+    private static String toBase32(byte[] bytes, int chars) {
+        StringBuilder out = new StringBuilder();
+        int buffer = 0, bits = 0, i = 0;
+        while (out.length() < chars) {
+            if (bits < 5) { buffer = (buffer << 8) | (bytes[i++] & 0xFF); bits += 8; }
+            bits -= 5;
+            out.append(ALPHABET.charAt((buffer >> bits) & 31));
+        }
+        return out.toString();
+    }
+
+    private static Path privateKeyFile() {
+        Path privateFile = keysDir().resolve("private_key.txt");
+        if (!Files.exists(privateFile)) {
+            System.out.println("Не найден закрытый ключ " + privateFile + ". Сначала выполните: java tools/KeyGen.java init");
+            System.exit(1);
+        }
+        return privateFile;
     }
 
     private static Path keysDir() {
@@ -141,5 +193,6 @@ public class KeyGen {
         System.out.println("Использование:");
         System.out.println("  java tools/KeyGen.java init");
         System.out.println("  java tools/KeyGen.java issue <КОД-УСТРОЙСТВА> [дней|lifetime]");
+        System.out.println("  java tools/KeyGen.java codes [A:100:30]   — тестовые коды SWT-… и адрес админ-панели");
     }
 }

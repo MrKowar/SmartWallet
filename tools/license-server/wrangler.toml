@@ -1,0 +1,15 @@
+name = "smartwallet-license"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Партии тестовых кодов: «буква:количество:дней». Новая партия — новая буква, например "A:100:30,B:50:14"
+BATCHES = "A:100:30"
+
+# Секрет LICENSE_PRIVATE_KEY задаётся в панели Cloudflare (Settings → Variables and Secrets),
+# в этот файл его не вписывать.
+
+# Где хранится, какой код к какому телефону привязан
+# [[kv_namespaces]]
+# binding = "CODES_KV"
+# id = "ВСТАВЬТЕ_ID"

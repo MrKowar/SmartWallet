@@ -1599,6 +1599,30 @@
       @keyframes fade-out-only{from{opacity:1;}to{opacity:0;}}
     }
   </style>
+<style id="admin-panel">
+  .app-version{display:block;width:100%;margin:14px 0 4px;padding:6px;background:none;border:0;color:var(--text-dim);font:inherit;font-size:12px;text-align:center;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+  .adm-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px;}
+  .adm-stat{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;}
+  .adm-stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums;color:var(--text);}
+  .adm-stat span{font-size:11px;color:var(--text-soft);}
+  .adm-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;}
+  .adm-tab{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--text-soft);border-radius:999px;padding:7px 12px;font:inherit;font-size:13px;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform 120ms var(--ease-out-strong),background-color 160ms ease,color 160ms ease;}
+  .adm-tab:active{transform:scale(.97);}
+  .adm-tab.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .adm-list{display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow-y:auto;overscroll-behavior:contain;}
+  .adm-row{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:10px 12px;}
+  .adm-main{flex:1;min-width:0;}
+  .adm-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;color:var(--text);overflow-wrap:anywhere;}
+  .adm-meta{font-size:12px;color:var(--text-soft);margin-top:2px;}
+  .adm-badge{flex-shrink:0;white-space:nowrap;font-size:11px;font-weight:600;border-radius:999px;padding:3px 8px;}
+  .adm-free{background:rgba(47,123,255,.15);color:var(--accent);}
+  .adm-used{background:rgba(43,212,154,.14);color:var(--income);}
+  .adm-exp{background:rgba(255,92,108,.14);color:var(--danger);}
+  .adm-copy{flex-shrink:0;border:0;background:rgba(255,138,43,.14);color:var(--orange);border-radius:10px;padding:8px 10px;font:inherit;font-size:13px;touch-action:manipulation;user-select:none;-webkit-user-select:none;transition:transform 120ms var(--ease-out-strong);}
+  .adm-copy:active{transform:scale(.95);}
+  .adm-empty{color:var(--text-soft);text-align:center;padding:24px 0;font-size:14px;}
+  .adm-input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;}
+</style>
 </head>
 <body>
 
@@ -1874,6 +1898,35 @@
     <button class="modal-btn modal-btn-cancel" onclick="exportBackup()">💾 Сохранить копию данных</button>
     <button class="modal-btn modal-btn-cancel" onclick="importBackup()">📂 Восстановить из копии</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings')">Закрыть</button>
+    <button class="app-version" id="app-version" type="button" onclick="versionTap()">SmartWallet</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Тестовые коды</div>
+    <div id="adm-login" style="display:none">
+      <div class="settings-hint" style="margin-bottom:10px">Вставьте ссылку на админ-панель или код доступа из неё.</div>
+      <input class="adm-input" id="adm-token" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="https://…/a/КОД">
+      <button class="modal-btn modal-btn-primary" onclick="adminLogin()">Войти</button>
+    </div>
+    <div id="adm-body" style="display:none">
+      <div class="adm-stats">
+        <div class="adm-stat"><b id="adm-all">—</b><span>всего</span></div>
+        <div class="adm-stat"><b id="adm-used">—</b><span>активировано</span></div>
+        <div class="adm-stat"><b id="adm-free">—</b><span>свободно</span></div>
+      </div>
+      <div class="adm-tabs" id="adm-tabs">
+        <button class="adm-tab on" data-f="all">Все</button>
+        <button class="adm-tab" data-f="free">Свободные</button>
+        <button class="adm-tab" data-f="used">Активированные</button>
+        <button class="adm-tab" data-f="exp">Истёкшие</button>
+      </div>
+      <div class="adm-list" id="adm-list"></div>
+      <button class="modal-btn modal-btn-cancel" onclick="adminLogout()">Выйти из админки</button>
+    </div>
+    <button class="modal-btn modal-btn-cancel" onclick="closeModal('admin')">Закрыть</button>
   </div>
 </div>
 
@@ -3895,7 +3948,130 @@
     if (percent < 0) document.getElementById('app-update-btn').disabled = false;
   };
 
-  window.onAppUpToDate = function () { showToast('У вас последняя версия SmartWallet'); };
+  // Новый интерфейс скачивается молча и включается при следующем запуске — говорим об этом прямо
+  window.onAppUpToDate = function () {
+    showToast('Приложение актуально. Если вышел новый интерфейс — он включится после перезапуска');
+  };
+
+  // ===== ВЕРСИЯ И СКРЫТАЯ АДМИНКА =====
+  // Строка версии внизу настроек. 7 нажатий подряд открывают админку тестовых кодов.
+  // В приложении нет ни кода доступа, ни списка кодов: всё приходит с сервера по коду, который знает только владелец.
+  const ADMIN_SERVER = 'https://smartwallet-license.alex2003prokopenko.workers.dev';
+  const ADMIN_TOKEN_KEY = 'sw_admin_token';
+  let versionTaps = 0, versionTapTimer = null, adminData = null, adminFilter = 'all';
+
+  function renderAppVersion() {
+    const m = location.href.match(/\/web\/(\d+)\//);
+    document.getElementById('app-version').textContent = 'SmartWallet 1.3 · интерфейс ' + (m ? m[1] : 'встроенный');
+  }
+
+  function versionTap() {
+    versionTaps++;
+    clearTimeout(versionTapTimer);
+    versionTapTimer = setTimeout(() => { versionTaps = 0; }, 1500);
+    if (versionTaps < 7) return;
+    versionTaps = 0;
+    closeModal('settings');
+    setTimeout(openAdmin, 240);
+  }
+
+  function adminToken() {
+    try { return localStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+
+  function openAdmin() {
+    const has = !!adminToken();
+    document.getElementById('adm-login').style.display = has ? 'none' : 'block';
+    document.getElementById('adm-body').style.display = has ? 'block' : 'none';
+    openModal('admin');
+    if (has) loadAdmin();
+  }
+
+  function adminLogin() {
+    const raw = document.getElementById('adm-token').value.trim();
+    const m = raw.match(/\/a\/([A-Za-z0-9]+)/);
+    const token = (m ? m[1] : raw).replace(/[^A-Za-z0-9]/g, '');
+    if (token.length < 20) { showToast('Это не похоже на код доступа'); return; }
+    try { localStorage.setItem(ADMIN_TOKEN_KEY, token); } catch (e) {}
+    document.getElementById('adm-token').value = '';
+    openAdmin();
+  }
+
+  function adminLogout() {
+    try { localStorage.removeItem(ADMIN_TOKEN_KEY); } catch (e) {}
+    adminData = null;
+    closeModal('admin');
+  }
+
+  async function loadAdmin() {
+    const list = document.getElementById('adm-list');
+    list.innerHTML = '<div class="adm-empty">Загрузка…</div>';
+    try {
+      const res = await fetch(ADMIN_SERVER + '/a/' + adminToken() + '/api', { cache: 'no-store' });
+      if (res.status === 404) {
+        try { localStorage.removeItem(ADMIN_TOKEN_KEY); } catch (e) {}
+        list.innerHTML = '<div class="adm-empty">Код доступа не подошёл</div>';
+        return;
+      }
+      if (!res.ok) throw new Error(res.status);
+      adminData = await res.json();
+      renderAdmin();
+    } catch (e) {
+      list.innerHTML = '<div class="adm-empty">Нет связи с сервером</div>';
+    }
+  }
+
+  function adminState(c) { return !c.device ? 'free' : (c.expiry < adminData.today ? 'exp' : 'used'); }
+
+  function renderAdmin() {
+    if (!adminData) return;
+    const codes = adminData.codes;
+    const used = codes.filter(c => c.device).length;
+    document.getElementById('adm-all').textContent = codes.length;
+    document.getElementById('adm-used').textContent = used;
+    document.getElementById('adm-free').textContent = codes.length - used;
+    const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+    const day = d => new Date(d * 86400000).toLocaleDateString('ru-RU', { timeZone: 'UTC' });
+    const rows = codes.filter(c => {
+      const st = adminState(c);
+      return adminFilter === 'all' || (adminFilter === 'used' ? st !== 'free' : st === adminFilter);
+    });
+    document.getElementById('adm-list').innerHTML = rows.length ? rows.map(c => {
+      const st = adminState(c);
+      const badge = st === 'free' ? '<span class="adm-badge adm-free">свободен</span>'
+        : st === 'exp' ? '<span class="adm-badge adm-exp">истёк</span>' : '<span class="adm-badge adm-used">активирован</span>';
+      const meta = c.device
+        ? 'Телефон ' + esc(c.device) + ' · до ' + day(c.expiry)
+        : c.days + ' дней с момента активации';
+      return '<div class="adm-row"><div class="adm-main"><div class="adm-code">' + esc(c.code) + '</div><div class="adm-meta">№' + c.n + ' · ' + meta +
+        '</div></div>' + badge + (c.device ? '' : '<button class="adm-copy" data-code="' + esc(c.code) + '">Копировать</button>') + '</div>';
+    }).join('') : '<div class="adm-empty">Ничего нет</div>';
+  }
+
+  function copyText(text) {
+    const done = () => showToast('Код скопирован');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else fallbackCopy(text, done);
+  }
+
+  function fallbackCopy(text, done) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { showToast(text); }
+    ta.remove();
+  }
+
+  document.getElementById('adm-tabs').addEventListener('click', e => {
+    const b = e.target.closest('.adm-tab'); if (!b) return;
+    document.querySelectorAll('.adm-tab').forEach(t => t.classList.toggle('on', t === b));
+    adminFilter = b.dataset.f; renderAdmin();
+  });
+  document.getElementById('adm-list').addEventListener('click', e => {
+    const b = e.target.closest('.adm-copy'); if (b) copyText(b.dataset.code);
+  });
+  renderAppVersion();
 
   window.onAppUpdateError = function (message) { showToast('Не удалось проверить обновления: ' + message); };
 

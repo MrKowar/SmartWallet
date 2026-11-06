@@ -93,8 +93,9 @@ async function adminApi(env, secrets) {
       });
     }
   }
+  // CORS нужен скрытой админке в приложении; без токена этот адрес отвечает 404
   return new Response(JSON.stringify({ today: todayEpochDay(), codes }), {
-    headers: { 'content-type': 'application/json; charset=utf-8', ...privateHeaders() }
+    headers: { 'content-type': 'application/json; charset=utf-8', ...privateHeaders(), 'Access-Control-Allow-Origin': '*' }
   });
 }
 

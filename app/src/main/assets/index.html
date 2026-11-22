@@ -1721,6 +1721,85 @@
     .cat-share i{display:block;height:100%;border-radius:3px;background:var(--accent);transform-origin:left;}
     .forecast-tab.active,.analytics-tab.active{box-shadow:none;}
 
+    /* ----- Расшифровка главной суммы ----- */
+    .budget-why{margin-top:12px;}
+    .budget-why summary{
+      display:inline-flex;align-items:center;gap:6px;min-height:36px;cursor:pointer;list-style:none;
+      font-size:13px;font-weight:600;color:rgba(255,255,255,.85);
+    }
+    .budget-why summary::-webkit-details-marker{display:none;}
+    .budget-why summary::after{content:'';width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform 160ms var(--ease-out-strong);}
+    .budget-why[open] summary::after{transform:rotate(-135deg) translateY(-1px);}
+    #budget-why-rows{margin-top:6px;padding:10px 12px;border-radius:12px;background:rgba(8,13,28,.24);}
+    .why-row{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:13px;color:rgba(255,255,255,.85);}
+    .why-row b{font-weight:700;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap;}
+    .why-row b.neg{color:#FFD1D9;}
+    .why-total{margin-top:4px;padding-top:8px;border-top:1px solid rgba(255,255,255,.18);font-weight:700;}
+
+    /* ----- Быстрое добавление ----- */
+    .quick-actions-top{margin:0 0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .quick-actions-top .qa-btn{
+      display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;
+      min-height:52px;padding:0 12px;font-size:15px;font-weight:700;border-radius:16px;border:none;
+    }
+    .quick-actions-top .qa-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+    .fab-add{
+      position:fixed;right:20px;z-index:40;
+      bottom:calc(100px + env(safe-area-inset-bottom, 0px));
+      width:56px;height:56px;border-radius:18px;border:none;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      background:var(--accent);color:#fff;
+      box-shadow:0 12px 28px -10px rgba(47,123,255,.7), 0 0 0 1px rgba(255,255,255,.12) inset;
+      transition:transform 160ms var(--ease-out-strong);
+    }
+    .fab-add[hidden]{display:none;}
+    .fab-add:active{transform:scale(.94);}
+    .fab-add svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;}
+    body{padding-bottom:calc(170px + env(safe-area-inset-bottom, 0px));}
+
+    .ops-type{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:0 0 12px;border-radius:14px;background:var(--surface-2);}
+    .ops-type button{min-height:40px;border:none;border-radius:10px;background:transparent;color:var(--text-soft);font:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+    .ops-type button.active{background:var(--surface-3);color:var(--text);}
+    .ops-dates{display:flex;gap:8px;margin:2px 0 10px;}
+    .ops-dates button{
+      flex:1;min-height:40px;border-radius:12px;border:1px solid var(--line-strong);
+      background:transparent;color:var(--text-soft);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+    }
+    .ops-dates button.active{background:var(--accent-soft);border-color:rgba(47,123,255,.5);color:var(--text);}
+    .ops-error{margin:-4px 2px 10px;font-size:13px;color:#FCA5A5;text-align:left;}
+    #ops-cats-grid .category-item{font:inherit;color:inherit;}
+
+    /* ----- Спокойная Главная ----- */
+    #page-main .month-progress-card{display:none;}      /* дублирует вкладку «Месяц» */
+    #auto-dist-card[hidden]{display:none;}
+    /* Перерасход — предупреждение, а не авария: красный оставлен просрочкам и ошибкам */
+    .budget-status.over{background:rgba(251,191,36,.2);color:#FFE6A8;border-color:rgba(251,191,36,.45);}
+    .btn-delete-all{color:var(--text-soft) !important;background:transparent !important;min-height:36px;padding:0 10px;}
+
+    /* Обычные траты — не тревога: в истории они нейтральные, зелёным выделен только доход */
+    .expense-amount.negative{color:var(--text);}
+
+    /* ----- Читаемость: контраст и минимальные размеры текста ----- */
+    :root{--text-dim:#8391AD;}
+    /* Белый на оранжевом давал ~2:1 — тёмный текст даёт больше 7:1 */
+    .qa-expense,.modal-btn-expense,.goal-deposit-btn,.modal-btn-green,.modal-btn-gold,.mp-payday-btn{
+      color:#1A1206 !important;
+    }
+    .ob-btn{height:40px;font-weight:700;}
+    .ob-actions-gap{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;}
+    .ob-row.is-overdue .ob-foot{flex-wrap:wrap;}
+    .ob-row.is-overdue .ob-plan{flex-basis:100%;}
+    .ob-row.is-overdue .ob-actions-gap{flex:1;justify-content:stretch;}
+    .ob-row.is-overdue .ob-actions-gap .ob-btn{flex:1;}
+    #ops-amount::-webkit-outer-spin-button,#ops-amount::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+    #ops-amount{-moz-appearance:textfield;}
+    #ops-cats-grid .category-item span:last-child{hyphens:auto;-webkit-hyphens:auto;overflow-wrap:normal;word-break:normal;}
+    .nav-item span:not(.nav-icon){font-size:12px;}
+    .category-item,.category-item span{font-size:12px;}
+    .mp-cat-name{font-size:12px;}
+    .week-summary-item .ws-stat .ws-lbl{font-size:12px;}
+    .pay-chip,.badge,.goal-tag{font-size:12px;}
+
     /* ----- Фокус для клавиатуры и TalkBack ----- */
     button:focus-visible,input:focus-visible,select:focus-visible,[role="button"]:focus-visible{
       outline:2px solid var(--accent-2);outline-offset:2px;
@@ -1827,6 +1906,8 @@
     .ai-skeleton i:nth-child(4){width:55%;}
     @keyframes ai-shimmer{from{background-position:100% 0;}to{background-position:-100% 0;}}
 
+    .ai-retry{color:var(--accent-2);border-color:rgba(47,123,255,.4);}
+    .ai-left{margin:12px 6px 0;font-size:12.5px;color:var(--text-soft);text-align:center;font-variant-numeric:tabular-nums;}
     .ai-disclaimer{margin:14px 6px 0;font-size:12px;line-height:1.5;color:var(--text-dim);text-align:center;}
 
     /* Кнопки ИИ в копилках и кредитах */
@@ -1877,6 +1958,10 @@
     <div class="budget-label" id="budget-period-label">Доступно на текущую неделю</div>
     <div class="budget-amount" id="week-available">0 <span>₽</span></div>
     <div class="budget-status" id="week-status-badge">В лимите</div>
+    <details class="budget-why">
+      <summary>Как посчитано</summary>
+      <div id="budget-why-rows"></div>
+    </details>
     <div class="budget-stats">
       <div class="budget-stat">
         <div class="val" id="stat-week-income" style="color:#9DFFD3">0 ₽</div>
@@ -1887,6 +1972,11 @@
         <div class="lbl" id="stat-week-expense-lbl">Расход нед.</div>
       </div>
     </div>
+  </div>
+
+  <div class="quick-actions quick-actions-top">
+    <button class="qa-btn qa-expense" onclick="openAddOps('expense')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Расход</button>
+    <button class="qa-btn qa-income" onclick="openAddOps('income')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Доход</button>
   </div>
 
   <div class="card daily-limit-card" onclick="openModal('daily-settings')">
@@ -1924,10 +2014,10 @@
     <div id="obligations-list"></div>
   </div>
 
-  <div class="card auto-dist-summary">
+  <div class="card auto-dist-summary" id="auto-dist-card">
     <div class="auto-dist-title">
-      <span>📊 Авто распределение (<span id="auto-dist-period-label">Текущая неделя</span>)</span>
-      <span style="font-size:11px; font-weight:normal; background:rgba(255,255,255,0.6); padding:2px 8px; border-radius:10px; color:#475569;" id="saved-total-display">Всего отложено: 0 ₽</span>
+      <span>Куда делится доход (<span id="auto-dist-period-label">Текущая неделя</span>)</span>
+      <span class="saved-total" id="saved-total-display" hidden>Всего отложено: 0 ₽</span>
     </div>
     <div id="auto-dist-rows"></div>
     <div class="auto-dist-total">
@@ -1936,7 +2026,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card month-progress-card">
     <div class="week-progress-section">
       <div class="title">Месячный прогресс</div>
       <div class="sub" id="month-progress-sub">Неделя 1 из 4</div>
@@ -1950,12 +2040,6 @@
       </div>
     </div>
     <div class="badge-row" id="main-weeks-badges"></div>
-  </div>
-
-  <div class="quick-actions">
-    <button class="qa-btn qa-expense" onclick="openAddOps('expense')"><span style="font-size: 20px;">💸</span> Расход</button>
-    <button class="qa-btn qa-income" onclick="openAddOps('income')"><span style="font-size: 20px;">💰</span> Доход</button>
-    <button class="qa-btn qa-scanner" onclick="AndroidScanner.startScan()"><span style="font-size: 20px;">📷</span> Скан чека</button>
   </div>
 
   <div class="section-header-row">
@@ -2070,13 +2154,19 @@
     <div class="ai-result-head">
       <span class="ai-result-title" id="ai-result-title">Ответ</span>
       <button class="ai-copy" id="ai-copy" type="button">Копировать</button>
+      <button class="ai-copy ai-retry" id="ai-retry" type="button" hidden>Повторить</button>
     </div>
     <div class="ai-skeleton" id="ai-skeleton"><i></i><i></i><i></i><i></i></div>
     <div class="ai-answer-text" id="ai-answer"></div>
   </section>
 
+  <p class="ai-left" id="ai-left" hidden></p>
   <p class="ai-disclaimer">ИИ получает только суммы по категориям, копилки и кредиты — без комментариев к операциям. Ответ может ошибаться, это не финансовая консультация.</p>
 </div>
+
+<button class="fab-add" id="fab-add" onclick="openAddOps('expense')" aria-label="Добавить расход">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+</button>
 
 <div class="bottom-nav">
   <button class="nav-item active" data-page="main" onclick="switchPage('main')">
@@ -2125,10 +2215,20 @@
   <div class="modal-content">
     <div class="modal-handle"></div>
     <div class="modal-title" id="ops-modal-title">Новая операция</div>
-    <input type="number" class="modal-input" id="ops-amount" placeholder="0 ₽" inputmode="numeric">
-    <input type="text" class="modal-input" id="ops-name" placeholder="Название (например: Продукты)" style="font-size:15px; font-weight:normal; text-align:left; padding:12px;">
+    <div class="ops-type" role="tablist" aria-label="Тип операции">
+      <button type="button" role="tab" data-type="expense" onclick="setOpsType('expense')">Расход</button>
+      <button type="button" role="tab" data-type="income" onclick="setOpsType('income')">Доход</button>
+    </div>
+    <input type="number" class="modal-input" id="ops-amount" placeholder="0 ₽" inputmode="decimal" enterkeyhint="done">
+    <div class="ops-error" id="ops-error" role="alert" hidden></div>
+    <div class="ops-dates" role="radiogroup" aria-label="Дата">
+      <button type="button" role="radio" data-days="0" onclick="setOpsDate(0)">Сегодня</button>
+      <button type="button" role="radio" data-days="1" onclick="setOpsDate(1)">Вчера</button>
+      <button type="button" role="radio" data-days="2" onclick="setOpsDate(2)">Позавчера</button>
+    </div>
+    <input type="text" class="modal-input" id="ops-name" placeholder="Комментарий, необязательно" style="font-size:16px; font-weight:normal; text-align:left; padding:12px;">
 
-    <div class="modal-input-label" style="text-align:left; margin-top:8px;">Категория:</div>
+    <div class="modal-input-label" style="text-align:left; margin-top:8px;">Категория</div>
     <div class="category-grid" id="ops-cats-grid"></div>
 
     <button class="modal-btn" id="ops-submit-btn" onclick="submitOps()">Добавить</button>
@@ -2793,7 +2893,9 @@
     totalSavedAllTime = Math.round(totalSavedAllTime);
 
     const spendingRow = autoDistRowsData.find(r => r.key === 'spending');
-    const currentWeekAvailable = (spendingRow ? spendingRow.amount : 0) - periodExpense - reserveShortfall;
+    const spendingShare = spendingRow ? spendingRow.amount : 0;
+    const carryOver = computeCarryOver(period, obligations, (data.distPct[SPENDING_BUCKET] || 0) / 100);
+    const currentWeekAvailable = carryOver + spendingShare - periodExpense - reserveShortfall;
 
     const daysLeftInWeek = Math.max(1, period.daysLeft);
     let baseDaily = parseFloat(data.dailyLimit) || 0;
@@ -2818,6 +2920,7 @@
       mIncome, mExpense, mBalance: mIncome - mExpense,
       weekStats, currentWeek,
       period, periodIncome, periodExpense, periodAvailable: currentWeekAvailable,
+      carryOver, spendingShare, reserveShortfall,
       currentWeekAvailable,
       curWeekIncome: periodIncome, curWeekExpense: periodExpense,
       autoDistRowsData, curWeekTotalDistributed, totalSavedAllTime,
@@ -2827,6 +2930,62 @@
 
     renderMainPage();
     renderProfile();
+  }
+
+  /**
+   * Остаток прошлых периодов на расходы (может быть и минусом — перерасход переносится).
+   * Весь доход до текущего периода (I) минус оплаченные обязательные платежи (O) и то, что
+   * уже лежит в резерве под будущие платежи (S), делится по автораспределению; доля «Расходы»
+   * минус обычные траты тех периодов (E) и есть остаток. Считаем с периода первого дохода:
+   * траты, внесённые раньше любого дохода, не должны уводить бюджет в минус.
+   */
+  function computeCarryOver(period, obligations, spendPct) {
+    const start = startOfDay(period.start);
+    let firstIncome = null;
+    data.transactions.forEach(t => {
+      const d = new Date(t.date);
+      if (t.type === 'income' && !isNaN(d.getTime()) && (!firstIncome || d < firstIncome)) firstIncome = d;
+    });
+    if (!firstIncome || firstIncome >= start) return 0;
+    const from = startOfDay(getBudgetPeriod(firstIncome).start);
+
+    let income = 0, obligationsPaid = 0, spent = 0;
+    data.transactions.forEach(t => {
+      const d = new Date(t.date);
+      if (isNaN(d.getTime())) return;
+      const isObligation = t.type === 'expense' && (t.category === 'loan' || t.fromReserve);
+      if (d >= start) {
+        // Платёж этого периода: отложенная заранее часть взята из прошлых доходов
+        if (isObligation && typeof t.savedBefore === 'number') obligationsPaid += Math.min(t.amount, t.savedBefore);
+        return;
+      }
+      if (d < from) return;
+      if (t.type === 'income') income += t.amount;
+      else if (isObligation) obligationsPaid += t.amount;
+      else spent += t.amount;
+    });
+    const inReserve = obligations.reduce((sum, o) => sum + (o.paidThisPeriod ? 0 : (o.plan.saved || 0)), 0);
+    const distributable = income - obligationsPaid - inReserve;
+    // Если обязательные съели больше дохода, нехватка целиком ложится на расходы
+    const share = distributable >= 0 ? distributable * spendPct : distributable;
+    return Math.round(share - spent);
+  }
+
+  // Расшифровка главной суммы: из чего она сложилась
+  function renderBudgetWhy() {
+    const box = document.getElementById('budget-why-rows');
+    if (!box) return;
+    const g = globalCalc;
+    const sign = n => (n > 0 ? '+' : n < 0 ? '−' : '') + rub(Math.abs(n));
+    const rows = [
+      ['Остаток прошлых периодов', g.carryOver],
+      [`На расходы из дохода периода (${data.distPct[SPENDING_BUCKET] || 0}%)`, g.spendingShare],
+      ['Траты периода', -g.periodExpense]
+    ];
+    if (g.reserveShortfall > 0) rows.push(['Не хватает на обязательные платежи', -g.reserveShortfall]);
+    box.innerHTML = rows.map(([label, val]) =>
+      `<div class="why-row"><span>${label}</span><b class="${val < 0 ? 'neg' : ''}">${sign(Math.round(val))}</b></div>`
+    ).join('') + `<div class="why-row why-total"><span>Доступно</span><b class="${g.currentWeekAvailable < 0 ? 'neg' : ''}">${sign(g.currentWeekAvailable)}</b></div>`;
   }
 
   // ===== UI RENDERERS =====
@@ -2841,6 +3000,10 @@
     const distPeriodLabel = document.getElementById('auto-dist-period-label');
     if (distPeriodLabel) distPeriodLabel.textContent = period.shortLabel;
 
+    renderBudgetWhy();
+    // Распределение показываем, только когда в периоде есть доход: «Итого 0 ₽» лишь путает
+    const distCard = document.getElementById('auto-dist-card');
+    if (distCard) distCard.hidden = !(globalCalc.periodIncome > 0);
     const badge = document.getElementById('week-status-badge');
     if(globalCalc.currentWeekAvailable >= 0) {
       badge.textContent = "В лимите";
@@ -3442,7 +3605,8 @@
     const cat = mandatoryCategory(mp.category);
     const period = getBudgetPeriod(today);
     const lastPaid = mp.payments[mp.payments.length - 1];
-    const paidThisPeriod = lastPaid && isWithinPeriod(new Date(lastPaid.paidAt), period) ? lastPaid : null;
+    // Пока есть просроченный срок, платёж не «оплачен»: иначе просрочка прячется за зелёной плашкой
+    const paidThisPeriod = state.kind !== 'overdue' && lastPaid && isWithinPeriod(new Date(lastPaid.paidAt), period) ? lastPaid : null;
     return {
       kind: 'custom', id: mp.id, name: mp.name, icon: cat.icon, categoryName: cat.name,
       due, amount, state, plan, paidThisPeriod,
@@ -3487,8 +3651,13 @@
 
   function obligationPlanText(o) {
     const p = o.plan;
-    if (o.paidThisPeriod) return `Оплачено ${formatShortDate(new Date(o.paidThisPeriod.paidAt))} · следующий срок ${formatShortDate(o.due)}`;
-    if (p.overdue) return `Просрочено — заморожена вся сумма`;
+    if (o.paidThisPeriod) {
+      const paidText = `Оплачено ${formatShortDate(new Date(o.paidThisPeriod.paidAt))}`;
+      return o.state.kind === 'overdue'
+        ? `${paidText} · ещё не оплачен срок ${formatShortDate(o.due)}`
+        : `${paidText} · следующий срок ${formatShortDate(o.due)}`;
+    }
+    if (p.overdue) return `Срок прошёл — сумма отложена целиком. Уже платили? Нажмите «Уже оплачено»`;
     if (p.share <= 0) return `Копить начнём со следующей выплаты`;
     if (p.share >= p.amount) return `Отложить всю сумму ${periodSourceLabel()}`;
     return `Отложить <strong>${rub(p.share)}</strong> из ${rub(p.amount)} ${periodSourceLabel()}`;
@@ -3522,7 +3691,10 @@
             : paymentChip(o.state));
       const action = paid
         ? (o.kind === 'custom' ? `<button class="ob-btn ob-btn-ghost" onclick="undoMandatoryPayment('${o.id}')">Отменить</button>` : '')
-        : `<button class="ob-btn" onclick="payObligation(this, '${o.kind}', '${o.id}', ${o.n || 0})"><span class="ob-btn-label">Оплатить</span></button>`;
+        : `<button class="ob-btn" onclick="payObligation(this, '${o.kind}', '${o.id}', ${o.n || 0})"><span class="ob-btn-label">Оплатить</span></button>` +
+          (o.state.kind === 'overdue'
+            ? `<button class="ob-btn ob-btn-ghost" onclick="markPaidOutside('${o.kind}', '${o.id}', ${o.n || 0})">Уже оплачено</button>`
+            : '');
       const openEdit = o.kind === 'custom' ? `openEditMandatory('${o.id}')` : `openLoanDetail('${o.id}')`;
       return `
         <div class="ob-row ${p.overdue ? 'is-overdue' : ''} ${paid ? 'is-paid' : ''} ${o.id === justAddedObligationId ? 'is-new' : ''}" data-ob="${o.kind}:${o.id}">
@@ -3544,7 +3716,7 @@
           </div>
           <div class="ob-foot">
             <div class="ob-plan">${obligationPlanText(o)}</div>
-            ${action}
+            <div class="ob-actions-gap">${action}</div>
           </div>
         </div>`;
     }).join('');
@@ -3589,6 +3761,27 @@
     saveSilently();
     recalculateEverything();
     showToast(`${mp.name}: оплачено ${rub(next.amount)}`);
+  }
+
+  // Платёж уже оплачен вне приложения (или до начала учёта): закрываем срок без расхода,
+  // иначе давние «просрочки» навсегда замораживают деньги и уводят бюджет в минус
+  function markPaidOutside(kind, id, n) {
+    if (kind === 'loan') {
+      const loan = (data.loans || []).find(l => l.id === id);
+      const p = loan && loan.schedule.find(x => x.n === n);
+      if (!p) return;
+      Object.assign(p, { status: 'paid', paidAt: new Date().toISOString(), paidAmount: Number(p.amount) || 0, txId: null, outside: true });
+      showToast(`Платёж №${n} отмечен оплаченным`);
+    } else {
+      const mp = (data.mandatoryPayments || []).find(x => x.id === id);
+      if (!mp) return;
+      const next = mandatoryNext(mp);
+      mp.payments.push({ due: isoDate(next.due), paidAt: new Date().toISOString(), amount: next.amount, txId: null, outside: true });
+      showToast(`${mp.name}: отмечено оплаченным`);
+    }
+    saveSilently();
+    recalculateEverything();
+    if (typeof renderLoans === 'function') renderLoans();
   }
 
   function undoMandatoryPayment(id) {
@@ -4350,6 +4543,8 @@
     if(page === 'month') updateMonthPage();
     if(page === 'analytics') updateAnalyticsPage();
     if(page === 'ai') updateAIPage();
+    const fab = document.getElementById('fab-add');
+    if (fab) fab.hidden = page === 'ai';
   }
 
   // ===== ИИ-АНАЛИЗ =====
@@ -4357,6 +4552,8 @@
   // Телефон отправляет код устройства — по нему сервер считает дневной лимит.
   const AI_SERVER = 'https://smartwallet-license.alex2003prokopenko.workers.dev';
   let aiBusy = false;
+  let aiLeft = null;          // сколько запросов осталось сегодня (присылает сервер)
+  let aiLastRun = null;       // для кнопки «Повторить»
 
   function aiDeviceCode() {
     try {
@@ -4375,6 +4572,10 @@
       body: JSON.stringify({ device: device, prompt: prompt })
     })
       .then(r => r.json().catch(() => ({})).then(d => ({ ok: r.ok && d.ok, d: d })))
+      .then(res => {
+        if (res.ok && typeof res.d.left === 'number') aiLeft = res.d.left;
+        return res;
+      })
       .then(res => res.ok
         ? window.onDeepSeekAnswer(requestId, res.d.answer)
         : window.onDeepSeekError(requestId, res.d.message || 'сервер не ответил'))
@@ -4450,6 +4651,8 @@
   function runAI(title, question) {
     if (aiBusy) return;
     aiBusy = true;
+    aiLastRun = [title, question];
+    document.getElementById('ai-retry').hidden = true;
     document.querySelectorAll('.ai-topic,.ai-send').forEach(b => { b.disabled = true; });
     const result = document.getElementById('ai-result');
     result.hidden = false;
@@ -4502,6 +4705,9 @@
     const copy = document.getElementById('ai-copy');
     copy.hidden = !!isError;
     copy.dataset.text = text;
+    document.getElementById('ai-retry').hidden = !isError || !aiLastRun;
+    const left = document.getElementById('ai-left');
+    if (aiLeft !== null) { left.hidden = false; left.textContent = `Осталось запросов сегодня: ${aiLeft} из 30`; }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -4516,6 +4722,9 @@
       if (!q) { input.focus(); return; }
       input.blur();
       runAI(q.length > 60 ? q.slice(0, 57) + '…' : q, 'Мой вопрос: ' + q);
+    });
+    document.getElementById('ai-retry').addEventListener('click', () => {
+      if (aiLastRun) runAI(aiLastRun[0], aiLastRun[1]);
     });
     const copy = document.getElementById('ai-copy');
     copy.addEventListener('click', () => {
@@ -4607,8 +4816,23 @@
     card.classList.add('is-hidden');
     target.scrollIntoView({ block: 'center', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 
+    // Ждём, пока плавная прокрутка остановится: раньше карточку мерили через 380 мс,
+    // прокрутка к нижним блокам ещё шла, и карточка уезжала за экран
     clearTimeout(coachTimer);
-    coachTimer = setTimeout(() => {
+    const token = (coachTimer = setTimeout(() => {}, 0));
+    let lastTop = null, still = 0;
+    const startedAt = performance.now();
+    const waitStill = () => {
+      if (coachTimer !== token) return;
+      const top = target.getBoundingClientRect().top;
+      still = lastTop !== null && Math.abs(top - lastTop) < 0.5 ? still + 1 : 0;
+      lastTop = top;
+      if (still >= 3 || performance.now() - startedAt > 1500) place();
+      else requestAnimationFrame(waitStill);
+    };
+    requestAnimationFrame(waitStill);
+
+    function place() {
       const r = target.getBoundingClientRect();
       const pad = 6;
       spot.style.width = `${r.width + pad * 2}px`;
@@ -4624,23 +4848,22 @@
       document.getElementById('coach-skip').style.visibility = i === COACH_STEPS.length - 1 ? 'hidden' : 'visible';
       document.querySelectorAll('#coach-dots .coach-dot').forEach((d, k) => d.classList.toggle('is-active', k === i));
 
-      // Карточка — там, где больше места: под блоком или над ним
+      // Карточка — там, где больше места: под блоком или над ним; всегда целиком в окне
       const gap = 14;
+      const h = card.offsetHeight;
+      const maxTop = Math.max(gap, window.innerHeight - h - gap);
       const spaceBelow = window.innerHeight - r.bottom;
-      if (spaceBelow >= card.offsetHeight + gap * 2 || spaceBelow >= r.top) {
-        card.style.top = `${Math.min(r.bottom + gap, window.innerHeight - card.offsetHeight - gap)}px`;
-        card.style.bottom = 'auto';
-      } else {
-        card.style.top = 'auto';
-        card.style.bottom = `${Math.min(window.innerHeight - r.top + gap, window.innerHeight - card.offsetHeight - gap)}px`;
-      }
+      const top = (spaceBelow >= h + gap * 2 || spaceBelow >= r.top) ? r.bottom + gap : r.top - gap - h;
+      card.style.top = `${Math.min(Math.max(gap, top), maxTop)}px`;
+      card.style.bottom = 'auto';
       requestAnimationFrame(() => card.classList.remove('is-hidden'));
-    }, prefersReducedMotion() ? 60 : 380);
+    }
   }
 
   function endCoach() {
     try { localStorage.setItem(COACH_KEY, '1'); } catch (e) {}
     clearTimeout(coachTimer);
+    coachTimer = null; // останавливает ожидание прокрутки в showCoachStep
     document.getElementById('coach-card').classList.add('is-hidden');
     setTimeout(() => { document.getElementById('coach').hidden = true; }, 200);
   }
@@ -4939,55 +5162,104 @@
   }
 
   // Добавление операции
-  function openAddOps(type) {
+  let opsDaysAgo = 0;
+
+  // Недавние категории — первыми, последняя выбрана сразу: обычно человек вносит одно и то же
+  function recentCats(type) {
+    const r = (data.recentCats || {})[type];
+    return Array.isArray(r) ? r : [];
+  }
+
+  function rememberCat(type, id) {
+    if (!data.recentCats) data.recentCats = {};
+    data.recentCats[type] = [id, ...recentCats(type).filter(x => x !== id)].slice(0, 3);
+  }
+
+  function setOpsType(type) {
     currentOpsType = type;
-    selectedCatId = '';
-
-    const title = document.getElementById('ops-modal-title');
+    document.querySelectorAll('.ops-type button').forEach(b => {
+      const on = b.dataset.type === type;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
     const submitBtn = document.getElementById('ops-submit-btn');
-    const grid = document.getElementById('ops-cats-grid');
-
-    document.getElementById('ops-amount').value = '';
-    document.getElementById('ops-name').value = '';
-
-    grid.innerHTML = '';
-    const catsList = type === 'income' ? CATS_INCOME : CATS_EXPENSE;
-
-    title.textContent = type === 'income' ? '💵 Добавить доход' : '💸 Добавить расход';
     submitBtn.className = type === 'income' ? 'modal-btn modal-btn-income' : 'modal-btn modal-btn-expense';
-    submitBtn.textContent = 'Добавить в систему';
+    submitBtn.textContent = type === 'income' ? 'Добавить доход' : 'Добавить расход';
+    document.getElementById('ops-modal-title').textContent = type === 'income' ? 'Новый доход' : 'Новый расход';
+    document.getElementById('ops-name').placeholder = type === 'income' ? 'Комментарий, например: смена в субботу' : 'Комментарий, например: Пятёрочка';
+    renderOpsCats();
+  }
 
-    catsList.forEach(c => {
-      const item = document.createElement('div');
-      item.className = 'category-item';
+  function renderOpsCats() {
+    const grid = document.getElementById('ops-cats-grid');
+    const list = currentOpsType === 'income' ? CATS_INCOME : CATS_EXPENSE;
+    const recent = recentCats(currentOpsType).filter(id => list.some(c => c.id === id));
+    const ordered = [...recent.map(id => list.find(c => c.id === id)), ...list.filter(c => !recent.includes(c.id))];
+    if (!list.some(c => c.id === selectedCatId)) selectedCatId = recent[0] || list[0].id;
+    grid.innerHTML = '';
+    ordered.forEach(c => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'category-item' + (c.id === selectedCatId ? ' selected' : '');
       item.id = `cat-item-${c.id}`;
+      item.setAttribute('aria-pressed', c.id === selectedCatId ? 'true' : 'false');
       item.innerHTML = `<span class="cat-icon">${c.icon}</span><span>${c.name}</span>`;
       item.onclick = () => {
-        document.querySelectorAll('.category-item').forEach(x => x.classList.remove('selected'));
+        grid.querySelectorAll('.category-item').forEach(x => { x.classList.remove('selected'); x.setAttribute('aria-pressed', 'false'); });
         item.classList.add('selected');
+        item.setAttribute('aria-pressed', 'true');
         selectedCatId = c.id;
       };
       grid.appendChild(item);
     });
+  }
 
+  function setOpsDate(daysAgo) {
+    opsDaysAgo = daysAgo;
+    document.querySelectorAll('.ops-dates button').forEach(b => {
+      const on = Number(b.dataset.days) === daysAgo;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+  }
+
+  function showOpsError(text) {
+    const box = document.getElementById('ops-error');
+    box.textContent = text;
+    box.hidden = !text;
+  }
+
+  function openAddOps(type) {
+    selectedCatId = '';
+    document.getElementById('ops-amount').value = '';
+    document.getElementById('ops-name').value = '';
+    showOpsError('');
+    setOpsType(type);
+    setOpsDate(0);
     openModal('add-ops');
+    // Клавиатура с цифрами сразу: сумма — первое, что вводят
+    setTimeout(() => { try { document.getElementById('ops-amount').focus({ preventScroll: true }); } catch (e) {} }, 260);
   }
 
   function submitOps() {
-    const amt = parseFloat(document.getElementById('ops-amount').value);
+    const amt = parseFloat(String(document.getElementById('ops-amount').value).replace(',', '.'));
     const name = document.getElementById('ops-name').value.trim();
 
-    if(!amt || amt <= 0) { alert("Введите корректную сумму"); return; }
-    if(!selectedCatId) { alert("Выберите категорию"); return; }
+    if (!amt || amt <= 0) { showOpsError('Введите сумму больше нуля'); document.getElementById('ops-amount').focus(); return; }
+    if (!selectedCatId) { showOpsError('Выберите категорию'); return; }
+    showOpsError('');
 
+    const when = new Date();
+    when.setDate(when.getDate() - opsDaysAgo);
     const newTx = {
       id: 'tx-' + Date.now() + '-' + Math.round(Math.random()*1000),
       type: currentOpsType,
       amount: amt,
       name: name,
       category: selectedCatId,
-      date: new Date().toISOString()
+      date: when.toISOString()
     };
+    rememberCat(currentOpsType, selectedCatId);
 
     data.transactions.push(newTx);
 
@@ -4998,7 +5270,7 @@
     closeModal('add-ops');
     recalculateEverything();
     saveSilently();
-    showToast("Транзакция успешно добавлена");
+    showToast(currentOpsType === 'income' ? `Доход ${rub(amt)} добавлен` : `Расход ${rub(amt)} добавлен`);
 
     if (window.pendingQueue && window.pendingQueue.length > 0) {
       setTimeout(processNextInQueue, 400);

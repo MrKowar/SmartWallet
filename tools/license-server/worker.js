@@ -107,27 +107,22 @@ async function askAi(request, env) {
     return json({ ok: false, message: 'ИИ сейчас перегружен, попробуйте завтра' }, 429);
   }
 
-  let res;
-  try {
-    res = await fetch('https://api.freepay.space/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + env.FREEPAY_API_KEY },
-      body: JSON.stringify({
-        model: env.AI_MODEL || 'claude-haiku-5-5',
-        // Модель сначала «думает»: размышления тоже расходуют лимит токенов, поэтому запас большой
-        reasoning_effort: 'medium', // на low ответы Haiku выходят пустыми и общими
-        max_tokens: 2500,
-        temperature: 0.4,
-        messages: [{ role: 'system', content: AI_SYSTEM }, { role: 'user', content: prompt }]
-      })
-    });
-  } catch {
-    return json({ ok: false, message: 'ИИ не отвечает, попробуйте позже' }, 502);
+  // Провайдер иногда «зависает» на минуту. Первая попытка ограничена по времени,
+  // вторая — с короткими размышлениями: она отвечает быстрее, хоть и проще
+  const attempts = [
+    { effort: 'medium', ms: 40000 },
+    { effort: 'low', ms: 25000 }
+  ];
+  let answer = '';
+  let lastStatus = 0;
+  for (const a of attempts) {
+    const r = await callModel(env, prompt, a.effort, a.ms);
+    lastStatus = r.status;
+    if (r.answer) { answer = r.answer; break; }
+    if (r.status === 402 || r.status === 401) break;
   }
-  const data = await res.json().catch(() => ({}));
-  const answer = String(data?.choices?.[0]?.message?.content || '').trim();
-  if (!res.ok || !answer) {
-    return json({ ok: false, message: res.status === 402 ? 'Закончился баланс ИИ' : 'ИИ не смог ответить, попробуйте ещё раз' }, 502);
+  if (!answer) {
+    return json({ ok: false, message: lastStatus === 402 ? 'Закончился баланс ИИ' : 'ИИ сейчас не ответил. Попробуйте ещё раз — запрос не засчитан' }, 502);
   }
 
   // Считаем только удачные ответы. Ошибка записи счётчика не должна ломать ответ
@@ -136,7 +131,37 @@ async function askAi(request, env) {
     env.CODES_KV.put(deviceKey, String((deviceUsed || 0) + 1), ttl),
     env.CODES_KV.put(totalKey, String((totalUsed || 0) + 1), ttl)
   ]).catch(() => {});
-  return json({ ok: true, answer });
+  const left = Math.max(0, Number(env.AI_DEVICE_LIMIT || 30) - (deviceUsed || 0) - 1);
+  return json({ ok: true, answer, left });
+}
+
+/** Один запрос к модели. Возвращает { answer, status } или { status } без исключений. */
+async function callModel(env, prompt, effort, ms) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    const res = await fetch('https://api.freepay.space/v1/chat/completions', {
+      method: 'POST',
+      signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + env.FREEPAY_API_KEY },
+      body: JSON.stringify({
+        model: env.AI_MODEL || 'claude-haiku-5-5',
+        // Размышления тоже расходуют лимит токенов, поэтому запас большой.
+        // На low ответы Haiku беднее, поэтому low — только запасной вариант
+        reasoning_effort: effort,
+        max_tokens: 2500,
+        temperature: 0.4,
+        messages: [{ role: 'system', content: AI_SYSTEM }, { role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    const answer = String(data?.choices?.[0]?.message?.content || '').trim();
+    return res.ok && answer ? { answer, status: res.status } : { status: res.status };
+  } catch {
+    return { status: 0 };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 // ---------- Админ-панель ----------

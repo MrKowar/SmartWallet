@@ -1800,6 +1800,133 @@
     .week-summary-item .ws-stat .ws-lbl{font-size:12px;}
     .pay-chip,.badge,.goal-tag{font-size:12px;}
 
+    /* ----- Шапка листа: заголовок слева, «Готово» справа ----- */
+    .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+    .sheet-head .modal-title{margin:0;text-align:left;}
+    .sheet-done{min-height:40px;padding:0 14px;border:none;border-radius:12px;background:var(--accent-soft);color:var(--accent-2);font:inherit;font-size:15px;font-weight:700;cursor:pointer;}
+    .sheet-hint{margin:0 0 12px;font-size:13.5px;line-height:1.5;color:var(--text-soft);text-align:left;}
+    .sheet-note{margin:6px 2px 10px;font-size:12.5px;line-height:1.45;color:var(--text-dim);text-align:left;}
+    .field-label{display:block;margin:10px 2px 6px;font-size:13px;font-weight:600;color:var(--text-soft);text-align:left;}
+    .modal-input.field-text{text-align:left;font-size:16px;font-weight:500;padding:12px 14px;}
+
+    /* ----- Настройки: сгруппированный список, как в системных настройках ----- */
+    .settings-sheet{padding-bottom:calc(16px + env(safe-area-inset-bottom, 0px));}
+    .set-profile{
+      width:100%;display:flex;align-items:center;gap:14px;padding:14px;margin-bottom:6px;
+      border-radius:18px;border:1px solid var(--line);background:var(--surface-2);
+      color:var(--text);font:inherit;text-align:left;cursor:pointer;
+    }
+    .set-profile .avatar{width:52px;height:52px;flex-shrink:0;font-size:18px;}
+    .set-profile-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+    .set-profile-text b{font-size:17px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .set-profile-text small{font-size:13px;color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .set-group-title{margin:18px 6px 8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);text-align:left;}
+    .set-group{border-radius:18px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;}
+    .set-row{
+      width:100%;display:flex;align-items:center;gap:12px;min-height:54px;padding:10px 14px;
+      border:none;background:transparent;color:var(--text);font:inherit;text-align:left;cursor:pointer;
+    }
+    .set-row + .set-row{border-top:1px solid var(--line);}
+    button.set-row:active{background:var(--surface-3);}
+    .set-ic{flex-shrink:0;width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+    .set-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    .ic-blue{background:rgba(47,123,255,.16);color:#7FB0FF;}
+    .ic-violet{background:rgba(139,92,246,.16);color:#B79CFF;}
+    .ic-orange{background:rgba(255,138,42,.16);color:var(--orange-2);}
+    .ic-green{background:rgba(52,211,153,.14);color:#5EE3B0;}
+    .ic-gray{background:rgba(148,163,184,.14);color:#B4C0D6;}
+    .set-label{flex:1;min-width:0;overflow-wrap:anywhere;font-size:15px;font-weight:600;display:flex;flex-direction:column;gap:2px;}
+    .set-label small{font-size:12.5px;font-weight:400;color:var(--text-dim);line-height:1.35;}
+    .set-value{flex-shrink:0;max-width:44%;font-size:14px;color:var(--text-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .set-chev{flex-shrink:0;width:18px;height:18px;fill:none;stroke:var(--text-dim);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+    .set-row-switch .switch{flex-shrink:0;}
+    .settings-sheet .app-version{margin-top:18px;}
+
+    /* ----- Категории ----- */
+    .cat-manage{margin-top:12px;border-radius:18px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;}
+    .cat-manage-row{display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 14px;}
+    .cat-manage-row + .cat-manage-row{border-top:1px solid var(--line);}
+    .cat-manage-ic{width:32px;font-size:22px;text-align:center;flex-shrink:0;}
+    .cat-manage-name{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--text);overflow-wrap:anywhere;}
+    .cat-manage-tag{font-size:12px;color:var(--text-dim);}
+    .cat-manage-del{min-height:36px;padding:0 12px;border-radius:10px;border:1px solid rgba(248,113,113,.35);background:transparent;color:#FCA5A5;font:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+    .cat-new-preview{display:flex;justify-content:center;margin:4px 0 8px;}
+    .cat-new-preview span{width:72px;height:72px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--surface-2);border:1px solid var(--line-strong);}
+    .emoji-status{font-weight:500;color:var(--accent-2);margin-left:6px;}
+    .emoji-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin-bottom:12px;}
+    .emoji-opt{aspect-ratio:1;min-height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-size:22px;cursor:pointer;padding:0;}
+    .emoji-opt.ai{border-color:rgba(47,123,255,.35);}
+    .emoji-opt.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent) inset;}
+    #ops-cats-grid .category-item.cat-add{border-style:dashed;color:var(--accent-2);}
+    #ops-cats-grid .category-item.cat-add .cat-icon{font-size:22px;font-weight:300;}
+
+    /* ----- Кнопка «Чек» рядом с «Расход/Доход» ----- */
+    .quick-actions-top{grid-template-columns:1fr 1fr auto;}
+    .qa-btn.qa-receipt{background:var(--surface);border:1px solid var(--line-strong) !important;color:var(--text);min-width:76px;}
+    .qa-receipt svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+    .setup-steps{margin:0 0 6px;padding-left:22px;text-align:left;}
+    .setup-steps li{margin:0 0 9px;font-size:14px;line-height:1.5;color:var(--text);}
+    .setup-steps li::marker{color:var(--accent-2);font-weight:700;}
+    .setup-steps b{font-weight:700;}
+
+    /* ----- Сканер: полноэкранная камера, рамка, без звука ----- */
+    .scanner{position:fixed;inset:0;z-index:300;background:#000;overflow:hidden;}
+    .scanner[hidden]{display:none;}
+    .scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+    .scanner-shade{
+      position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(ellipse 72vw 72vw at 50% 44%, transparent 58%, rgba(0,0,0,.62) 59%);
+    }
+    .scanner-top{position:absolute;top:calc(14px + env(safe-area-inset-top, 0px));right:14px;z-index:2;}
+    .scanner-close{width:48px;height:48px;border-radius:16px;border:none;background:rgba(20,24,36,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+    .scanner-close svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;}
+    .scanner-frame{position:absolute;left:50%;top:44%;width:64vw;max-width:300px;aspect-ratio:1;transform:translate(-50%,-50%);}
+    .scanner-frame i{position:absolute;width:36px;height:36px;border:4px solid #fff;transition:border-color 160ms ease;}
+    .scanner-frame i:nth-child(1){top:0;left:0;border-right:none;border-bottom:none;border-top-left-radius:18px;}
+    .scanner-frame i:nth-child(2){top:0;right:0;border-left:none;border-bottom:none;border-top-right-radius:18px;}
+    .scanner-frame i:nth-child(3){bottom:0;left:0;border-right:none;border-top:none;border-bottom-left-radius:18px;}
+    .scanner-frame i:nth-child(4){bottom:0;right:0;border-left:none;border-top:none;border-bottom-right-radius:18px;}
+    .scanner-frame.found i{border-color:var(--income);}
+    .scanner-line{position:absolute;left:10%;right:10%;top:12%;height:2px;border-radius:2px;background:rgba(91,155,255,.9);box-shadow:0 0 12px rgba(91,155,255,.8);animation:scan-line 2.2s ease-in-out infinite alternate;}
+    .scanner-frame.found .scanner-line{display:none;}
+    @keyframes scan-line{from{transform:translateY(0);}to{transform:translateY(calc(min(64vw, 300px) * .74));}}
+    .scanner-hint{
+      position:absolute;left:24px;right:24px;top:calc(44% + min(32vw, 150px) + 26px);
+      text-align:center;font-size:15px;font-weight:600;line-height:1.45;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6);
+    }
+    .scanner-hint.is-error{color:#FFD7A8;}
+    .scanner-bottom{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom, 0px));display:flex;justify-content:center;}
+    .scanner-btn{
+      display:flex;align-items:center;gap:10px;min-height:52px;padding:0 20px;border-radius:16px;border:1px solid rgba(255,255,255,.22);
+      background:rgba(20,24,36,.72);color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer;
+      -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    }
+    .scanner-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    @media (prefers-reduced-motion: reduce){ .scanner-line{animation:none;top:50%;} }
+
+    /* ----- Разбор чека ----- */
+    .receipt-meta{margin:-6px 0 10px;font-size:13px;color:var(--text-soft);text-align:center;}
+    .receipt-ai{margin:0 0 10px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45;text-align:left;background:var(--accent-soft);color:#BFD6FF;}
+    .receipt-ai.is-failed{background:rgba(251,191,36,.12);color:#FFE6A8;}
+    .receipt-ai.is-pending{position:relative;overflow:hidden;}
+    .receipt-ai.is-pending::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);animation:ai-shimmer 1.4s linear infinite;background-size:200% 100%;}
+    .receipt-items{border-radius:16px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;text-align:left;}
+    .receipt-row{padding:10px 12px;}
+    .receipt-row + .receipt-row{border-top:1px solid var(--line);}
+    .receipt-row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+    .receipt-name{flex:1;min-width:0;font-size:14px;line-height:1.35;color:var(--text);overflow-wrap:anywhere;}
+    .receipt-price{flex-shrink:0;font-size:14px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
+    .receipt-cat{margin-top:6px;display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:0 4px 0 8px;min-height:34px;border-radius:10px;background:var(--surface-3);}
+    .receipt-cat-ic{font-size:16px;}
+    .receipt-cat select{appearance:none;-webkit-appearance:none;border:none;background:transparent;color:var(--text);font:inherit;font-size:13.5px;font-weight:600;padding:6px 22px 6px 2px;max-width:220px;
+      background-image:linear-gradient(45deg,transparent 50%,var(--text-soft) 50%),linear-gradient(135deg,var(--text-soft) 50%,transparent 50%);
+      background-position:calc(100% - 10px) 52%,calc(100% - 5px) 52%;background-size:5px 5px;background-repeat:no-repeat;}
+    .receipt-cat select option{background:#172238;color:#F1F5F9;}
+    .receipt-sum{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px;}
+    .receipt-chip{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);font-size:13px;color:var(--text-soft);}
+    .receipt-chip b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums;}
+
     /* ----- Фокус для клавиатуры и TalkBack ----- */
     button:focus-visible,input:focus-visible,select:focus-visible,[role="button"]:focus-visible{
       outline:2px solid var(--accent-2);outline-offset:2px;
@@ -1977,6 +2104,7 @@
   <div class="quick-actions quick-actions-top">
     <button class="qa-btn qa-expense" onclick="openAddOps('expense')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Расход</button>
     <button class="qa-btn qa-income" onclick="openAddOps('income')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Доход</button>
+    <button class="qa-btn qa-receipt" onclick="startReceiptScan()" aria-label="Сканировать чек"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>Чек</button>
   </div>
 
   <div class="card daily-limit-card" onclick="openModal('daily-settings')">
@@ -2237,29 +2365,173 @@
 </div>
 
 <div class="modal-overlay" id="modal-settings">
-  <div class="modal-content">
+  <div class="modal-content settings-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">Настройки</div>
+    <div class="sheet-head">
+      <div class="modal-title">Настройки</div>
+      <button class="sheet-done" type="button" onclick="closeModal('settings')">Готово</button>
+    </div>
 
-    <div class="settings-row">
-      <div class="settings-text">
-        <div class="settings-label">Читать уведомления Mir Pay</div>
-        <div class="settings-hint">Когда ползунок включён, SmartWallet распознаёт оплаты Mir Pay и предлагает внести расход. Уведомления Т-Банка не читаются.</div>
-      </div>
-      <button class="switch" id="mirpay-switch" role="switch" aria-checked="false" aria-label="Читать уведомления Mir Pay" onclick="toggleMirPayNotifications()">
-        <span class="switch-knob"></span>
+    <button class="set-profile" type="button" onclick="closeModal('settings'); openProfileSettings()">
+      <span class="avatar" id="set-avatar">SW</span>
+      <span class="set-profile-text">
+        <b id="set-name">Ваше имя</b>
+        <small id="set-plan">Профиль и фото</small>
+      </span>
+      <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+
+    <div class="set-group-title">Бюджет</div>
+    <div class="set-group">
+      <button class="set-row" type="button" onclick="closeModal('settings'); openIncomeScheme()">
+        <span class="set-ic ic-blue"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
+        <span class="set-label">График доходов</span><span class="set-value" id="set-scheme-val"></span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="set-row" type="button" onclick="closeModal('settings'); openModal('dist-settings')">
+        <span class="set-ic ic-violet"><svg viewBox="0 0 24 24"><path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg></span>
+        <span class="set-label">Автораспределение</span><span class="set-value" id="set-dist-val"></span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="set-row" type="button" onclick="closeModal('settings'); openModal('daily-settings')">
+        <span class="set-ic ic-orange"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
+        <span class="set-label">Дневной лимит</span><span class="set-value" id="set-daily-val"></span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
       </button>
     </div>
 
-    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openProfileSettings()">👤 Мой профиль</button>
-    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openIncomeScheme()">📅 График доходов</button>
-    <button class="modal-btn modal-btn-primary" onclick="closeModal('settings'); openModal('dist-settings')">📊 Проценты автораспределения</button>
-    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings'); setTimeout(startCoach, 260)">💡 Показать подсказки</button>
-    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings'); checkForUpdates()">🔄 Проверить обновления</button>
-    <button class="modal-btn modal-btn-cancel" onclick="exportBackup()">💾 Сохранить копию данных</button>
-    <button class="modal-btn modal-btn-cancel" onclick="importBackup()">📂 Восстановить из копии</button>
-    <button class="modal-btn modal-btn-cancel" onclick="closeModal('settings')">Закрыть</button>
+    <div class="set-group-title">Операции</div>
+    <div class="set-group">
+      <button class="set-row" type="button" onclick="closeModal('settings'); openCategories()">
+        <span class="set-ic ic-green"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/></svg></span>
+        <span class="set-label">Категории расходов</span><span class="set-value" id="set-cats-val"></span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="set-row" type="button" onclick="closeModal('settings'); openReceiptSetup()">
+        <span class="set-ic ic-blue"><svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8h3v3H7zM14 8h3v3h-3zM7 14h3v3H7zM14 14h3v3h-3z"/></svg></span>
+        <span class="set-label">Сканер чеков</span><span class="set-value" id="set-receipt-val"></span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div class="set-row set-row-switch">
+        <span class="set-ic ic-orange"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+        <span class="set-label">Оплаты Mir Pay<small>Предлагать внести расход по уведомлению</small></span>
+        <button class="switch" id="mirpay-switch" role="switch" aria-checked="false" aria-label="Читать уведомления Mir Pay" onclick="toggleMirPayNotifications()">
+          <span class="switch-knob"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="set-group-title">Данные</div>
+    <div class="set-group">
+      <button class="set-row" type="button" onclick="exportBackup()">
+        <span class="set-ic ic-green"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg></span>
+        <span class="set-label">Сохранить копию данных</span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="set-row" type="button" onclick="importBackup()">
+        <span class="set-ic ic-gray"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg></span>
+        <span class="set-label">Восстановить из копии</span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="set-group-title">Приложение</div>
+    <div class="set-group">
+      <button class="set-row" type="button" onclick="closeModal('settings'); checkForUpdates()">
+        <span class="set-ic ic-blue"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span>
+        <span class="set-label">Проверить обновления</span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="set-row" type="button" onclick="closeModal('settings'); setTimeout(startCoach, 260)">
+        <span class="set-ic ic-gray"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></span>
+        <span class="set-label">Показать подсказки</span>
+        <svg class="set-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
     <button class="app-version" id="app-version" type="button" onclick="versionTap()">SmartWallet</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-categories">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="sheet-head">
+      <div class="modal-title">Категории расходов</div>
+      <button class="sheet-done" type="button" onclick="closeModal('categories')">Готово</button>
+    </div>
+    <p class="sheet-hint">Свои категории появляются в окне расхода и в разборе чеков. Стандартные удалить нельзя.</p>
+    <button class="modal-btn modal-btn-primary" type="button" onclick="openNewCategory()">Добавить свою категорию</button>
+    <div class="cat-manage" id="cat-manage"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cat-new">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Новая категория</div>
+    <div class="cat-new-preview"><span id="cat-new-icon">📦</span></div>
+    <label class="field-label" for="cat-new-name">Название</label>
+    <input type="text" class="modal-input field-text" id="cat-new-name" maxlength="24" placeholder="Например: Рыбалка" autocomplete="off">
+    <div class="field-label">Иконка <span class="emoji-status" id="cat-emoji-status"></span></div>
+    <div class="emoji-grid" id="cat-emoji-grid" role="radiogroup" aria-label="Иконка категории"></div>
+    <div class="ops-error" id="cat-new-error" role="alert" hidden></div>
+    <button class="modal-btn modal-btn-primary" type="button" onclick="saveNewCategory()">Создать категорию</button>
+    <button class="modal-btn modal-btn-cancel" type="button" onclick="closeModal('cat-new')">Отмена</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-receipt-setup">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Сканер чеков</div>
+    <p class="sheet-hint">SmartWallet читает QR-код с чека и получает из налоговой полный список покупок через сервис proverkacheka.com. Для этого нужен ваш личный ключ (токен) — он бесплатный.</p>
+    <ol class="setup-steps">
+      <li>Откройте сайт <b>proverkacheka.com</b> и нажмите «Личный кабинет», затем «Регистрация».</li>
+      <li>Заполните анкету. <b>Имя, фамилию и остальные данные можно указать любые, даже вымышленные</b> — сервис их не проверяет. Настоящей должна быть только почта: на неё придёт письмо для входа.</li>
+      <li>Войдите в кабинет, откройте раздел «Справка» и сгенерируйте токен API.</li>
+      <li>Скопируйте токен и вставьте его в поле ниже.</li>
+    </ol>
+    <label class="field-label" for="receipt-token">Токен proverkacheka.com</label>
+    <input type="text" class="modal-input field-text" id="receipt-token" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Вставьте токен">
+    <p class="sheet-note">Токен хранится только на этом телефоне и отправляется только на proverkacheka.com. У бесплатного токена есть дневной лимит проверок.</p>
+    <div class="ops-error" id="receipt-token-error" role="alert" hidden></div>
+    <button class="modal-btn modal-btn-primary" type="button" onclick="saveReceiptToken()">Сохранить и сканировать</button>
+    <button class="modal-btn modal-btn-cancel" type="button" id="receipt-token-remove" onclick="removeReceiptToken()" hidden>Отключить сканер</button>
+    <button class="modal-btn modal-btn-cancel" type="button" onclick="closeModal('receipt-setup')">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-receipt">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="receipt-title">Чек</div>
+    <div class="receipt-meta" id="receipt-meta"></div>
+    <div class="receipt-ai" id="receipt-ai"></div>
+    <div class="receipt-items" id="receipt-items"></div>
+    <div class="receipt-sum" id="receipt-sum"></div>
+    <button class="modal-btn modal-btn-expense" type="button" id="receipt-save" onclick="saveReceipt()">Добавить расходы</button>
+    <button class="modal-btn modal-btn-cancel" type="button" onclick="closeModal('receipt')">Отмена</button>
+  </div>
+</div>
+
+<div class="scanner" id="scanner" hidden role="dialog" aria-modal="true" aria-label="Сканирование чека">
+  <video id="scanner-video" playsinline muted></video>
+  <canvas id="scanner-canvas" hidden></canvas>
+  <div class="scanner-shade"></div>
+  <div class="scanner-top">
+    <button class="scanner-close" type="button" onclick="closeScanner()" aria-label="Закрыть сканер">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="scanner-frame" id="scanner-frame"><i></i><i></i><i></i><i></i><b class="scanner-line"></b></div>
+  <div class="scanner-hint" id="scanner-hint">Наведите камеру на QR-код чека</div>
+  <div class="scanner-bottom">
+    <input type="file" id="receipt-photo" accept="image/*" hidden onchange="onReceiptPhoto(event)">
+    <button class="scanner-btn" type="button" onclick="document.getElementById('receipt-photo').click()">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+      Фото из галереи
+    </button>
   </div>
 </div>
 
@@ -2528,16 +2800,23 @@
   // ===== CONFIG & STATE =====
   const CATS_EXPENSE = [
     { id: 'food', name: 'Продукты', icon: '🛒' },
-    { id: 'transport', name: 'Транспорт', icon: '🚗' },
-    { id: 'cafe', name: 'Кафе/Рестораны', icon: '🍔' },
-    { id: 'home', name: 'Жилье/ЖКХ', icon: '🏠' },
-    { id: 'clothes', name: 'Одежда', icon: '👕' },
-    { id: 'health', name: 'Здоровье', icon: '💊' },
-    { id: 'fun', name: 'Развлечения', icon: '🎉' },
+    { id: 'cafe', name: 'Кафе и рестораны', icon: '🍽️' },
     { id: 'snack', name: 'Перекус на работе', icon: '🥪' },
-    { id: 'sweets', name: 'Вкусняхи', icon: '🍩' },
+    { id: 'sweets', name: 'Вкусняшки', icon: '🍫' },
+    { id: 'transport', name: 'Транспорт', icon: '🚌' },
+    { id: 'taxi', name: 'Такси', icon: '🚕' },
+    { id: 'car', name: 'Авто и бензин', icon: '⛽' },
+    { id: 'home', name: 'Жильё и ЖКХ', icon: '🏠' },
+    { id: 'subs', name: 'Связь и подписки', icon: '📱' },
+    { id: 'health', name: 'Здоровье и аптека', icon: '💊' },
+    { id: 'beauty', name: 'Красота и гигиена', icon: '🧴' },
+    { id: 'household', name: 'Дом и быт', icon: '🧽' },
+    { id: 'clothes', name: 'Одежда и обувь', icon: '👕' },
     { id: 'kids', name: 'Дети', icon: '🧸' },
-    { id: 'subs', name: 'Подписки и связь', icon: '📺' },
+    { id: 'pets', name: 'Животные', icon: '🐾' },
+    { id: 'fun', name: 'Развлечения', icon: '🎬' },
+    { id: 'gifts', name: 'Подарки', icon: '🎁' },
+    { id: 'education', name: 'Учёба', icon: '📚' },
     { id: 'loan', name: 'Кредит', icon: '💳' },
     { id: 'other_exp', name: 'Разное', icon: '📦' }
   ];
@@ -2594,6 +2873,7 @@
   // ===== INITIALIZATION & CALENDAR UTILS =====
   window.addEventListener('DOMContentLoaded', () => {
     data = normalizeData(loadData());
+    syncCustomCats();
     updateHeaderDate();
     recalculateEverything();
     switchPage('main');
@@ -4368,6 +4648,7 @@
     if (!imported || !Array.isArray(imported.transactions)) { alert('Файл не похож на копию SmartWallet'); return; }
     if (!confirm(`Заменить текущие данные копией? Операций в копии: ${imported.transactions.length}.`)) return;
     data = normalizeData(imported);
+    syncCustomCats();
     saveSilently();
     closeModal('settings');
     recalculateEverything();
@@ -4582,7 +4863,6 @@
       .catch(() => window.onDeepSeekError(requestId, 'нет связи с сервером, проверьте интернет'));
   }
 
-  function rub(n) { return Math.round(Number(n) || 0).toLocaleString('ru-RU') + ' ₽'; }
 
   function monthExpenseByCategory() {
     const now = new Date();
@@ -4734,6 +5014,544 @@
     });
   });
 
+  // ===== КАТЕГОРИИ: СВОИ =====
+  // Свои категории хранятся в data.customCats и добавляются в общий список CATS_EXPENSE,
+  // поэтому аналитика, история и ИИ видят их так же, как стандартные
+  const BASE_EXPENSE_IDS = CATS_EXPENSE.map(c => c.id);
+  const EMOJI_FALLBACK = ['📦', '🛍️', '🎁', '🐟', '🎣', '⚽', '🎮', '🚗', '🏋️', '🌿', '☕', '✂️'];
+
+  function syncCustomCats() {
+    for (let i = CATS_EXPENSE.length - 1; i >= 0; i--) {
+      if (!BASE_EXPENSE_IDS.includes(CATS_EXPENSE[i].id)) CATS_EXPENSE.splice(i, 1);
+    }
+    const other = CATS_EXPENSE.findIndex(c => c.id === 'other_exp');
+    (data.customCats || []).forEach(c => CATS_EXPENSE.splice(other, 0, { id: c.id, name: c.name, icon: c.icon, custom: true }));
+  }
+
+  function openCategories() {
+    renderCategoryManage();
+    openModal('categories');
+  }
+
+  function renderCategoryManage() {
+    const box = document.getElementById('cat-manage');
+    box.innerHTML = '';
+    CATS_EXPENSE.filter(c => c.id !== 'loan').forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'cat-manage-row';
+      row.innerHTML = `<span class="cat-manage-ic"></span><span class="cat-manage-name"></span>`;
+      row.querySelector('.cat-manage-ic').textContent = c.icon;
+      row.querySelector('.cat-manage-name').textContent = c.name;
+      if (c.custom) {
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'cat-manage-del';
+        del.textContent = 'Удалить';
+        del.setAttribute('aria-label', `Удалить категорию ${c.name}`);
+        del.onclick = () => deleteCustomCategory(c.id);
+        row.appendChild(del);
+      } else {
+        const tag = document.createElement('span');
+        tag.className = 'cat-manage-tag';
+        tag.textContent = 'стандартная';
+        row.appendChild(tag);
+      }
+      box.appendChild(row);
+    });
+  }
+
+  function deleteCustomCategory(id) {
+    const cat = (data.customCats || []).find(c => c.id === id);
+    if (!cat) return;
+    const used = data.transactions.filter(t => t.category === id).length;
+    const text = used
+      ? `Удалить «${cat.name}»? ${used} ${plural(used, 'операция перейдёт', 'операции перейдут', 'операций перейдут')} в «Разное».`
+      : `Удалить категорию «${cat.name}»?`;
+    if (!confirm(text)) return;
+    data.transactions.forEach(t => { if (t.category === id) t.category = 'other_exp'; });
+    data.customCats = data.customCats.filter(c => c.id !== id);
+    syncCustomCats();
+    saveSilently();
+    recalculateEverything();
+    renderCategoryManage();
+    showToast('Категория удалена');
+  }
+
+  let newCatIcon = '📦';
+  let newCatReturnToOps = false;
+  let emojiTimer = null;
+
+  function openNewCategory(fromOps) {
+    newCatReturnToOps = !!fromOps;
+    newCatIcon = '📦';
+    document.getElementById('cat-new-name').value = '';
+    document.getElementById('cat-new-icon').textContent = newCatIcon;
+    document.getElementById('cat-emoji-status').textContent = '';
+    showFieldError('cat-new-error', '');
+    renderEmojiGrid(EMOJI_FALLBACK.slice(0, 8));
+    if (fromOps) closeModal('add-ops');
+    else closeModal('categories');
+    setTimeout(() => {
+      openModal('cat-new');
+      setTimeout(() => { try { document.getElementById('cat-new-name').focus({ preventScroll: true }); } catch (e) {} }, 260);
+    }, fromOps ? 240 : 0);
+  }
+
+  function renderEmojiGrid(list, aiCount) {
+    const grid = document.getElementById('cat-emoji-grid');
+    grid.innerHTML = '';
+    const unique = [...new Set(list)];
+    unique.forEach((e, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'emoji-opt' + (e === newCatIcon ? ' selected' : '') + (i < (aiCount || 0) ? ' ai' : '');
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', e === newCatIcon ? 'true' : 'false');
+      b.textContent = e;
+      b.onclick = () => {
+        newCatIcon = e;
+        document.getElementById('cat-new-icon').textContent = e;
+        grid.querySelectorAll('.emoji-opt').forEach(x => { x.classList.toggle('selected', x === b); x.setAttribute('aria-checked', x === b ? 'true' : 'false'); });
+      };
+      grid.appendChild(b);
+    });
+  }
+
+  // ИИ предлагает смайл, пока человек печатает название (после паузы)
+  function onNewCatNameInput() {
+    clearTimeout(emojiTimer);
+    const name = document.getElementById('cat-new-name').value.trim();
+    const status = document.getElementById('cat-emoji-status');
+    if (name.length < 3) { status.textContent = ''; return; }
+    emojiTimer = setTimeout(async () => {
+      status.textContent = 'ИИ подбирает…';
+      const res = await aiTaskRequest({ task: 'emoji', name });
+      if (document.getElementById('cat-new-name').value.trim() !== name) return;
+      if (res && Array.isArray(res.result) && res.result.length) {
+        newCatIcon = res.result[0];
+        document.getElementById('cat-new-icon').textContent = newCatIcon;
+        renderEmojiGrid([...res.result, ...EMOJI_FALLBACK].slice(0, 8), res.result.length);
+        status.textContent = 'подобрал ИИ';
+      } else {
+        status.textContent = '';
+      }
+    }, 700);
+  }
+
+  function saveNewCategory() {
+    const name = document.getElementById('cat-new-name').value.trim().replace(/\s+/g, ' ');
+    if (name.length < 2) { showFieldError('cat-new-error', 'Введите название, хотя бы 2 буквы'); return; }
+    if (CATS_EXPENSE.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+      showFieldError('cat-new-error', 'Такая категория уже есть'); return;
+    }
+    if (!data.customCats) data.customCats = [];
+    const id = 'c-' + Date.now().toString(36);
+    data.customCats.push({ id, name, icon: newCatIcon });
+    syncCustomCats();
+    saveSilently();
+    closeModal('cat-new');
+    showToast(`Категория «${name}» добавлена`);
+    if (newCatReturnToOps) {
+      setTimeout(() => {
+        openModal('add-ops');
+        selectedCatId = id;
+        renderOpsCats();
+      }, 240);
+    } else {
+      setTimeout(openCategories, 240);
+    }
+  }
+
+  function showFieldError(id, text) {
+    const box = document.getElementById(id);
+    if (!box) return;
+    box.textContent = text;
+    box.hidden = !text;
+  }
+
+  // Служебный запрос ИИ (чек, смайл). null — если ИИ недоступен: тогда работаем без него
+  async function aiTaskRequest(payload) {
+    const device = aiDeviceCode();
+    if (!device) return null;
+    try {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 35000);
+      const r = await fetch(AI_SERVER + '/ai/task', {
+        method: 'POST', signal: ctl.signal,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(Object.assign({ device }, payload))
+      });
+      clearTimeout(timer);
+      const d = await r.json().catch(() => ({}));
+      return r.ok && d.ok ? d : null;
+    } catch (e) { return null; }
+  }
+
+  // ===== НАСТРОЙКИ =====
+  function fillSettingsValues() {
+    const name = (data.profile && data.profile.name) || 'Ваше имя';
+    document.getElementById('set-name').textContent = name;
+    const av = document.getElementById('set-avatar');
+    const src = document.getElementById('profile-avatar');
+    if (av && src) { av.innerHTML = src.innerHTML; av.style.cssText = src.style.cssText; }
+    const sub = document.getElementById('profile-sub');
+    document.getElementById('set-plan').textContent = sub ? sub.textContent : 'Профиль и фото';
+    const s = data.incomeScheme || {};
+    const schemeNames = { weekly: 'Раз в неделю', twice: 'Аванс и зарплата', daily: 'Каждый день', vakhta: 'Вахта', monthly: 'Раз в месяц' };
+    document.getElementById('set-scheme-val').textContent = schemeNames[s.type] || '';
+    document.getElementById('set-dist-val').textContent = `${data.distPct[SPENDING_BUCKET] || 0}%`;
+    document.getElementById('set-daily-val').textContent = data.dailyLimit ? rub(data.dailyLimit) : 'Авто';
+    const custom = (data.customCats || []).length;
+    document.getElementById('set-cats-val').textContent = custom ? `${custom} ${plural(custom, 'своя', 'свои', 'своих')}` : `${CATS_EXPENSE.length - 1}`;
+    document.getElementById('set-receipt-val').textContent = receiptToken() ? 'Подключён' : 'Не подключён';
+  }
+
+  // ===== СКАНЕР ЧЕКОВ (proverkacheka.com) =====
+  const RECEIPT_TOKEN_KEY = 'sw_receipt_token';
+  const RECEIPT_API = 'https://proverkacheka.com/api/v1/check/get';
+  let scannerStream = null;
+  let scannerLoop = null;
+  let scannerBusy = false;
+  let receiptDraft = null;
+
+  function receiptToken() {
+    try { return localStorage.getItem(RECEIPT_TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+
+  function openReceiptSetup() {
+    const token = receiptToken();
+    document.getElementById('receipt-token').value = token;
+    document.getElementById('receipt-token-remove').hidden = !token;
+    showFieldError('receipt-token-error', '');
+    openModal('receipt-setup');
+  }
+
+  function saveReceiptToken() {
+    const token = document.getElementById('receipt-token').value.trim();
+    if (token.length < 10) { showFieldError('receipt-token-error', 'Похоже, токен вставлен не полностью'); return; }
+    try { localStorage.setItem(RECEIPT_TOKEN_KEY, token); } catch (e) {}
+    closeModal('receipt-setup');
+    showToast('Сканер чеков подключён');
+    setTimeout(openScanner, 260);
+  }
+
+  function removeReceiptToken() {
+    try { localStorage.removeItem(RECEIPT_TOKEN_KEY); } catch (e) {}
+    closeModal('receipt-setup');
+    showToast('Сканер чеков отключён');
+  }
+
+  function startReceiptScan() {
+    if (!receiptToken()) { openReceiptSetup(); return; }
+    openScanner();
+  }
+
+  function loadJsQR() {
+    if (window.jsQR) return Promise.resolve(window.jsQR);
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'lib/jsQR.js';
+      s.onload = () => resolve(window.jsQR);
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function setScannerHint(text, isError) {
+    const hint = document.getElementById('scanner-hint');
+    hint.textContent = text;
+    hint.classList.toggle('is-error', !!isError);
+  }
+
+  async function openScanner() {
+    const scanner = document.getElementById('scanner');
+    scanner.hidden = false;
+    scanner.classList.remove('is-done');
+    scannerBusy = false;
+    setScannerHint('Наведите камеру на QR-код чека');
+    document.getElementById('scanner-frame').classList.remove('found');
+    loadJsQR().catch(() => {});
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setScannerHint('Камера здесь недоступна. Выберите фото чека из галереи', true);
+      return;
+    }
+    try {
+      // Только видео: сканер работает молча, без звука и без вспышки
+      scannerStream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      if (document.getElementById('scanner').hidden) { stopCamera(); return; }
+      const video = document.getElementById('scanner-video');
+      video.srcObject = scannerStream;
+      await video.play();
+      scanFrames();
+    } catch (e) {
+      setScannerHint('Нет доступа к камере. Обновите приложение до версии 1.4 или выберите фото чека из галереи', true);
+    }
+  }
+
+  function scanFrames() {
+    const video = document.getElementById('scanner-video');
+    const canvas = document.getElementById('scanner-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const detector = ('BarcodeDetector' in window) ? (() => { try { return new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { return null; } })() : null;
+    let last = 0;
+    const tick = async (now) => {
+      if (!scannerStream || scannerBusy) return;
+      scannerLoop = requestAnimationFrame(tick);
+      if (now - last < 180 || video.readyState < 2) return;
+      last = now;
+      let raw = '';
+      try {
+        if (detector) {
+          const codes = await detector.detect(video);
+          raw = codes[0] ? codes[0].rawValue : '';
+        } else if (window.jsQR) {
+          const w = 640, h = Math.round(640 * video.videoHeight / video.videoWidth) || 480;
+          canvas.width = w; canvas.height = h;
+          ctx.drawImage(video, 0, 0, w, h);
+          const code = window.jsQR(ctx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' });
+          raw = code ? code.data : '';
+        }
+      } catch (e) { raw = ''; }
+      if (raw) onQrFound(raw);
+    };
+    scannerLoop = requestAnimationFrame(tick);
+  }
+
+  function stopCamera() {
+    cancelAnimationFrame(scannerLoop);
+    if (scannerStream) scannerStream.getTracks().forEach(t => t.stop());
+    scannerStream = null;
+    const video = document.getElementById('scanner-video');
+    if (video) video.srcObject = null;
+  }
+
+  function closeScanner() {
+    stopCamera();
+    document.getElementById('scanner').hidden = true;
+  }
+
+  function isReceiptQr(raw) {
+    return /(^|&)fn=\d+/.test(raw) && /(^|&)fp=\d+/.test(raw) && /(^|&)s=[\d.]+/.test(raw);
+  }
+
+  function onQrFound(raw) {
+    if (scannerBusy) return;
+    if (!isReceiptQr(raw)) { setScannerHint('Это не QR-код кассового чека', true); return; }
+    scannerBusy = true;
+    document.getElementById('scanner-frame').classList.add('found');
+    if (navigator.vibrate) { try { navigator.vibrate(30); } catch (e) {} } // лёгкий отклик вместо звука
+    fetchReceipt({ qrraw: raw });
+  }
+
+  async function onReceiptPhoto(event) {
+    const file = event.target.files && event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+    scannerBusy = true;
+    stopCamera();
+    setScannerHint('Ищу QR-код на фото…');
+    // Сначала пробуем прочитать QR прямо на телефоне — так быстрее и не нужно отправлять фото
+    try {
+      const jsQR = await loadJsQR();
+      const img = await createImageBitmap(file);
+      const scale = Math.min(1, 1600 / Math.max(img.width, img.height));
+      const canvas = document.getElementById('scanner-canvas');
+      canvas.width = Math.round(img.width * scale); canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const code = jsQR(ctx.getImageData(0, 0, canvas.width, canvas.height).data, canvas.width, canvas.height);
+      if (code && isReceiptQr(code.data)) { fetchReceipt({ qrraw: code.data }); return; }
+    } catch (e) {}
+    fetchReceipt({ qrfile: file });
+  }
+
+  const RECEIPT_CODES = {
+    0: 'Чек некорректный. Проверьте, что сканируете QR-код кассового чека',
+    2: 'Налоговая ещё не получила этот чек. Попробуйте через несколько часов',
+    3: 'Превышен лимит проверок по вашему токену на сегодня',
+    4: 'Слишком частые запросы. Подождите минуту и попробуйте снова',
+    5: 'Сервис проверки чеков не смог найти данные. Попробуйте позже'
+  };
+
+  async function fetchReceipt(source) {
+    setScannerHint('Получаю чек из налоговой…');
+    const form = new FormData();
+    form.append('token', receiptToken());
+    if (source.qrraw) form.append('qrraw', source.qrraw);
+    if (source.qrfile) form.append('qrfile', source.qrfile);
+    let d = null;
+    try {
+      const r = await fetch(RECEIPT_API, { method: 'POST', body: form });
+      d = await r.json();
+    } catch (e) {
+      return receiptFail('Нет связи с proverkacheka.com. Проверьте интернет');
+    }
+    if (!d || d.code === 401) return receiptFail('Токен не подошёл. Проверьте его в Настройки → Сканер чеков');
+    if (d.code !== 1) return receiptFail(RECEIPT_CODES[d.code] || (typeof d.data === 'string' ? d.data : 'Не удалось получить чек'));
+    const j = (d.data && d.data.json) || {};
+    const items = (j.items || []).map(it => ({
+      name: String(it.name || 'Без названия').trim(),
+      sum: Math.round(Number(it.sum) || 0) / 100,
+      price: Math.round(Number(it.price) || 0) / 100,
+      quantity: Number(it.quantity) || 1,
+      category: guessCategory(String(it.name || ''))
+    })).filter(it => it.sum > 0);
+    if (!items.length) return receiptFail('В чеке нет покупок');
+    const raw = source.qrraw || '';
+    receiptDraft = {
+      id: [j.fiscalDriveNumber, j.fiscalDocumentNumber, j.fiscalSign].filter(Boolean).join('-') || raw,
+      shop: String(j.retailPlace || j.user || 'Покупка').replace(/\s+/g, ' ').trim(),
+      date: j.dateTime ? new Date(j.dateTime) : new Date(),
+      total: Math.round(Number(j.totalSum) || 0) / 100 || items.reduce((s, it) => s + it.sum, 0),
+      items,
+      aiState: 'pending'
+    };
+    closeScanner();
+    renderReceipt();
+    openModal('receipt');
+    classifyReceipt();
+  }
+
+  function receiptFail(text) {
+    scannerBusy = false;
+    document.getElementById('scanner-frame').classList.remove('found');
+    setScannerHint(text, true);
+    // Камера снова ищет код, если была включена
+    if (!scannerStream && !document.getElementById('scanner').hidden) {
+      setTimeout(() => { if (!document.getElementById('scanner').hidden && !scannerStream) openScanner().then(() => setScannerHint(text, true)); }, 1800);
+    } else if (scannerStream) {
+      scanFrames();
+    }
+  }
+
+  // Подсказка без ИИ — на случай, если он недоступен; ИИ потом уточнит
+  const CAT_RULES = [
+    ['sweets', /шокол|конфет|чипс|печень|торт|пирожн|мороже|вафл|кола|cola|пепси|pepsi|газир|лимонад|мармел|батончик|сникерс|snickers|kinder|milka|милка|орео|oreo|зефир|пастил|круассан/i],
+    ['health', /таб\.|табл|капс|аптек|ибупро|парацет|нурофен|витамин|мазь|капли|сироп|бинт|пластыр|лекар/i],
+    ['pets', /корм|кошек|собак|whiskas|felix|pedigree|наполнит/i],
+    ['beauty', /шампун|гель д\/душ|мыло|дезодор|зубн|паста зуб|крем|бальзам|прокладк|бритв|косметич|тушь|помад/i],
+    ['household', /губк|моющ|порош|стирал|туалетн.*бумаг|салфет|пакет д\/мусор|мешки д\/мус|освеж|чистящ|fairy|фейри|лампоч|батарейк/i],
+    ['kids', /подгуз|детск|игрушк|соска|памперс|pampers/i],
+    ['transport', /бензин|аи-9|дизел|топлив|азс/i],
+    ['cafe', /кофе.*(капуч|латте|американо)|капучино|латте|американо|бургер|шаурм|пицц/i]
+  ];
+
+  function guessCategory(name) {
+    for (const [id, re] of CAT_RULES) if (re.test(name) && CATS_EXPENSE.some(c => c.id === id)) return id;
+    return 'food';
+  }
+
+  async function classifyReceipt() {
+    const draft = receiptDraft;
+    if (!draft) return;
+    const cats = CATS_EXPENSE.filter(c => c.id !== 'loan').map(c => ({ id: c.id, name: c.name }));
+    const res = await aiTaskRequest({ task: 'classify', items: draft.items.map(it => it.name), categories: cats });
+    if (receiptDraft !== draft) return;
+    if (res && res.result) {
+      draft.items.forEach((it, i) => { if (!it.userSet && res.result[i]) it.category = res.result[i]; });
+      draft.aiState = 'done';
+    } else {
+      draft.aiState = 'failed';
+    }
+    renderReceipt();
+  }
+
+  function catById(id) {
+    return CATS_EXPENSE.find(c => c.id === id) || CATS_EXPENSE.find(c => c.id === 'other_exp');
+  }
+
+  function renderReceipt() {
+    const d = receiptDraft;
+    if (!d) return;
+    document.getElementById('receipt-title').textContent = d.shop;
+    document.getElementById('receipt-meta').textContent =
+      `${d.date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}, ${d.date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })} · ${d.items.length} ${plural(d.items.length, 'позиция', 'позиции', 'позиций')}`;
+    const ai = document.getElementById('receipt-ai');
+    ai.className = 'receipt-ai is-' + d.aiState;
+    ai.textContent = d.aiState === 'pending' ? 'ИИ раскладывает покупки по категориям…'
+      : d.aiState === 'done' ? 'Категории подобрал ИИ. Если он ошибся — нажмите на категорию и выберите свою'
+      : 'ИИ сейчас недоступен — категории подобраны по названиям. Проверьте их';
+
+    const box = document.getElementById('receipt-items');
+    box.innerHTML = '';
+    const options = CATS_EXPENSE.filter(c => c.id !== 'loan');
+    d.items.forEach((it, i) => {
+      const row = document.createElement('div');
+      row.className = 'receipt-row';
+      row.innerHTML = `
+        <div class="receipt-row-top"><span class="receipt-name"></span><b class="receipt-price"></b></div>
+        <label class="receipt-cat"><span class="receipt-cat-ic" aria-hidden="true"></span><select aria-label="Категория"></select></label>`;
+      row.querySelector('.receipt-name').textContent = it.quantity !== 1 ? `${it.name} × ${String(it.quantity).replace('.', ',')}` : it.name;
+      row.querySelector('.receipt-price').textContent = rub(it.sum);
+      const sel = row.querySelector('select');
+      options.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id;
+        o.textContent = c.name;
+        if (c.id === it.category) o.selected = true;
+        sel.appendChild(o);
+      });
+      row.querySelector('.receipt-cat-ic').textContent = catById(it.category).icon;
+      sel.onchange = () => {
+        it.category = sel.value;
+        it.userSet = true;
+        row.querySelector('.receipt-cat-ic').textContent = catById(it.category).icon;
+        renderReceiptSum();
+      };
+      box.appendChild(row);
+    });
+    renderReceiptSum();
+  }
+
+  function receiptGroups() {
+    const groups = {};
+    receiptDraft.items.forEach(it => {
+      if (!groups[it.category]) groups[it.category] = { sum: 0, names: [] };
+      groups[it.category].sum += it.sum;
+      groups[it.category].names.push(it.name);
+    });
+    return groups;
+  }
+
+  function renderReceiptSum() {
+    const groups = receiptGroups();
+    const parts = Object.entries(groups).sort((a, b) => b[1].sum - a[1].sum)
+      .map(([id, g]) => `<span class="receipt-chip">${catById(id).icon} ${escapeHtml(catById(id).name)} <b>${rub(g.sum)}</b></span>`);
+    document.getElementById('receipt-sum').innerHTML = parts.join('');
+    document.getElementById('receipt-save').textContent = `Добавить расходы на ${rub(receiptDraft.total)}`;
+  }
+
+  function saveReceipt() {
+    const d = receiptDraft;
+    if (!d) return;
+    if (!data.receipts) data.receipts = [];
+    if (d.id && data.receipts.includes(d.id) && !confirm('Этот чек уже добавлен. Добавить ещё раз?')) return;
+    const groups = receiptGroups();
+    Object.entries(groups).forEach(([cat, g], k) => {
+      const shown = g.names.slice(0, 3).join(', ') + (g.names.length > 3 ? ` и ещё ${g.names.length - 3}` : '');
+      data.transactions.push({
+        id: 'tx-' + Date.now() + '-' + k + '-' + Math.round(Math.random() * 1000),
+        type: 'expense', amount: Math.round(g.sum * 100) / 100,
+        name: `${d.shop}: ${shown}`.slice(0, 120),
+        category: cat, date: d.date.toISOString(), receiptId: d.id
+      });
+      rememberCat('expense', cat);
+    });
+    if (d.id) data.receipts = [d.id, ...data.receipts.filter(x => x !== d.id)].slice(0, 300);
+    receiptDraft = null;
+    closeModal('receipt');
+    recalculateEverything();
+    saveSilently();
+    showToast(`Чек добавлен: ${Object.keys(groups).length} ${plural(Object.keys(groups).length, 'категория', 'категории', 'категорий')}`);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('cat-new-name').addEventListener('input', onNewCatNameInput);
+  });
+
   // Шторка уезжает вниз за 220 мс (быстрее, чем выезжает), потом окно скрывается
   const MODAL_EXIT_MS = 220;
 
@@ -4879,6 +5697,7 @@
       try { enabled = !!AndroidScanner.isMirPayNotificationsEnabled(); } catch(e) { enabled = false; }
     }
     setMirPaySwitchUI(enabled);
+    fillSettingsValues();
     openModal('settings');
   }
 
@@ -5192,7 +6011,7 @@
 
   function renderOpsCats() {
     const grid = document.getElementById('ops-cats-grid');
-    const list = currentOpsType === 'income' ? CATS_INCOME : CATS_EXPENSE;
+    const list = currentOpsType === 'income' ? CATS_INCOME : CATS_EXPENSE.filter(c => c.id !== 'loan');
     const recent = recentCats(currentOpsType).filter(id => list.some(c => c.id === id));
     const ordered = [...recent.map(id => list.find(c => c.id === id)), ...list.filter(c => !recent.includes(c.id))];
     if (!list.some(c => c.id === selectedCatId)) selectedCatId = recent[0] || list[0].id;
@@ -5212,6 +6031,14 @@
       };
       grid.appendChild(item);
     });
+    if (currentOpsType === 'expense') {
+      const add = document.createElement('button');
+      add.type = 'button';
+      add.className = 'category-item cat-add';
+      add.innerHTML = '<span class="cat-icon">+</span><span>Своя категория</span>';
+      add.onclick = () => openNewCategory(true);
+      grid.appendChild(add);
+    }
   }
 
   function setOpsDate(daysAgo) {

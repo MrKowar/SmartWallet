@@ -18,6 +18,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.webkit.JavascriptInterface
+import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -48,6 +49,15 @@ class MainActivity : AppCompatActivity() {
     private var updateCheckStarted = false
     private var isWebViewLoaded = false
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+    // Камера для сканера чеков: страница просит видео через getUserMedia, Android — разрешение CAMERA
+    private var pendingCameraRequest: PermissionRequest? = null
+
+    private val cameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        val request = pendingCameraRequest ?: return@registerForActivityResult
+        pendingCameraRequest = null
+        if (granted) request.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) else request.deny()
+    }
 
     private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         filePathCallback?.onReceiveValue(if (uri != null) arrayOf(uri) else null)
@@ -166,6 +176,25 @@ class MainActivity : AppCompatActivity() {
                 filePathCallback = callback
                 imagePicker.launch("image/*")
                 return true
+            }
+
+            // Камеру отдаём только нашему интерфейсу и только видео (звук сканеру не нужен)
+            override fun onPermissionRequest(request: PermissionRequest) {
+                runOnUiThread {
+                    val origin = request.origin?.toString().orEmpty()
+                    val trusted = origin.startsWith("file://") || origin.isEmpty() || origin == "null"
+                    if (!trusted || !request.resources.contains(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) {
+                        request.deny()
+                        return@runOnUiThread
+                    }
+                    if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        request.grant(arrayOf(PermissionRequest.RESOURCE_VIDEO_CAPTURE))
+                    } else {
+                        pendingCameraRequest?.deny()
+                        pendingCameraRequest = request
+                        cameraPermission.launch(Manifest.permission.CAMERA)
+                    }
+                }
             }
         }
 

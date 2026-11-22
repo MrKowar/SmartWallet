@@ -18,6 +18,7 @@
 //   AI_MODEL            — необязательно, модель ИИ (по умолчанию claude-haiku-5-5)
 //   AI_DEVICE_LIMIT     — необязательно, запросов к ИИ в сутки с одного телефона (по умолчанию 30)
 //   AI_DAILY_LIMIT      — необязательно, запросов к ИИ в сутки всего, защита баланса (по умолчанию 1500)
+//   AI_TASK_LIMIT       — необязательно, служебных запросов ИИ (чек, смайл) в сутки на телефон (по умолчанию 60)
 
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const DEVICE_CODE = /^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/;
@@ -30,6 +31,7 @@ export default {
       if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors() });
       if (url.pathname === '/redeem' && request.method === 'POST') return await redeem(request, env);
       if (url.pathname === '/ai' && request.method === 'POST') return await askAi(request, env);
+      if (url.pathname === '/ai/task' && request.method === 'POST') return await aiTask(request, env);
 
       const admin = url.pathname.match(/^\/a\/([A-Za-z0-9]+)(\/api)?$/);
       if (admin && request.method === 'GET') {
@@ -136,7 +138,7 @@ async function askAi(request, env) {
 }
 
 /** Один запрос к модели. Возвращает { answer, status } или { status } без исключений. */
-async function callModel(env, prompt, effort, ms) {
+async function callModel(env, prompt, effort, ms, system = AI_SYSTEM, maxTokens = 2500) {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), ms);
   try {
@@ -149,9 +151,9 @@ async function callModel(env, prompt, effort, ms) {
         // Размышления тоже расходуют лимит токенов, поэтому запас большой.
         // На low ответы Haiku беднее, поэтому low — только запасной вариант
         reasoning_effort: effort,
-        max_tokens: 2500,
+        max_tokens: maxTokens,
         temperature: 0.4,
-        messages: [{ role: 'system', content: AI_SYSTEM }, { role: 'user', content: prompt }]
+        messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }]
       })
     });
     const data = await res.json().catch(() => ({}));
@@ -162,6 +164,64 @@ async function callModel(env, prompt, effort, ms) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+// ---------- Короткие задачи ИИ: разложить чек по категориям, подобрать смайл ----------
+// Отдельный счётчик: это служебные запросы, они не должны съедать лимит советов
+
+async function aiTask(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return json({ ok: false, message: 'Неверный запрос' }, 400); }
+  const device = String(body.device || '').toUpperCase();
+  if (!DEVICE_CODE.test(device)) return json({ ok: false, message: 'Неверный код устройства' }, 400);
+  if (!env.FREEPAY_API_KEY) return json({ ok: false, message: 'ИИ ещё не подключён на сервере' }, 503);
+
+  let system, prompt, parse;
+  if (body.task === 'classify') {
+    const items = (Array.isArray(body.items) ? body.items : []).slice(0, 80).map(x => String(x).slice(0, 120));
+    const cats = (Array.isArray(body.categories) ? body.categories : []).slice(0, 40)
+      .map(c => ({ id: String(c.id || '').slice(0, 40), name: String(c.name || '').slice(0, 40) }))
+      .filter(c => c.id && c.name);
+    if (!items.length || !cats.length) return json({ ok: false, message: 'Пустой чек' }, 400);
+    system = 'Ты раскладываешь позиции кассового чека по категориям расходов. Отвечай только JSON без пояснений.';
+    prompt = 'Категории (id: название):\n' + cats.map(c => `${c.id}: ${c.name}`).join('\n') +
+      '\n\nПозиции чека (номер: название):\n' + items.map((n, i) => `${i}: ${n}`).join('\n') +
+      '\n\nДля каждой позиции выбери самый подходящий id категории. Примеры: куриная грудка, молоко, хлеб — продукты; ' +
+      'шоколадка, конфеты, чипсы, газировка — сладкое и вкусняшки; таблетки — здоровье; пакет — продукты. ' +
+      'Если не подходит ничего — id категории «Разное». Ответ строго в виде JSON-объекта {"0":"id","1":"id",...}.';
+    const ids = new Set(cats.map(c => c.id));
+    parse = text => {
+      const m = text.match(/\{[\s\S]*\}/);
+      if (!m) return null;
+      const obj = JSON.parse(m[0]);
+      const out = {};
+      items.forEach((_, i) => { const v = String(obj[i] ?? obj[String(i)] ?? ''); if (ids.has(v)) out[i] = v; });
+      return Object.keys(out).length ? out : null;
+    };
+  } else if (body.task === 'emoji') {
+    const name = String(body.name || '').trim().slice(0, 40);
+    if (!name) return json({ ok: false, message: 'Пустое название' }, 400);
+    system = 'Ты подбираешь иконку-эмодзи для категории расходов. Отвечай только эмодзи, без текста.';
+    prompt = `Категория расходов: «${name}». Дай 4 разных подходящих эмодзи через пробел, самый подходящий первым.`;
+    parse = text => {
+      const list = (text.match(/\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic}|\p{Emoji_Modifier})*/gu) || []).slice(0, 4);
+      return list.length ? list : null;
+    };
+  } else {
+    return json({ ok: false, message: 'Неизвестная задача' }, 400);
+  }
+
+  const day = new Date().toISOString().slice(0, 10);
+  const key = `ait:${day}:${device}`;
+  const used = Number(await env.CODES_KV.get(key).catch(() => 0)) || 0;
+  if (used >= Number(env.AI_TASK_LIMIT || 60)) return json({ ok: false, message: 'На сегодня лимит ИИ исчерпан' }, 429);
+
+  const r = await callModel(env, prompt, 'low', 30000, system, 1500);
+  let result = null;
+  try { result = r.answer ? parse(r.answer) : null; } catch { result = null; }
+  if (!result) return json({ ok: false, message: 'ИИ не ответил' }, 502);
+  await env.CODES_KV.put(key, String(used + 1), { expirationTtl: 3 * 86400 }).catch(() => {});
+  return json({ ok: true, result });
 }
 
 // ---------- Админ-панель ----------

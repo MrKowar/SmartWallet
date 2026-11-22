@@ -1761,11 +1761,12 @@
     .ops-type button{min-height:40px;border:none;border-radius:10px;background:transparent;color:var(--text-soft);font:inherit;font-size:14px;font-weight:600;cursor:pointer;}
     .ops-type button.active{background:var(--surface-3);color:var(--text);}
     .ops-dates{display:flex;gap:8px;margin:2px 0 10px;}
-    .ops-dates button{
+    .ops-dates button,.ops-dates label{
       flex:1;min-height:40px;border-radius:12px;border:1px solid var(--line-strong);
       background:transparent;color:var(--text-soft);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
     }
-    .ops-dates button.active{background:var(--accent-soft);border-color:rgba(47,123,255,.5);color:var(--text);}
+    .ops-dates label.active,.ops-dates button.active{background:var(--accent-soft);border-color:rgba(47,123,255,.5);color:var(--text);}
     .ops-error{margin:-4px 2px 10px;font-size:13px;color:#FCA5A5;text-align:left;}
     #ops-cats-grid .category-item{font:inherit;color:inherit;}
 
@@ -1799,6 +1800,38 @@
     .mp-cat-name{font-size:12px;}
     .week-summary-item .ws-stat .ws-lbl{font-size:12px;}
     .pay-chip,.badge,.goal-tag{font-size:12px;}
+
+    /* Синие поверхности темнее: светлый текст на них от 4.5:1 (на #2F7BFF было 3.1–3.8:1) */
+    .card-gradient,.month-big-card{background:linear-gradient(155deg,#2257D6 0%,#1E48BF 55%,#1A3A9E 100%);}
+    .card-gradient .budget-label,#budget-period-label{color:#E6EEFF;}
+    .card-gradient .budget-row-item .label,.card-gradient .budget-stat .label,
+    #stat-week-income-lbl,#stat-week-expense-lbl{color:rgba(255,255,255,.88);}
+    .budget-why summary,.why-row{color:rgba(255,255,255,.92);}
+    .qa-income,.modal-btn-income,.coach-next,.fab-add,.hub-btn-goal{background:linear-gradient(155deg,#2563EB,#1D4ED8);color:#fff;}
+    .avatar{background:linear-gradient(155deg,#2563EB,#1D4ED8);}
+
+    /* Всплывающее сообщение с «Отменить» */
+    .toast{display:flex;align-items:center;gap:14px;}
+    .toast-undo{
+      min-height:32px;padding:0 12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.14);color:#fff;font:inherit;font-size:13px;font-weight:700;cursor:pointer;
+    }
+    .toast-undo[hidden]{display:none;}
+
+    /* Своя дата операции */
+    .ops-dates .ops-date-other{position:relative;}
+    .ops-date-other input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
+    .ops-lock{margin:-4px 2px 10px;font-size:12.5px;line-height:1.45;color:var(--text-soft);text-align:left;}
+    .ops-lock[hidden]{display:none;}
+    .modal-btn-delete{background:transparent;border:1px solid rgba(248,113,113,.45);color:#FCA5A5;}
+    .modal-btn-delete[hidden]{display:none;}
+    .ops-type[hidden]{display:none;}
+    #ops-cats-grid.is-locked{pointer-events:none;opacity:.45;}
+    #ops-amount:disabled{opacity:.6;}
+
+    /* Подтверждение досрочного взноса */
+    .prepay-confirm{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line-strong);line-height:1.5;}
+    .prepay-confirm p{margin:0 0 10px;}
 
     /* ----- Шапка листа: заголовок слева, «Готово» справа ----- */
     .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
@@ -2053,7 +2086,7 @@
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-text"></span><button type="button" class="toast-undo" id="toast-undo" hidden>Отменить</button></div>
 
 <div id="page-main" class="page active">
   <div class="header">
@@ -2349,10 +2382,11 @@
     </div>
     <input type="number" class="modal-input" id="ops-amount" placeholder="0 ₽" inputmode="decimal" enterkeyhint="done">
     <div class="ops-error" id="ops-error" role="alert" hidden></div>
+    <div class="ops-lock" id="ops-lock" hidden>Операция связана с платежом: сумму и категорию меняют через отмену оплаты. Здесь можно поправить комментарий и дату.</div>
     <div class="ops-dates" role="radiogroup" aria-label="Дата">
       <button type="button" role="radio" data-days="0" onclick="setOpsDate(0)">Сегодня</button>
       <button type="button" role="radio" data-days="1" onclick="setOpsDate(1)">Вчера</button>
-      <button type="button" role="radio" data-days="2" onclick="setOpsDate(2)">Позавчера</button>
+      <label data-days="other" class="ops-date-other" id="ops-date-other-btn"><span id="ops-date-other-label">Другая дата</span><input type="date" id="ops-date-input" aria-label="Другая дата" onchange="setOpsCustomDate(this.value)"></label>
     </div>
     <input type="text" class="modal-input" id="ops-name" placeholder="Комментарий, необязательно" style="font-size:16px; font-weight:normal; text-align:left; padding:12px;">
 
@@ -2360,6 +2394,7 @@
     <div class="category-grid" id="ops-cats-grid"></div>
 
     <button class="modal-btn" id="ops-submit-btn" onclick="submitOps()">Добавить</button>
+    <button class="modal-btn modal-btn-delete" id="ops-delete-btn" onclick="deleteEditingOp()" hidden>Удалить операцию</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('add-ops')">Отмена</button>
   </div>
 </div>
@@ -2658,7 +2693,7 @@
     <div class="modal-handle"></div>
     <div class="modal-title" id="deposit-goal-title">Пополнить копилку</div>
     <input type="number" class="modal-input" id="deposit-goal-amount" placeholder="Сумма ₽">
-    <button class="modal-btn modal-btn-green" id="deposit-goal-submit">Внести аванс</button>
+    <button class="modal-btn modal-btn-green" id="deposit-goal-submit">Пополнить</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('deposit-goal')">Отмена</button>
   </div>
 </div>
@@ -3362,7 +3397,10 @@
       lastOps.forEach(t => {
         const item = document.createElement('div');
         item.className = 'expense-item';
-        item.onclick = () => deleteSingleTransaction(t.id);
+        item.onclick = () => openEditOps(t.id);
+        item.setAttribute('role', 'button');
+        item.tabIndex = 0;
+        item.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEditOps(t.id); } };
 
         let icon = '❓';
         let catName = 'Разное';
@@ -3586,7 +3624,7 @@
       return { text: 'Цель достигнута 🎉', ratePerDay: 0, ratePerMonth: 0, remaining: 0, done: true, etaDate: new Date() };
     }
     if (deposits.length === 0) {
-      return { text: 'Пока нет пополнений — прогноз появится после первых взносов.', ratePerDay: 0, ratePerMonth: 0, remaining, done: false, etaDate: null };
+      return { text: current > 0 ? 'Прогноз появится после пополнений через приложение.' : 'Пока нет пополнений — прогноз появится после первых взносов.', ratePerDay: 0, ratePerMonth: 0, remaining, done: false, etaDate: null };
     }
 
     const windowDays = 90;
@@ -4009,14 +4047,14 @@
     if (row.classList.contains('is-paying')) return;
     row.classList.add('is-paying');
     btn.querySelector('.ob-btn-label').textContent = '✓ Оплачено';
-    setTimeout(() => {
+    setTimeout(() => withUndo(() => {
       if (kind === 'loan') {
         activeLoanId = id;
         togglePayment(n);
       } else {
         payMandatory(id);
       }
-    }, 420);
+    }), 420);
   }
 
   // Сколько на этот платёж отложено с прошлых выплат (эти деньги уже не в бюджете периода)
@@ -4045,19 +4083,31 @@
 
   // Платёж уже оплачен вне приложения (или до начала учёта): закрываем срок без расхода,
   // иначе давние «просрочки» навсегда замораживают деньги и уводят бюджет в минус
+  // Закрываются сразу все прошедшие сроки этого платежа: два пропущенных месяца — одно нажатие
   function markPaidOutside(kind, id, n) {
+    withUndo(() => markPaidOutsideNow(kind, id, n));
+  }
+
+  function markPaidOutsideNow(kind, id, n) {
+    const today = startOfDay(new Date());
+    const paidAt = new Date().toISOString();
     if (kind === 'loan') {
       const loan = (data.loans || []).find(l => l.id === id);
-      const p = loan && loan.schedule.find(x => x.n === n);
-      if (!p) return;
-      Object.assign(p, { status: 'paid', paidAt: new Date().toISOString(), paidAmount: Number(p.amount) || 0, txId: null, outside: true });
-      showToast(`Платёж №${n} отмечен оплаченным`);
+      if (!loan) return;
+      const overdue = unpaidPayments(loan).filter(p => p.n <= n || parseIso(p.due) < today);
+      if (!overdue.length) return;
+      overdue.forEach(p => Object.assign(p, { status: 'paid', paidAt, paidAmount: Number(p.amount) || 0, txId: null, outside: true }));
+      showToast(overdue.length > 1 ? `Отмечено оплаченными: ${overdue.length} ${plural(overdue.length, 'платёж', 'платежа', 'платежей')}` : `Платёж №${overdue[0].n} отмечен оплаченным`);
     } else {
       const mp = (data.mandatoryPayments || []).find(x => x.id === id);
       if (!mp) return;
-      const next = mandatoryNext(mp);
-      mp.payments.push({ due: isoDate(next.due), paidAt: new Date().toISOString(), amount: next.amount, txId: null, outside: true });
-      showToast(`${mp.name}: отмечено оплаченным`);
+      let count = 0;
+      for (let next = mandatoryNext(mp); next && startOfDay(next.due) < today && count < 120; next = mandatoryNext(mp)) {
+        mp.payments.push({ due: isoDate(next.due), paidAt, amount: next.amount, txId: null, outside: true });
+        count++;
+      }
+      if (!count) return;
+      showToast(count > 1 ? `${mp.name}: отмечено ${count} ${plural(count, 'прошедший срок', 'прошедших срока', 'прошедших сроков')}` : `${mp.name}: отмечено оплаченным`);
     }
     saveSilently();
     recalculateEverything();
@@ -4559,13 +4609,31 @@
       <button class="modal-btn modal-btn-gold" onclick="applyPrepayment('term')">Внести и сократить срок</button>`;
   }
 
-  function applyPrepayment(mode) {
+  // Досрочный взнос переписывает график и списывает деньги — сначала спрашиваем
+  function applyPrepayment(mode, confirmed) {
     const loan = activeLoan();
     const extra = parseFloat(document.getElementById('loan-extra').value);
     const unpaid = loan ? unpaidPayments(loan) : [];
     if (!loan || !(extra > 0) || unpaid.length === 0) return;
 
     const balance = loanBalance(loan);
+    if (!confirmed) {
+      const closes = mode === 'close' || extra >= balance;
+      const what = closes
+        ? `Закрыть кредит «${escapeHtml(loan.name)}» полностью: внести <strong>${rub(Math.min(extra, balance))}</strong>?`
+        : `Внести досрочно <strong>${rub(extra)}</strong> и ${mode === 'term' ? 'сократить срок' : 'уменьшить платёж'}?`;
+      const box = document.getElementById('loan-extra-result');
+      box.innerHTML = `<div class="prepay-confirm" role="alertdialog" aria-label="Подтверждение досрочного взноса">
+        <p>${what} Сумма запишется расходом сегодня, график пересчитается.</p>
+        <button class="modal-btn modal-btn-gold" onclick="applyPrepayment('${mode}', true)">Да, внести</button>
+        <button class="modal-btn modal-btn-cancel" onclick="updateExtraPayment()">Назад</button>
+      </div>`;
+      return;
+    }
+    withUndo(() => applyPrepaymentNow(loan, extra, unpaid, balance, mode));
+  }
+
+  function applyPrepaymentNow(loan, extra, unpaid, balance, mode) {
     const paid = loan.schedule.filter(p => p.status === 'paid');
     const amount = Math.min(extra, balance);
     const txId = 'tx-' + Date.now() + '-' + Math.round(Math.random() * 1000);
@@ -4581,7 +4649,7 @@
       const base = isoDate(new Date(nextDue.getFullYear(), nextDue.getMonth() - 1, 1));
       const rest = Math.round((balance - extra) * 100) / 100;
       const res = loanCall('schedule', String(rest), loan.rate, months, base, loan.payDay, loan.type);
-      if (res.error) { alert(res.error); return; }
+      if (res.error) { document.getElementById('loan-extra-result').textContent = res.error; return; }
       const startN = paid.length;
       loan.schedule = paid.concat(res.schedule.map((p, i) => ({
         ...p, n: startN + i + 1, status: 'unpaid', paidAt: null, paidAmount: null, txId: null
@@ -5577,10 +5645,45 @@
     }
   }
 
-  function showToast(msg) {
+  // undo — необязательная функция: тогда в сообщении есть «Отменить», и оно висит дольше
+  let toastTimer = null;
+  function showToast(msg, undo) {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+    const btn = document.getElementById('toast-undo');
+    document.getElementById('toast-text').textContent = msg;
+    btn.hidden = typeof undo !== 'function';
+    btn.onclick = btn.hidden ? null : () => {
+      btn.onclick = null;
+      t.classList.remove('show');
+      clearTimeout(toastTimer);
+      undo();
+    };
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.classList.remove('show'); btn.onclick = null; }, btn.hidden ? 2500 : 5000);
+  }
+
+  // Снимок данных до действия: «Отменить» возвращает всё как было
+  function undoSnapshot() {
+    const before = JSON.stringify(data);
+    return () => {
+      data = normalizeData(JSON.parse(before));
+      saveSilently();
+      recalculateEverything();
+      if (typeof updateGoalsPage === 'function') updateGoalsPage();
+      if (typeof renderLoans === 'function') renderLoans();
+      if (activeLoanId && document.getElementById('modal-loan-detail').classList.contains('show') && activeLoan()) renderLoanDetail();
+      showToast('Отменено');
+    };
+  }
+
+  // Выполнить действие с деньгами и дать его отменить: сообщение действия получает «Отменить»
+  function withUndo(action) {
+    const undo = undoSnapshot();
+    const before = JSON.stringify(data);
+    action();
+    if (JSON.stringify(data) === before) return; // ничего не изменилось — отменять нечего
+    showToast(document.getElementById('toast-text').textContent, undo);
   }
 
   // ===== ПОДСКАЗКИ ПРИ ПЕРВОМ ВХОДЕ =====
@@ -5986,7 +6089,14 @@
   // Недавние категории — первыми, последняя выбрана сразу: обычно человек вносит одно и то же
   function recentCats(type) {
     const r = (data.recentCats || {})[type];
-    return Array.isArray(r) ? r : [];
+    if (Array.isArray(r) && r.length) return r;
+    // Ещё ничего не запомнено — берём категории последних операций этого типа
+    const fromHistory = [];
+    for (let i = data.transactions.length - 1; i >= 0 && fromHistory.length < 3; i--) {
+      const t = data.transactions[i];
+      if (t.type === type && t.category && !t.loanId && !t.mandatoryId && !fromHistory.includes(t.category)) fromHistory.push(t.category);
+    }
+    return fromHistory;
   }
 
   function rememberCat(type, id) {
@@ -6041,13 +6151,95 @@
     }
   }
 
+  // Дата операции: «Сегодня», «Вчера» или любая через «Другая дата» (opsCustomDate — 'YYYY-MM-DD')
+  let opsCustomDate = null;
+
   function setOpsDate(daysAgo) {
     opsDaysAgo = daysAgo;
-    document.querySelectorAll('.ops-dates button').forEach(b => {
-      const on = Number(b.dataset.days) === daysAgo;
+    opsCustomDate = null;
+    document.getElementById('ops-date-input').value = '';
+    document.getElementById('ops-date-input').max = isoDate(new Date());
+    document.getElementById('ops-date-other-label').textContent = 'Другая дата';
+    markOpsDate(String(daysAgo));
+  }
+
+  function setOpsCustomDate(value) {
+    if (!value) return;
+    const d = parseIso(value);
+    const ago = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86400000);
+    if (ago === 0 || ago === 1) { setOpsDate(ago); return; }
+    opsCustomDate = value;
+    document.getElementById('ops-date-input').value = value;
+    document.getElementById('ops-date-other-label').textContent = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+    markOpsDate('other');
+  }
+
+  function markOpsDate(key) {
+    document.querySelectorAll('.ops-dates [data-days]').forEach(b => {
+      const on = b.dataset.days === key;
       b.classList.toggle('active', on);
-      b.setAttribute('aria-checked', on ? 'true' : 'false');
+      if (b.tagName === 'BUTTON') b.setAttribute('aria-checked', on ? 'true' : 'false');
     });
+  }
+
+  // Дата операции с сохранением времени: правка даты не должна сдвигать порядок внутри дня
+  function opsDateFrom(base) {
+    const when = new Date(base || Date.now());
+    if (opsCustomDate) {
+      const d = parseIso(opsCustomDate);
+      when.setFullYear(d.getFullYear(), d.getMonth(), d.getDate());
+    } else {
+      const today = new Date();
+      when.setFullYear(today.getFullYear(), today.getMonth(), today.getDate() - opsDaysAgo);
+    }
+    return when;
+  }
+
+  // ===== ПРАВКА ОПЕРАЦИИ =====
+  let editingTxId = null;
+
+  // Связанные операции (оплата платежа, кредита, копилки): сумму меняют через отмену оплаты
+  function isLinkedTx(t) {
+    return !!(t.loanId || t.mandatoryId || t.fromReserve || t.goalId || String(t.id).startsWith('tx-auto-g-'));
+  }
+
+  function openEditOps(id) {
+    const t = data.transactions.find(x => x.id === id);
+    if (!t) return;
+    editingTxId = id;
+    selectedCatId = t.category;
+    const linked = isLinkedTx(t);
+    setOpsType(t.type);
+    document.getElementById('ops-modal-title').textContent = t.type === 'income' ? 'Изменить доход' : 'Изменить расход';
+    const submitBtn = document.getElementById('ops-submit-btn');
+    submitBtn.textContent = 'Сохранить';
+    document.getElementById('ops-delete-btn').hidden = false;
+    document.getElementById('ops-amount').value = t.amount;
+    document.getElementById('ops-amount').disabled = linked;
+    document.getElementById('ops-lock').hidden = !linked;
+    document.querySelector('.ops-type').hidden = linked;
+    document.getElementById('ops-cats-grid').classList.toggle('is-locked', linked);
+    document.getElementById('ops-name').value = t.name || '';
+    showOpsError('');
+    const d = new Date(t.date);
+    const ago = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86400000);
+    if (ago === 0 || ago === 1) setOpsDate(ago); else setOpsCustomDate(isoDate(d));
+    openModal('add-ops');
+  }
+
+  function resetOpsEdit() {
+    editingTxId = null;
+    document.getElementById('ops-delete-btn').hidden = true;
+    document.getElementById('ops-amount').disabled = false;
+    document.getElementById('ops-lock').hidden = true;
+    document.querySelector('.ops-type').hidden = false;
+    document.getElementById('ops-cats-grid').classList.remove('is-locked');
+  }
+
+  function deleteEditingOp() {
+    const id = editingTxId;
+    closeModal('add-ops');
+    deleteSingleTransaction(id);
   }
 
   function showOpsError(text) {
@@ -6057,6 +6249,7 @@
   }
 
   function openAddOps(type) {
+    resetOpsEdit();
     selectedCatId = '';
     document.getElementById('ops-amount').value = '';
     document.getElementById('ops-name').value = '';
@@ -6074,10 +6267,12 @@
 
     if (!amt || amt <= 0) { showOpsError('Введите сумму больше нуля'); document.getElementById('ops-amount').focus(); return; }
     if (!selectedCatId) { showOpsError('Выберите категорию'); return; }
+    if (opsDateFrom() > new Date(Date.now() + 60000)) { showOpsError('Дата в будущем — выберите сегодня или раньше'); return; }
     showOpsError('');
 
-    const when = new Date();
-    when.setDate(when.getDate() - opsDaysAgo);
+    if (editingTxId) { saveEditedOp(amt, name); return; }
+
+    const when = opsDateFrom();
     const newTx = {
       id: 'tx-' + Date.now() + '-' + Math.round(Math.random()*1000),
       type: currentOpsType,
@@ -6104,15 +6299,40 @@
     }
   }
 
+  function saveEditedOp(amt, name) {
+    const t = data.transactions.find(x => x.id === editingTxId);
+    if (!t) { closeModal('add-ops'); return; }
+    withUndo(() => {
+      const linked = isLinkedTx(t);
+      const delta = amt - t.amount;
+      t.name = name;
+      t.date = opsDateFrom(t.date).toISOString();
+      if (!linked) {
+        // Доход вырос — копилкам с автораспределением достаётся их доля прибавки, как при новом доходе
+        if (t.type === 'income' && currentOpsType === 'income' && delta > 0) distributeIncome(delta);
+        t.amount = amt;
+        t.type = currentOpsType;
+        t.category = selectedCatId;
+        rememberCat(currentOpsType, selectedCatId);
+      }
+      saveSilently();
+      recalculateEverything();
+      showToast('Операция изменена');
+    });
+    editingTxId = null;
+    closeModal('add-ops');
+  }
+
+  // Без окна подтверждения: удаление сразу, а в сообщении — «Отменить»
   function deleteSingleTransaction(id) {
-    if(confirm("Удалить эту операцию?")) {
+    withUndo(() => {
       data.transactions = data.transactions.filter(t => t.id !== id);
       unlinkLoanTransaction(id);
       unlinkMandatoryTransaction(id);
       recalculateEverything();
       saveSilently();
       showToast("Операция удалена");
-    }
+    });
   }
 
   function deleteAllTransactions() {
@@ -6341,12 +6561,13 @@
   }
 
   function deleteGoal(id) {
-    if(id === 'car-goal') {
-      if(!confirm("Вы уверены, что хотите сбросить или удалить главную цель на машину?")) return;
-    } else {
-      if(!confirm("Удалить эту копилку?")) return;
-    }
     const removed = data.goals.find(g => g.id === id);
+    if (!removed) return;
+    const held = Math.round(Number(removed.current) || 0);
+    const msg = held > 0
+      ? `Удалить копилку «${removed.name}»? В ней ${rub(held)}: приложение перестанет их учитывать, сами деньги останутся там, где вы их храните.`
+      : `Удалить копилку «${removed.name}»?`;
+    if (!confirm(msg)) return;
     data.goals = data.goals.filter(g => g.id !== id);
     if (removed && removed.autoDist) {
       data.distPct.spending = (data.distPct.spending || 0) + (Number(removed.pct) || 0);

@@ -1523,30 +1523,6 @@
     }
     .mp-payday-btn:active{transform:scale(.97);}
 
-    /* ===== ИИ в разработке: вкладка размыта, кнопки ИИ скрыты ===== */
-    .goal-ai-btn,.goal-ai,.ai-feature{display:none !important;}
-    #page-ai.ai-soon{position:relative;min-height:calc(100dvh - 140px);}
-    .ai-soon-preview{
-      filter:blur(6px) saturate(80%);opacity:.55;pointer-events:none;
-      -webkit-user-select:none;user-select:none;
-    }
-    .ai-soon-card{
-      position:absolute;left:16px;right:16px;top:96px;max-width:420px;margin:0 auto;
-      padding:28px 22px 24px;border-radius:24px;text-align:center;
-      background:linear-gradient(180deg,rgba(30,46,100,.88),rgba(16,28,64,.92));
-      -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
-      border:1px solid rgba(255,255,255,.1);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 24px 50px -20px rgba(0,0,0,.8);
-    }
-    .ai-soon-icon{font-size:40px;line-height:1;}
-    .ai-soon-badge{
-      display:inline-block;margin-top:14px;padding:4px 12px;border-radius:999px;
-      font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-      color:var(--orange-2);background:rgba(255,122,26,.14);border:1px solid rgba(255,122,26,.3);
-    }
-    .ai-soon-title{margin-top:12px;font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--text);}
-    .ai-soon-text{margin-top:8px;font-size:14px;line-height:1.5;color:var(--text-soft);}
-
     /* ===== Автораспределение: свои статьи ===== */
     .pct-setting{gap:10px;}
     .pct-setting .pct-label{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
@@ -1623,6 +1599,249 @@
   .adm-empty{color:var(--text-soft);text-align:center;padding:24px 0;font-size:14px;}
   .adm-input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;}
 </style>
+  <!-- РЕДИЗАЙН 1.4: строгий тёмный финтех (ui-ux-pro-max: Minimalism & Swiss, Trust & Authority).
+       Плоские поверхности, одна акцентная синяя, оранжевый только для сигналов, линейные SVG-иконки. -->
+  <style id="redesign-v4">
+    :root{
+      --bg:#080D1C;
+      --bg-2:#0C1326;
+      --surface:#111A30;
+      --surface-2:#172238;
+      --surface-3:#1F2C47;
+      --line:rgba(148,163,184,.12);
+      --line-strong:rgba(148,163,184,.24);
+      --hairline:rgba(148,163,184,.12);
+      --text:#F1F5F9;
+      --text-soft:#9AA8C2;
+      --text-dim:#6B7A96;
+      --accent:#2F7BFF;
+      --accent-2:#5B9BFF;
+      --accent-soft:rgba(47,123,255,.14);
+      --accent-glow:rgba(47,123,255,.32);
+      --orange:#FF8A2A;
+      --orange-2:#FFA552;
+      --orange-glow:rgba(255,138,42,.28);
+      --income:#34D399;
+      --danger:#F87171;
+      --warning:#FBBF24;
+      --radius:20px;
+      --card-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 10px 30px -18px rgba(0,0,0,.7);
+      --press-shadow:none;
+    }
+
+    html{background:var(--bg);}
+    body{
+      background:
+        radial-gradient(140% 50% at 50% -10%, rgba(47,123,255,.16), transparent 60%),
+        var(--bg);
+      background-attachment:fixed;
+      font-family:Roboto,'Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+      letter-spacing:-.005em;
+    }
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+    /* ----- Типографика: меньше «чёрного» веса, чёткая иерархия ----- */
+    .header h1{font-size:26px;font-weight:700;letter-spacing:-.02em;background:none;-webkit-text-fill-color:currentColor;color:var(--text);}
+    .header small{font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--text-dim);}
+    .budget-amount,.month-big-balance,.daily-limit-main .big-amount{font-weight:700;letter-spacing:-.03em;}
+    .goals-header h2,.analytics-header h2,.month-header h2{font-weight:700;}
+    .profile-name{font-weight:700;}
+    .budget-label,.month-big-label{font-weight:600;letter-spacing:.06em;}
+    .daily-limit-header .title,.obligations-header .title,.section-title{
+      font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--text-soft);text-transform:uppercase;
+    }
+
+    /* ----- Поверхности: плоские карточки с тонкой кромкой ----- */
+    .card,.goal-card,.month-card,.loan-card,.profile-card,.auto-dist-summary,.chart-placeholder,.obligations-card{
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--card-shadow);
+    }
+    .daily-limit-card::before,.daily-limit-card::after,.obligations-card::before,.obligations-card::after{display:none;}
+    .card-gradient,.month-big-card{
+      background:linear-gradient(155deg,#2F7BFF 0%,#2563EB 55%,#1D4ED8 100%);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 18px 36px -22px rgba(47,123,255,.8);
+    }
+    .card-gradient::before,.card-gradient::after,.month-big-card::before,.month-big-card::after{opacity:.35;}
+    .budget-stat .val{background:rgba(8,13,28,.22);border:1px solid rgba(255,255,255,.12);}
+    .budget-status{font-weight:600;}
+
+    .header-logo{
+      background:var(--surface-2);border:1px solid var(--line-strong);color:var(--text);
+      box-shadow:none;font-weight:700;
+    }
+    .avatar{box-shadow:none;}
+    .profile-edit{opacity:1;color:var(--text-dim);display:flex;}
+    .profile-edit svg,.daily-limit-header .icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+    .daily-limit-header .icon{
+      width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      background:rgba(255,138,42,.12);color:var(--orange-2);font-size:0;filter:none;animation:none;
+    }
+
+    /* Тени-свечения у кнопок убраны: акцент держится цветом, а не ореолом */
+    .qa-expense,.qa-income,.modal-btn-primary,.modal-btn-income,.toast,.goal-deposit-btn,.modal-btn-green,
+    .modal-btn-gold,.modal-btn-expense,.hub-btn-goal,.hub-btn-loan,.ob-btn{box-shadow:none;}
+
+    .ob-add{background:var(--accent-soft);border-color:rgba(47,123,255,.35);color:var(--accent-2);width:44px;height:44px;}
+    .obligations-reserve{background:var(--surface-2);border-color:var(--line-strong);}
+    .daily-progress-track{background:var(--surface-3);}
+
+    /* ----- Нижняя навигация: линейные иконки, активная вкладка — тонированная плашка ----- */
+    .bottom-nav{
+      background:rgba(13,20,38,.86);
+      -webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%);
+      border:1px solid var(--line);
+      box-shadow:0 16px 36px -18px rgba(0,0,0,.8);
+    }
+    .nav-item{min-height:52px;color:var(--text-dim);font-weight:600;}
+    .nav-item .nav-icon{display:flex;align-items:center;justify-content:center;height:24px;font-size:0;filter:none;}
+    .nav-item .nav-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+    .nav-item.active{
+      color:var(--text);background:var(--accent-soft);
+      box-shadow:inset 0 0 0 1px rgba(47,123,255,.32);
+    }
+    .nav-item.active .nav-icon{color:var(--accent-2);transform:none;}
+    .nav-item.active .nav-icon svg{stroke-width:2.2;}
+
+    /* ----- Копилка: кнопки действий спокойнее ----- */
+    .hub-btn{font-weight:700;font-size:15px;min-height:96px;gap:10px;}
+    .hub-btn-goal{background:linear-gradient(155deg,#2F7BFF,#1D4ED8);}
+    .hub-btn-loan{background:var(--surface);border:1px solid rgba(255,138,42,.35);color:var(--text);}
+    .hub-ic{display:flex;width:36px;height:36px;border-radius:11px;align-items:center;justify-content:center;background:rgba(255,255,255,.16);}
+    .hub-btn-loan .hub-ic{background:rgba(255,138,42,.14);color:var(--orange-2);}
+    .hub-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+
+    /* ----- Аналитика: доля категории полоской ----- */
+    .cat-row{flex-wrap:wrap;row-gap:8px;}
+    .cat-row .label{min-width:0;}
+    .cat-pct{margin-left:6px;padding:2px 7px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--text-soft);background:var(--surface-2);font-variant-numeric:tabular-nums;}
+    .cat-share{flex-basis:100%;height:5px;border-radius:3px;background:var(--surface-3);overflow:hidden;}
+    .cat-share i{display:block;height:100%;border-radius:3px;background:var(--accent);transform-origin:left;}
+    .forecast-tab.active,.analytics-tab.active{box-shadow:none;}
+
+    /* ----- Фокус для клавиатуры и TalkBack ----- */
+    button:focus-visible,input:focus-visible,select:focus-visible,[role="button"]:focus-visible{
+      outline:2px solid var(--accent-2);outline-offset:2px;
+    }
+
+    /* =================== ИИ-анализ =================== */
+    #page-ai{padding:calc(20px + env(safe-area-inset-top, 0px)) 16px 8px;}
+    .ai-head{display:flex;align-items:center;gap:14px;margin:4px 4px 18px;}
+    .ai-head-icon{
+      flex-shrink:0;width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+      background:var(--accent-soft);border:1px solid rgba(47,123,255,.3);color:var(--accent-2);
+    }
+    .ai-head-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;}
+    .ai-head h2{font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--text);}
+    .ai-head p{margin-top:3px;font-size:13.5px;line-height:1.4;color:var(--text-soft);}
+
+    .ai-snapshot{
+      background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+      padding:16px;box-shadow:var(--card-shadow);
+    }
+    .ai-snap-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+    .ai-snap-label{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft);}
+    .ai-snap-period{font-size:12.5px;color:var(--text-dim);white-space:nowrap;font-variant-numeric:tabular-nums;}
+    .ai-snap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px;}
+    .ai-snap-grid > div{background:var(--surface-2);border-radius:14px;padding:10px 10px 9px;min-width:0;}
+    .ai-snap-val{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ai-snap-val.is-negative{color:var(--danger);}
+    .ai-snap-cap{margin-top:2px;font-size:12px;color:var(--text-dim);}
+    .ai-snap-cats{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+    .ai-cat{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto;align-items:center;gap:10px;font-size:13px;}
+    .ai-cat-name{color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ai-cat-bar{height:6px;border-radius:3px;background:var(--surface-3);overflow:hidden;}
+    .ai-cat-bar i{display:block;height:100%;background:var(--accent);border-radius:3px;transform-origin:left;}
+    .ai-cat-val{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;}
+    .ai-cat-empty{font-size:13px;line-height:1.45;color:var(--text-dim);}
+
+    .ai-section-title{margin:22px 4px 10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft);}
+    .ai-topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+    .ai-topic{
+      display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:96px;padding:14px;
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;
+      color:var(--text);text-align:left;font-family:inherit;cursor:pointer;
+      transition:transform 160ms var(--ease-out-strong), border-color 160ms ease, background-color 160ms ease, opacity 160ms ease;
+    }
+    .ai-topic:active{transform:scale(.97);background:var(--surface-2);}
+    .ai-topic:disabled{opacity:.5;cursor:default;}
+    .ai-topic-ic{
+      width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+      background:var(--surface-2);color:var(--accent-2);
+    }
+    .ai-topic-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+    .ai-topic-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+    .ai-topic-text b{font-size:14.5px;font-weight:700;}
+    .ai-topic-text small{font-size:12.5px;line-height:1.35;color:var(--text-dim);}
+
+    .ai-ask{display:flex;gap:8px;margin-top:12px;}
+    .ai-ask input{
+      flex:1;min-width:0;height:52px;padding:0 16px;border-radius:16px;
+      background:var(--surface);border:1px solid var(--line-strong);color:var(--text);
+      font:inherit;font-size:16px;
+    }
+    .ai-ask input::placeholder{color:var(--text-dim);}
+    .ai-ask input:focus{outline:none;border-color:var(--accent);}
+    .ai-send{
+      flex-shrink:0;width:52px;height:52px;border-radius:16px;border:none;cursor:pointer;
+      background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;
+      transition:transform 160ms var(--ease-out-strong), opacity 160ms ease;
+    }
+    .ai-send:active{transform:scale(.95);}
+    .ai-send:disabled{opacity:.5;}
+    .ai-send svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+
+    .ai-result{
+      margin-top:16px;padding:16px;border-radius:var(--radius);
+      background:var(--surface);border:1px solid rgba(47,123,255,.28);
+      scroll-margin-top:16px;
+    }
+    .ai-result.is-error{border-color:rgba(248,113,113,.35);}
+    .ai-result-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+    .ai-result-title{font-size:15px;font-weight:700;color:var(--text);min-width:0;overflow-wrap:anywhere;}
+    .ai-copy{
+      flex-shrink:0;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid var(--line-strong);
+      background:transparent;color:var(--text-soft);font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+    }
+    .ai-copy:active{background:var(--surface-2);}
+    .ai-answer-text{font-size:14.5px;line-height:1.6;color:var(--text);overflow-wrap:anywhere;}
+    .ai-answer-text p{margin:0 0 8px;}
+    .ai-answer-text p.ai-h{font-weight:700;margin-top:4px;}
+    .ai-answer-text ul,.ai-answer-text ol{margin:0 0 10px;padding-left:20px;}
+    .ai-answer-text li{margin:0 0 6px;}
+    .ai-answer-text li::marker{color:var(--accent-2);}
+    .ai-answer-text b{color:#fff;font-weight:700;}
+    .ai-result.is-error .ai-answer-text{color:var(--text-soft);}
+
+    .ai-skeleton{display:flex;flex-direction:column;gap:9px;padding:2px 0 6px;}
+    .ai-skeleton[hidden]{display:none;}
+    .ai-skeleton i{
+      display:block;height:12px;border-radius:6px;
+      background:linear-gradient(90deg,var(--surface-2) 0%,var(--surface-3) 50%,var(--surface-2) 100%);
+      background-size:200% 100%;animation:ai-shimmer 1.2s linear infinite;
+    }
+    .ai-skeleton i:nth-child(2){width:92%;}
+    .ai-skeleton i:nth-child(3){width:78%;}
+    .ai-skeleton i:nth-child(4){width:55%;}
+    @keyframes ai-shimmer{from{background-position:100% 0;}to{background-position:-100% 0;}}
+
+    .ai-disclaimer{margin:14px 6px 0;font-size:12px;line-height:1.5;color:var(--text-dim);text-align:center;}
+
+    /* Кнопки ИИ в копилках и кредитах */
+    .goal-ai-btn{background:var(--accent-soft);border:1px solid rgba(47,123,255,.3);color:var(--accent-2);min-height:44px;}
+    .goal-ai,.ai-answer{background:var(--surface-2);border:1px solid var(--line);color:var(--text);line-height:1.55;white-space:pre-line;}
+
+    @media (hover: hover) and (pointer: fine){
+      .ai-topic:hover{border-color:var(--line-strong);background:var(--surface-2);}
+    }
+    @media (prefers-reduced-motion: reduce){
+      .ai-skeleton i{animation:none;}
+      .ai-topic,.ai-send{transition:opacity 160ms ease;}
+      .ai-topic:active,.ai-send:active{transform:none;}
+    }
+  </style>
 </head>
 <body>
 
@@ -1651,7 +1870,7 @@
       <div class="profile-name" id="profile-name">Ваше имя</div>
       <div class="profile-sub" id="profile-sub">Настройте профиль и график доходов</div>
     </div>
-    <div class="profile-edit">✏️</div>
+    <div class="profile-edit" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
   </div>
 
   <div class="card card-gradient">
@@ -1673,7 +1892,7 @@
   <div class="card daily-limit-card" onclick="openModal('daily-settings')">
     <div class="daily-limit-header">
       <span class="title">ДНЕВНОЙ ЛИМИТ</span>
-      <span class="icon">⚡</span>
+      <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
     </div>
     <div class="daily-limit-amounts">
       <div class="daily-limit-main">
@@ -1752,8 +1971,8 @@
     <p>Копите на цели и держите кредиты под контролем</p>
   </div>
   <div class="hub-actions">
-    <button class="hub-btn hub-btn-goal" onclick="openModal('add-goal')"><span>➕</span>Добавить новую цель</button>
-    <button class="hub-btn hub-btn-loan" onclick="openAddLoan()"><span>💳</span>Добавить кредит</button>
+    <button class="hub-btn hub-btn-goal" onclick="openModal('add-goal')"><span class="hub-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>Новая цель</button>
+    <button class="hub-btn hub-btn-loan" onclick="openAddLoan()"><span class="hub-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></span>Новый кредит</button>
   </div>
 
   <div class="section-title">Кредиты</div>
@@ -1799,39 +2018,81 @@
   </div>
 </div>
 
-<div id="page-ai" class="page ai-soon">
-  <div class="ai-soon-preview" aria-hidden="true">
-    <div class="analytics-header">
-      <h2>ИИ Аналитика</h2>
-      <p>Умный анализ ваших трат</p>
-    </div>
-    <div class="card" id="ai-advisor-content" style="padding: 24px; text-align: center; font-size: 14px; color: #475569;">
-      <!-- AI content goes here -->
+<div id="page-ai" class="page">
+  <div class="ai-head">
+    <div class="ai-head-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></div>
+    <div>
+      <h2>ИИ-анализ</h2>
+      <p>Разбор бюджета по вашим цифрам за текущий период</p>
     </div>
   </div>
-  <div class="ai-soon-card">
-    <div class="ai-soon-icon">🤖</div>
-    <div class="ai-soon-badge">В разработке</div>
-    <div class="ai-soon-title">ИИ-аналитика скоро</div>
-    <div class="ai-soon-text">Умные советы по бюджету, кредитам и копилкам появятся в одном из ближайших обновлений — оно придёт само.</div>
+
+  <section class="ai-snapshot" aria-label="Сводка периода">
+    <div class="ai-snap-top">
+      <span class="ai-snap-label">Сводка периода</span>
+      <span class="ai-snap-period" id="ai-snap-period"></span>
+    </div>
+    <div class="ai-snap-grid">
+      <div><div class="ai-snap-val" id="ai-snap-income">0 ₽</div><div class="ai-snap-cap">Доход</div></div>
+      <div><div class="ai-snap-val" id="ai-snap-expense">0 ₽</div><div class="ai-snap-cap">Расход</div></div>
+      <div><div class="ai-snap-val" id="ai-snap-left">0 ₽</div><div class="ai-snap-cap">Свободно</div></div>
+    </div>
+    <div class="ai-snap-cats" id="ai-snap-cats"></div>
+  </section>
+
+  <div class="ai-section-title">Что разобрать</div>
+  <div class="ai-topics" role="list">
+    <button class="ai-topic" role="listitem" data-topic="budget">
+      <span class="ai-topic-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span>
+      <span class="ai-topic-text"><b>Разбор бюджета</b><small>Выводы и главный совет</small></span>
+    </button>
+    <button class="ai-topic" role="listitem" data-topic="save">
+      <span class="ai-topic-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg></span>
+      <span class="ai-topic-text"><b>Где сэкономить</b><small>По вашим категориям трат</small></span>
+    </button>
+    <button class="ai-topic" role="listitem" data-topic="goals">
+      <span class="ai-topic-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
+      <span class="ai-topic-text"><b>Копилки</b><small>Как успеть к цели</small></span>
+    </button>
+    <button class="ai-topic" role="listitem" data-topic="loans">
+      <span class="ai-topic-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+      <span class="ai-topic-text"><b>Кредиты</b><small>Что гасить первым</small></span>
+    </button>
   </div>
+
+  <form class="ai-ask" id="ai-ask-form" autocomplete="off">
+    <label class="sr-only" for="ai-question">Свой вопрос ИИ</label>
+    <input id="ai-question" type="text" maxlength="300" enterkeyhint="send" placeholder="Свой вопрос ИИ…">
+    <button type="submit" class="ai-send" aria-label="Спросить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+  </form>
+
+  <section class="ai-result" id="ai-result" hidden aria-live="polite">
+    <div class="ai-result-head">
+      <span class="ai-result-title" id="ai-result-title">Ответ</span>
+      <button class="ai-copy" id="ai-copy" type="button">Копировать</button>
+    </div>
+    <div class="ai-skeleton" id="ai-skeleton"><i></i><i></i><i></i><i></i></div>
+    <div class="ai-answer-text" id="ai-answer"></div>
+  </section>
+
+  <p class="ai-disclaimer">ИИ получает только суммы по категориям, копилки и кредиты — без комментариев к операциям. Ответ может ошибаться, это не финансовая консультация.</p>
 </div>
 
 <div class="bottom-nav">
   <button class="nav-item active" data-page="main" onclick="switchPage('main')">
-    <span class="nav-icon">🏠</span><span>Главная</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></svg></span><span>Главная</span>
   </button>
   <button class="nav-item" data-page="goals" onclick="switchPage('goals')">
-    <span class="nav-icon">⏳</span><span>Копилка</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 7c0-1.1-.9-2-2-2H5a2 2 0 0 0 0 4h14v10H5a2 2 0 0 1-2-2V7"/><circle cx="16" cy="14" r="1.2"/></svg></span><span>Копилка</span>
   </button>
   <button class="nav-item" data-page="month" onclick="switchPage('month')">
-    <span class="nav-icon">📅</span><span>Месяц</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span><span>Месяц</span>
   </button>
   <button class="nav-item" data-page="analytics" onclick="switchPage('analytics')">
-    <span class="nav-icon">📈</span><span>Аналитика</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span>Аналитика</span>
   </button>
   <button class="nav-item" data-page="ai" onclick="switchPage('ai')">
-    <span class="nav-icon">🤖</span><span>ИИ</span>
+    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span><span>ИИ</span>
   </button>
 </div>
 
@@ -2105,7 +2366,7 @@
     <div class="loan-tool-title" style="margin-top:16px;">🗓️ График и погашения</div>
     <div id="loan-schedule"></div>
 
-    <button class="modal-btn modal-btn-cancel ai-feature" onclick="askLoansAI()">🤖 Разбор кредитов от ИИ</button>
+    <button class="modal-btn modal-btn-cancel" onclick="askLoansAI()">Разбор кредитов от ИИ</button>
     <div class="ai-answer" id="loans-ai-answer" style="display:none;"></div>
     <button class="modal-btn modal-btn-cancel" onclick="closeModal('loan-detail')">Закрыть</button>
   </div>
@@ -2754,16 +3015,17 @@
       return;
     }
 
-    CATS_EXPENSE.forEach(c => {
+    CATS_EXPENSE.slice().sort((a, b) => (catTotals[b.id] || 0) - (catTotals[a.id] || 0)).forEach(c => {
       const amt = catTotals[c.id] || 0;
       if(amt === 0) return;
       const pct = Math.round((amt / totalExp) * 100);
 
       const row = document.createElement('div');
-      row.className = 'month-stat-row';
+      row.className = 'month-stat-row cat-row';
       row.innerHTML = `
-        <div class="label"><span>${c.icon}</span> ${c.name} <span class="distrib-item" style="padding:2px 6px; font-size:10px; border-radius:8px; margin-left:6px; box-shadow:none;">${pct}%</span></div>
-        <div class="value">${amt.toLocaleString()} ₽</div>
+        <div class="label"><span>${c.icon}</span> ${c.name} <span class="cat-pct">${pct}%</span></div>
+        <div class="value">${amt.toLocaleString('ru-RU')} ₽</div>
+        <div class="cat-share" aria-hidden="true"><i style="transform:scaleX(${amt / totalExp})"></i></div>
       `;
       box.appendChild(row);
     });
@@ -2959,16 +3221,8 @@
     const box = document.getElementById('goal-ai-' + goalId);
     if (!g || !box) return;
 
-    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
-      box.textContent = 'ИИ доступен только в приложении SmartWallet.';
-      return;
-    }
-    box.textContent = '🤖 Думаю…';
-    try {
-      AndroidScanner.askAI('goal:' + goalId, aiPromptForGoal(g));
-    } catch (e) {
-      box.textContent = 'Не удалось отправить запрос: ' + e.message;
-    }
+    box.textContent = 'Думаю…';
+    requestAI('goal:' + goalId, aiPromptForGoal(g));
   }
 
   function setLoansAiAnswer(text) {
@@ -2979,15 +3233,15 @@
 
   window.onDeepSeekAnswer = function (requestId, text) {
     if (requestId === 'ai-page') { setAiAnswer(text); return; }
-    if (requestId === 'loans') { setLoansAiAnswer('🤖 ' + text); return; }
+    if (requestId === 'loans') { setLoansAiAnswer(text); return; }
     if (requestId.indexOf('goal:') === 0) {
       const box = document.getElementById('goal-ai-' + requestId.slice(5));
-      if (box) box.textContent = '🤖 ' + text;
+      if (box) box.textContent = text;
     }
   };
 
   window.onDeepSeekError = function (requestId, message) {
-    if (requestId === 'ai-page') { setAiAnswer('Не удалось получить ответ: ' + message); return; }
+    if (requestId === 'ai-page') { setAiAnswer('Не удалось получить ответ: ' + message, true); return; }
     if (requestId === 'loans') { setLoansAiAnswer('Не удалось получить ответ: ' + message); return; }
     if (requestId.indexOf('goal:') === 0) {
       const box = document.getElementById('goal-ai-' + requestId.slice(5));
@@ -3545,7 +3799,7 @@
     if (!box) return;
     const loans = data.loans || [];
     if (loans.length === 0) {
-      box.innerHTML = '<div class="empty-hint">Кредитов нет. Нажмите «Добавить кредит» — посчитаем платёж, переплату и добавим платёж в обязательные.</div>';
+      box.innerHTML = '<div class="empty-hint">Кредитов нет. Нажмите «Новый кредит» — посчитаем платёж, переплату и добавим платёж в обязательные.</div>';
       return;
     }
     const today = startOfDay(new Date());
@@ -3891,20 +4145,15 @@
   function askLoansAI() {
     const box = document.getElementById('loans-ai-answer');
     box.style.display = 'block';
-    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
-      box.textContent = 'ИИ доступен только в приложении SmartWallet.';
-      return;
-    }
     const loans = loansSummaryForAI();
     if (!loans) { box.textContent = 'Нет непогашенных кредитов.'; return; }
-    box.textContent = '🤖 Думаю…';
+    box.textContent = 'Думаю…';
     const income = Math.round(avgMonthlyIncome());
     const prompt = `Мои кредиты: ${loans}. Средний доход в месяц: ${income > 0 ? income + ' ₽' : 'нет данных'}. ` +
       `Свободно в текущем бюджетном периоде: ${Math.round(globalCalc.periodAvailable || 0)} ₽. ` +
       `Подскажи: какой кредит гасить досрочно в первую очередь и почему, сколько можно безопасно вносить сверх платежа, ` +
       `и что выгоднее — уменьшать платёж или срок. Все суммы уже посчитаны, не пересчитывай их.`;
-    try { AndroidScanner.askAI('loans', prompt); }
-    catch (e) { box.textContent = 'Не удалось отправить запрос: ' + e.message; }
+    requestAI('loans', prompt);
   }
 
   // ===== РЕЗЕРВНАЯ КОПИЯ =====
@@ -4103,88 +4352,178 @@
     if(page === 'ai') updateAIPage();
   }
 
-  function updateAIPage() {
-    const container = document.getElementById('ai-advisor-content');
-    let totalSnacksAndSweets = 0;
+  // ===== ИИ-АНАЛИЗ =====
+  // Ключ ИИ живёт только на сервере (tools/license-server/worker.js, POST /ai).
+  // Телефон отправляет код устройства — по нему сервер считает дневной лимит.
+  const AI_SERVER = 'https://smartwallet-license.alex2003prokopenko.workers.dev';
+  let aiBusy = false;
 
-    data.transactions.forEach(t => {
-      if(t.type === 'expense' && (t.category === 'snack' || t.category === 'sweets')) {
-        totalSnacksAndSweets += t.amount;
-      }
-    });
-
-    if (totalSnacksAndSweets > 0) {
-      container.innerHTML = `
-        <div style="font-size: 40px; margin-bottom: 12px;">🚨</div>
-        <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Финансовая дыра!</h3>
-        <p style="margin-bottom: 16px;">Вы потратили <strong style="color: var(--danger); font-size: 16px;">${totalSnacksAndSweets.toLocaleString()} ₽</strong> на перекусы и вкусняшки.</p>
-        <div class="ai-tip">
-          <strong>💡 Совет:</strong> Попробуйте брать еду из дома. Если бы вы отложили эти деньги в копилку, вы бы приблизились к своей цели!
-        </div>
-        <button class="goal-ai-btn" onclick="askAnalyticsAI()">🤖 Спросить ИИ</button>
-        <div class="ai-answer" id="ai-answer" style="display:none;"></div>
-      `;
-    } else {
-      container.innerHTML = `
-        <div style="font-size: 40px; margin-bottom: 12px;">✅</div>
-        <h3 style="color: var(--text); font-size: 18px; margin-bottom: 8px;">Всё под контролем</h3>
-        <p>На данный момент ИИ не нашел очевидных финансовых дыр в ваших расходах. Продолжайте в том же духе!</p>
-        <button class="goal-ai-btn" onclick="askAnalyticsAI()">🤖 Спросить ИИ</button>
-        <div class="ai-answer" id="ai-answer" style="display:none;"></div>
-      `;
-    }
+  function aiDeviceCode() {
+    try {
+      if (typeof License !== 'undefined' && License.getState) return JSON.parse(License.getState()).deviceCode || '';
+    } catch (e) {}
+    // Локальная проверка вёрстки в браузере
+    return location.hostname === '127.0.0.1' ? 'TEST-TEST-TEST' : '';
   }
 
-  function askAnalyticsAI() {
-    if (!nativeBridgeAvailable() || typeof AndroidScanner.askAI !== 'function') {
-      setAiAnswer('ИИ доступен только в приложении SmartWallet.');
-      return;
-    }
-    setAiAnswer('🤖 Думаю…');
+  function requestAI(requestId, prompt) {
+    const device = aiDeviceCode();
+    if (!device) { window.onDeepSeekError(requestId, 'ИИ работает только в приложении SmartWallet'); return; }
+    fetch(AI_SERVER + '/ai', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ device: device, prompt: prompt })
+    })
+      .then(r => r.json().catch(() => ({})).then(d => ({ ok: r.ok && d.ok, d: d })))
+      .then(res => res.ok
+        ? window.onDeepSeekAnswer(requestId, res.d.answer)
+        : window.onDeepSeekError(requestId, res.d.message || 'сервер не ответил'))
+      .catch(() => window.onDeepSeekError(requestId, 'нет связи с сервером, проверьте интернет'));
+  }
 
+  function rub(n) { return Math.round(Number(n) || 0).toLocaleString('ru-RU') + ' ₽'; }
+
+  function monthExpenseByCategory() {
     const now = new Date();
-    const period = globalCalc.period || getBudgetPeriod();
     const byCat = {};
-    let monthExpense = 0;
+    let total = 0;
     data.transactions.forEach(t => {
       const d = new Date(t.date);
       if (t.type === 'expense' && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) {
         byCat[t.category || 'other_exp'] = (byCat[t.category || 'other_exp'] || 0) + t.amount;
-        monthExpense += t.amount;
+        total += t.amount;
       }
     });
-    const catNames = {...CATS_EXPENSE.reduce((acc,c)=>(acc[c.id]=c.name,acc),{}), ...CATS_INCOME.reduce((acc,c)=>(acc[c.id]=c.name,acc),{})};
-    const topCats = Object.entries(byCat)
-      .sort((a,b)=>b[1]-a[1])
-      .slice(0,4)
-      .map(([id, amt]) => `${catNames[id] || id} — ${Math.round(amt)} ₽`)
-      .join(', ');
+    const names = CATS_EXPENSE.reduce((acc, c) => (acc[c.id] = c.name, acc), {});
+    const list = Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([id, amt]) => ({ name: names[id] || 'Другое', amount: amt }));
+    return { total: total, list: list };
+  }
 
-    const goalsText = data.goals.map(g =>
+  function aiBudgetContext() {
+    const period = globalCalc.period || getBudgetPeriod();
+    const month = monthExpenseByCategory();
+    const cats = month.list.slice(0, 6).map(c => `${c.name} — ${Math.round(c.amount)} ₽`).join(', ');
+    const goals = data.goals.map(g =>
       `${g.name}: ${Math.round(g.current)} из ${Math.round(g.target)} ₽${g.deadline ? `, срок ${formatLongDate(new Date(g.deadline))}` : ''}`
     ).join('; ');
-
-    const prompt = `Мой бюджет. За текущий период с ${formatShortDate(period.start)} по ${formatShortDate(period.end)}: ` +
-      `доход ${Math.round(globalCalc.periodIncome)} ₽, расход ${Math.round(globalCalc.periodExpense)} ₽, ` +
-      `на расходы доступно ${Math.round(globalCalc.periodAvailable)} ₽, дневной лимит ${Math.round(globalCalc.baseDaily)} ₽. ` +
-      `Расходы за календарный месяц: ${Math.round(monthExpense)} ₽. Топ категорий: ${topCats || 'нет данных'}. ` +
-      `Копилки: ${goalsText || 'нет'}. ` +
-      `Кредиты: ${loansSummaryForAI() || 'нет'}; резерв на обязательные платежи в периоде ${Math.round(globalCalc.obligationsReserve || 0)} ₽. ` +
-      `Дай 3 коротких вывода и один конкретный совет, как улучшить бюджет. Все суммы уже посчитаны, не пересчитывай их.`;
-
-    try {
-      AndroidScanner.askAI('ai-page', prompt);
-    } catch (e) {
-      setAiAnswer('Не удалось отправить запрос: ' + e.message);
-    }
+    return `Мой бюджет. Текущий период с ${formatShortDate(period.start)} по ${formatShortDate(period.end)}: ` +
+      `доход ${Math.round(globalCalc.periodIncome || 0)} ₽, расход ${Math.round(globalCalc.periodExpense || 0)} ₽, ` +
+      `на расходы доступно ${Math.round(globalCalc.periodAvailable || 0)} ₽, дневной лимит ${Math.round(globalCalc.baseDaily || 0)} ₽. ` +
+      `Расходы за календарный месяц: ${Math.round(month.total)} ₽, по категориям: ${cats || 'нет данных'}. ` +
+      `Копилки: ${goals || 'нет'}. Кредиты: ${loansSummaryForAI() || 'нет'}; ` +
+      `резерв на обязательные платежи в периоде ${Math.round(globalCalc.obligationsReserve || 0)} ₽. ` +
+      `Все суммы уже посчитаны, не пересчитывай их.`;
   }
 
-  function setAiAnswer(text) {
-    const box = document.getElementById('ai-answer');
-    if (!box) return;
-    box.style.display = 'block';
-    box.textContent = text;
+  const AI_TOPICS = {
+    budget: { title: 'Разбор бюджета', ask: 'Дай 3 коротких вывода о моём бюджете и один конкретный совет, как его улучшить.' },
+    save:   { title: 'Где сэкономить', ask: 'Найди 3 категории, где я могу сэкономить, и для каждой — конкретное действие и примерную экономию в рублях за месяц.' },
+    goals:  { title: 'Копилки', ask: 'Оцени, успеваю ли я к целям копилок. Подскажи, сколько откладывать в месяц и как ускорить накопление.' },
+    loans:  { title: 'Кредиты', ask: 'Какой кредит гасить досрочно в первую очередь и почему, сколько можно безопасно вносить сверх платежа, и что выгоднее — уменьшать платёж или срок. Если кредитов нет — скажи, как не влезать в долги при моём бюджете.' }
+  };
+
+  function updateAIPage() {
+    const period = globalCalc.period || getBudgetPeriod();
+    document.getElementById('ai-snap-period').textContent = `${formatShortDate(period.start)} — ${formatShortDate(period.end)}`;
+    document.getElementById('ai-snap-income').textContent = rub(globalCalc.periodIncome);
+    document.getElementById('ai-snap-expense').textContent = rub(globalCalc.periodExpense);
+    const left = document.getElementById('ai-snap-left');
+    left.textContent = rub(globalCalc.periodAvailable);
+    left.classList.toggle('is-negative', (globalCalc.periodAvailable || 0) < 0);
+
+    const month = monthExpenseByCategory();
+    const cats = document.getElementById('ai-snap-cats');
+    cats.innerHTML = '';
+    month.list.slice(0, 4).forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'ai-cat';
+      const share = month.total > 0 ? c.amount / month.total : 0;
+      row.innerHTML = '<span class="ai-cat-name"></span><span class="ai-cat-bar"><i></i></span><span class="ai-cat-val"></span>';
+      row.querySelector('.ai-cat-name').textContent = c.name;
+      row.querySelector('.ai-cat-bar i').style.transform = `scaleX(${share})`;
+      row.querySelector('.ai-cat-val').textContent = rub(c.amount);
+      cats.appendChild(row);
+    });
+    if (!month.list.length) cats.innerHTML = '<div class="ai-cat-empty">Расходов в этом месяце пока нет — ИИ даст общие советы по периоду.</div>';
   }
+
+  function runAI(title, question) {
+    if (aiBusy) return;
+    aiBusy = true;
+    document.querySelectorAll('.ai-topic,.ai-send').forEach(b => { b.disabled = true; });
+    const result = document.getElementById('ai-result');
+    result.hidden = false;
+    result.classList.remove('is-error');
+    document.getElementById('ai-result-title').textContent = title;
+    document.getElementById('ai-skeleton').hidden = false;
+    document.getElementById('ai-answer').innerHTML = '';
+    document.getElementById('ai-copy').hidden = true;
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    requestAI('ai-page', aiBudgetContext() + ' ' + question);
+  }
+
+  function askAnalyticsAI() { runAI(AI_TOPICS.budget.title, AI_TOPICS.budget.ask); }
+
+  // Ответ модели: абзацы, списки и **жирный** — HTML от сервера не вставляется
+  function formatAiAnswer(text) {
+    const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const inline = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    let html = '', list = null;
+    const closeList = () => { if (list) { html += `</${list}>`; list = null; } };
+    String(text).split(/\r?\n/).forEach(raw => {
+      const line = raw.trim();
+      if (!line) { closeList(); return; }
+      let m;
+      if ((m = line.match(/^[-*•]\s+(.+)/))) {
+        if (list !== 'ul') { closeList(); html += '<ul>'; list = 'ul'; }
+        html += `<li>${inline(m[1])}</li>`;
+      } else if ((m = line.match(/^\d+[.)]\s+(.+)/))) {
+        if (list !== 'ol') { closeList(); html += '<ol>'; list = 'ol'; }
+        html += `<li>${inline(m[1])}</li>`;
+      } else if ((m = line.match(/^#{1,6}\s+(.+)/))) {
+        closeList(); html += `<p class="ai-h">${inline(m[1])}</p>`;
+      } else {
+        closeList(); html += `<p>${inline(line)}</p>`;
+      }
+    });
+    closeList();
+    return html;
+  }
+
+  function setAiAnswer(text, isError) {
+    aiBusy = false;
+    document.querySelectorAll('.ai-topic,.ai-send').forEach(b => { b.disabled = false; });
+    const result = document.getElementById('ai-result');
+    if (!result) return;
+    result.hidden = false;
+    result.classList.toggle('is-error', !!isError);
+    document.getElementById('ai-skeleton').hidden = true;
+    document.getElementById('ai-answer').innerHTML = formatAiAnswer(text);
+    const copy = document.getElementById('ai-copy');
+    copy.hidden = !!isError;
+    copy.dataset.text = text;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.ai-topic').forEach(btn => btn.addEventListener('click', () => {
+      const t = AI_TOPICS[btn.dataset.topic];
+      runAI(t.title, t.ask);
+    }));
+    document.getElementById('ai-ask-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = document.getElementById('ai-question');
+      const q = input.value.trim();
+      if (!q) { input.focus(); return; }
+      input.blur();
+      runAI(q.length > 60 ? q.slice(0, 57) + '…' : q, 'Мой вопрос: ' + q);
+    });
+    const copy = document.getElementById('ai-copy');
+    copy.addEventListener('click', () => {
+      copyText(copy.dataset.text || '');
+      copy.textContent = 'Скопировано';
+      setTimeout(() => { copy.textContent = 'Копировать'; }, 1500);
+    });
+  });
 
   // Шторка уезжает вниз за 220 мс (быстрее, чем выезжает), потом окно скрывается
   const MODAL_EXIT_MS = 220;

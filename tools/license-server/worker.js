@@ -14,6 +14,10 @@
 //   LICENSE_PRIVATE_KEY — секрет: содержимое %USERPROFILE%\SmartWalletKeys\private_key.txt
 //   BATCHES             — партии кодов «буква:количество:дней», через запятую. Пример: "A:100:30"
 //   CODES_KV            — KV namespace, где хранится, какой код к какому телефону привязан
+//   FREEPAY_API_KEY     — секрет: ключ ИИ (api.freepay.space). В приложении его нет
+//   AI_MODEL            — необязательно, модель ИИ (по умолчанию claude-haiku-5-5)
+//   AI_DEVICE_LIMIT     — необязательно, запросов к ИИ в сутки с одного телефона (по умолчанию 30)
+//   AI_DAILY_LIMIT      — необязательно, запросов к ИИ в сутки всего, защита баланса (по умолчанию 1500)
 
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const DEVICE_CODE = /^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/;
@@ -25,6 +29,7 @@ export default {
     try {
       if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors() });
       if (url.pathname === '/redeem' && request.method === 'POST') return await redeem(request, env);
+      if (url.pathname === '/ai' && request.method === 'POST') return await askAi(request, env);
 
       const admin = url.pathname.match(/^\/a\/([A-Za-z0-9]+)(\/api)?$/);
       if (admin && request.method === 'GET') {
@@ -68,6 +73,70 @@ async function redeem(request, env) {
   return json({ ok: true, key, expiry });
 }
 
+// ---------- ИИ-анализ ----------
+// Ключ ИИ хранится только здесь. Телефон присылает свой код устройства и текст запроса;
+// сервер считает лимиты (на телефон и общий на сутки) и спрашивает модель.
+
+const AI_SYSTEM = 'Ты финансовый помощник приложения SmartWallet. Отвечай по-русски, коротко и по делу, ' +
+  'опираясь только на присланные цифры. Суммы в рублях. Без таблиц и без markdown-заголовков, ' +
+  'списки — короткими пунктами. Не давай советов по покупке ценных бумаг и криптовалюты.';
+
+async function askAi(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return json({ ok: false, message: 'Неверный запрос' }, 400); }
+  const device = String(body.device || '').toUpperCase();
+  const prompt = String(body.prompt || '').trim();
+  if (!DEVICE_CODE.test(device)) return json({ ok: false, message: 'Неверный код устройства' }, 400);
+  if (!prompt) return json({ ok: false, message: 'Пустой запрос' }, 400);
+  if (prompt.length > 6000) return json({ ok: false, message: 'Слишком длинный запрос' }, 400);
+  if (!env.FREEPAY_API_KEY) return json({ ok: false, message: 'ИИ ещё не подключён на сервере' }, 503);
+
+  const day = new Date().toISOString().slice(0, 10);
+  const deviceKey = `ai:${day}:${device}`;
+  const totalKey = `ai:${day}:total`;
+  const [deviceUsed, totalUsed] = await Promise.all([
+    env.CODES_KV.get(deviceKey).then(Number).catch(() => 0),
+    env.CODES_KV.get(totalKey).then(Number).catch(() => 0)
+  ]);
+  if ((deviceUsed || 0) >= Number(env.AI_DEVICE_LIMIT || 30)) {
+    return json({ ok: false, message: 'На сегодня лимит запросов к ИИ исчерпан. Завтра он обновится' }, 429);
+  }
+  if ((totalUsed || 0) >= Number(env.AI_DAILY_LIMIT || 1500)) {
+    return json({ ok: false, message: 'ИИ сейчас перегружен, попробуйте завтра' }, 429);
+  }
+
+  let res;
+  try {
+    res = await fetch('https://api.freepay.space/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + env.FREEPAY_API_KEY },
+      body: JSON.stringify({
+        model: env.AI_MODEL || 'claude-haiku-5-5',
+        // Модель сначала «думает»: размышления тоже расходуют лимит токенов, поэтому запас большой
+        reasoning_effort: 'low',
+        max_tokens: 2500,
+        temperature: 0.4,
+        messages: [{ role: 'system', content: AI_SYSTEM }, { role: 'user', content: prompt }]
+      })
+    });
+  } catch {
+    return json({ ok: false, message: 'ИИ не отвечает, попробуйте позже' }, 502);
+  }
+  const data = await res.json().catch(() => ({}));
+  const answer = String(data?.choices?.[0]?.message?.content || '').trim();
+  if (!res.ok || !answer) {
+    return json({ ok: false, message: res.status === 402 ? 'Закончился баланс ИИ' : 'ИИ не смог ответить, попробуйте ещё раз' }, 502);
+  }
+
+  // Считаем только удачные ответы. Ошибка записи счётчика не должна ломать ответ
+  const ttl = { expirationTtl: 3 * 86400 };
+  await Promise.all([
+    env.CODES_KV.put(deviceKey, String((deviceUsed || 0) + 1), ttl),
+    env.CODES_KV.put(totalKey, String((totalUsed || 0) + 1), ttl)
+  ]).catch(() => {});
+  return json({ ok: true, answer });
+}
+
 // ---------- Админ-панель ----------
 
 async function adminApi(env, secrets) {
@@ -94,7 +163,8 @@ async function adminApi(env, secrets) {
     }
   }
   // CORS нужен скрытой админке в приложении; без токена этот адрес отвечает 404
-  return new Response(JSON.stringify({ today: todayEpochDay(), codes }), {
+  const aiToday = Number(await env.CODES_KV.get(`ai:${new Date().toISOString().slice(0, 10)}:total`)) || 0;
+  return new Response(JSON.stringify({ today: todayEpochDay(), codes, ai: { today: aiToday, limit: Number(env.AI_DAILY_LIMIT || 1500) } }), {
     headers: { 'content-type': 'application/json; charset=utf-8', ...privateHeaders(), 'Access-Control-Allow-Origin': '*' }
   });
 }
